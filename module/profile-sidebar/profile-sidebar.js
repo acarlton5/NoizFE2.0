@@ -1,8 +1,19 @@
-import { buildProfileCard } from './profile-view.js';
+import { buildProfileCard } from '../profile/profile-view.js';
+import { getUserByToken } from '../users.js';
 
-export default async function init({ hub, root, utils, props }) {
+async function fetchLoggedInUser() {
+  try {
+    const token = await fetch('/data/logged-in.json').then((res) => res.json());
+    if (!token) return null;
+    return await getUserByToken(token);
+  } catch (err) {
+    return null;
+  }
+}
+
+export default async function init({ hub, root, utils }) {
   const view = buildProfileCard(root);
-  const user = props?.user || { name: 'Unknown User' };
+  const user = (await fetchLoggedInUser()) || { name: 'Unknown User' };
 
   view.updateUser(user);
 
@@ -28,8 +39,8 @@ export default async function init({ hub, root, utils, props }) {
   }
 
   return {
-    update(userData) {
-      view.updateUser(userData || {});
+    setUser(next) {
+      view.updateUser(next || {});
     }
   };
 }
