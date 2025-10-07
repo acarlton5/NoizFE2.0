@@ -12,6 +12,28 @@
 ------------------*/
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,900&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Rajdhani:400,500,600,700&display=swap");
+
+:root {
+  color-scheme: dark;
+  --font-primary: "gg sans", "Noto Sans", "Helvetica Neue", sans-serif;
+  --font-accent: "Rajdhani", sans-serif;
+  --bg-base: #1e1f22;
+  --bg-elevated: #2b2d31;
+  --bg-floating: #313338;
+  --surface-border: rgba(78, 80, 88, 0.65);
+  --surface-border-subtle: rgba(78, 80, 88, 0.35);
+  --text-primary: #f2f3f5;
+  --text-muted: #b5bac1;
+  --text-link: #99a7ff;
+  --text-link-hover: #b3bcff;
+  --interactive-muted: #3f4147;
+  --interactive-hover: rgba(255, 255, 255, 0.06);
+  --interactive-active: rgba(255, 255, 255, 0.12);
+  --accent: #5865f2;
+  --accent-hover: #4752c4;
+  --accent-active: #3c45a5;
+  --shadow-elevated: 0 8px 24px rgba(0, 0, 0, 0.32);
+}
 *,
 *::before,
 *::after {
@@ -1938,32 +1960,40 @@ textarea::placeholder {
     1. GENERAL
 -----------------*/
 *::selection {
-  color: #fff;
-  background-color: #40d04f;
+  color: var(--text-primary);
+  background-color: var(--accent);
 }
 
 body {
   font-size: 16px;
-  background-color: #ffffff;
-  color: #212529;
+  background-color: var(--bg-base);
+  color: var(--text-primary);
+  font-family: var(--font-primary);
   overflow-x: hidden;
 }
 
 h1, h2, h3, h4,
 h5, h6, a, p {
-  color: #212529;
-  font-family: "Rajdhani", sans-serif;
-  line-height: 1em;
+  color: var(--text-primary);
+  font-family: var(--font-primary);
+  line-height: 1.3;
 }
 
 h1, h2, h3, h4,
 h5, h6 {
   font-weight: 700;
+  font-family: var(--font-accent);
 }
 
-p a {
-  color: #4ff461;
+p a,
+a {
+  color: var(--text-link);
   font-weight: 600;
+}
+
+a:hover {
+  color: var(--text-link-hover);
+  text-decoration: none;
 }
 
 p .reaction {
@@ -1976,11 +2006,6 @@ p .reaction {
 
 p .reaction:first-child {
   margin-left: 0;
-}
-
-a:hover {
-  color: #4ff461;
-  text-decoration: none;
 }
 
 figure > img {
