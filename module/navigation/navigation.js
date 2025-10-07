@@ -27,6 +27,12 @@ export default async function init({ root }) {
     console.warn('[navigation] failed to load logged-in user', err);
   }
 
+  if (currentUser?.accent) {
+    document.documentElement.style.setProperty('--color-accent-user', currentUser.accent);
+  } else {
+    document.documentElement.style.removeProperty('--color-accent-user');
+  }
+
   const servers = (await Promise.all(SERVER_TOKENS.map((token) => getUserByToken(token)))).filter(Boolean);
 
   const activeServer = servers[0];

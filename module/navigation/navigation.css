@@ -33,7 +33,15 @@ module[data-module="navigation"] {
 }
 
 .server-rail__item--brand {
-  background: var(--color-accent);
+  background: var(--color-accent-user, var(--color-accent));
+  color: #050505;
+}
+
+.server-rail__item--brand:hover,
+.server-rail__item--brand:focus-visible {
+  background: var(--color-accent-user, var(--color-accent));
+  filter: brightness(1.08);
+  color: #050505;
 }
 
 .server-rail__brand-icon {
@@ -93,14 +101,22 @@ module[data-module="navigation"] {
   opacity: 1;
 }
 
-.server-rail__item--icon {
-  background: #2b2d31;
-  color: var(--color-text-muted);
+.server-rail__list--static .server-rail__item {
+  background: var(--color-accent-user, var(--color-accent));
+  color: #050505;
+}
+
+.server-rail__list--static .server-rail__item:hover,
+.server-rail__list--static .server-rail__item:focus-visible {
+  background: var(--color-accent-user, var(--color-accent));
+  filter: brightness(1.08);
+  color: #050505;
 }
 
 .server-rail__item--icon svg {
   width: 22px;
   height: 22px;
+  fill: currentColor;
 }
 
 .server-rail__me {
@@ -111,11 +127,24 @@ module[data-module="navigation"] {
   gap: 0;
   padding: 12px 0 0;
   width: 100%;
+  position: relative;
 }
 
 .server-rail__me .avatar-wrap {
   --avi-width: 40px;
   --avi-height: 40px;
+}
+
+.server-rail__me::before {
+  content: "";
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  width: 4px;
+  height: 36px;
+  border-radius: 4px 0 0 4px;
+  background: var(--color-accent);
+  transform: translateY(-50%);
 }
 
 @media (max-width: 960px) {

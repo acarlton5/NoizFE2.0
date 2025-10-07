@@ -15569,6 +15569,7 @@ figure > img {
   --color-text-muted: #b5bac1;
   --color-text-tertiary: #949ba4;
   --color-accent: #5865f2;
+  --color-accent-user: #5865f2;
   --color-danger: #ed4245;
   --shadow-elevated: 0 8px 16px rgba(0, 0, 0, 0.25);
 }
