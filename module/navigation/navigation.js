@@ -29,6 +29,13 @@ export default async function init({ root }) {
 
   const servers = (await Promise.all(SERVER_TOKENS.map((token) => getUserByToken(token)))).filter(Boolean);
 
+  const activeServer = servers[0];
+  if (activeServer?.accent) {
+    document.documentElement.style.setProperty('--color-accent', activeServer.accent);
+  } else {
+    document.documentElement.style.removeProperty('--color-accent');
+  }
+
   root.innerHTML = `
     <nav class="server-rail" aria-label="Servers">
       <button class="server-rail__item server-rail__item--brand" type="button" aria-label="NOIZ Home">
