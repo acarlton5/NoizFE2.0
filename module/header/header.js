@@ -1,19 +1,14 @@
 // module/header/header.js
 // Minimal title bar inspired by the provided reference image.
 
-export default async function init({ root, hub }) {
+export default async function init({ root }) {
   root.innerHTML = `
     <header class="title-bar" data-role="header">
-      <div class="title-bar__leading">
-        <button class="title-bar__rail-toggle" type="button" aria-label="Toggle navigation" data-role="rail-toggle">
-          <span class="title-bar__rail-indicator"></span>
-        </button>
-      </div>
-      <div class="title-bar__title">
-        <div class="title-bar__brand">
-          <img class="title-bar__mark" src="images/logo_badge.svg" alt="NOIZ logo" />
-          <span class="title-bar__wordmark" data-role="header-title">NOIZ</span>
-        </div>
+      <div class="title-bar__brand">
+        <span class="title-bar__logo" aria-hidden="true">
+          <img class="title-bar__logo-mark" src="images/logo_badge.svg" alt="" />
+        </span>
+        <span class="title-bar__wordmark" data-role="header-title">NOIZ</span>
       </div>
       <div class="title-bar__actions">
         <button class="title-bar__action" type="button" aria-label="Notifications">
@@ -25,12 +20,5 @@ export default async function init({ root, hub }) {
       </div>
     </header>
   `;
-
-  const toggle = root.querySelector('[data-role="rail-toggle"]');
-  if (toggle && hub?.emit) {
-    toggle.addEventListener('click', () => {
-      hub.emit('navigation:toggle');
-    });
-  }
 }
 

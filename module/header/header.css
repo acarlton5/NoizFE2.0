@@ -8,82 +8,55 @@
   right: 0;
   height: var(--header-height);
   z-index: 1000;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
+  display: flex;
   align-items: center;
-  padding: 0 12px;
+  justify-content: space-between;
+  padding: 0 18px;
   background: linear-gradient(135deg, rgba(20, 21, 30, 0.95) 0%, rgba(14, 15, 24, 0.94) 48%, rgba(9, 11, 18, 0.92) 100%);
   backdrop-filter: blur(10px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.45);
 }
 
-.title-bar__leading {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 44px;
-}
-
-.title-bar__rail-toggle {
-  width: 28px;
-  height: 28px;
-  border-radius: 8px;
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  background: rgba(255, 255, 255, 0.04);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  cursor: pointer;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
-}
-
-.title-bar__rail-toggle:focus-visible {
-  outline: 2px solid var(--accent, #5865f2);
-  outline-offset: 2px;
-}
-
-.title-bar__rail-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 4px;
-  background: var(--accent, #5865f2);
-  box-shadow: 0 0 8px rgba(88, 101, 242, 0.6);
-}
-
-.title-bar__title {
-  justify-self: center;
-}
-
 .title-bar__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.title-bar__logo {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: rgba(255, 255, 255, 0.86);
-  font-family: var(--font-accent, 'gg sans', 'Noto Sans', 'Helvetica Neue', sans-serif);
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  font-size: 0.82rem;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 12px;
+  background: linear-gradient(140deg, rgba(94, 114, 255, 0.96) 0%, rgba(172, 113, 255, 0.9) 50%, rgba(255, 142, 142, 0.88) 100%);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+  overflow: hidden;
 }
 
-.title-bar__mark {
+.title-bar__logo-mark {
   width: 22px;
   height: 22px;
   display: block;
-  border-radius: 6px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.45);
 }
 
 .title-bar__wordmark {
-  display: block;
+  color: rgba(255, 255, 255, 0.9);
+  font-family: var(--font-accent, 'gg sans', 'Noto Sans', 'Helvetica Neue', sans-serif);
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  font-size: 0.9rem;
+  white-space: nowrap;
 }
 
 .title-bar__actions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
 .title-bar__action {
@@ -112,17 +85,16 @@
 @media (max-width: 768px) {
   [data-role="header"],
   .title-bar {
-    padding: 0 10px;
+    padding: 0 12px;
   }
 
   .title-bar__brand {
-    font-size: 0.78rem;
-    letter-spacing: 0.14em;
+    gap: 8px;
   }
 
-  .title-bar__mark {
-    width: 20px;
-    height: 20px;
+  .title-bar__logo {
+    width: 30px;
+    height: 30px;
   }
 }
 
