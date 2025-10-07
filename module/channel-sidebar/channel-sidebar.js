@@ -1,122 +1,145 @@
 import { getUserByToken } from '../users.js';
 
-const DM_CHANNELS = [
+const SERVER = {
+  name: 'NOICE Creators',
+  status: 'All things overlays, plugins and collabs'
+};
+
+const CHANNEL_GROUPS = [
   {
-    token: 'marina-valentine',
-    status: 'Designing stream overlays',
-    unread: 3,
-    accent: '#7c5dff'
+    label: 'ANNOUNCEMENTS',
+    channels: [
+      { type: 'text', name: 'general-updates', unread: 2, mention: true },
+      { type: 'text', name: 'plugin-drops', unread: 4 }
+    ]
   },
   {
-    token: 'nick-grissom',
-    status: 'Grinding ranked matches',
-    unread: 0,
-    accent: '#54d8ff'
+    label: 'TEXT CHANNELS',
+    channels: [
+      { type: 'text', name: 'general-chat', active: true },
+      { type: 'text', name: 'content-feedback', unread: 8 },
+      { type: 'text', name: 'share-your-work' }
+    ]
   },
   {
-    token: 'neko-bebop',
-    status: 'Listening to synthwave',
-    unread: 8,
-    accent: '#ff72b6'
-  },
-  {
-    token: 'sarah-diamond',
-    status: 'On call • Mod sync',
-    unread: 1,
-    accent: '#ffa76d'
+    label: 'VOICE CHANNELS',
+    channels: [
+      {
+        type: 'voice',
+        name: 'Live lounge',
+        users: [
+          { token: 'nick-grissom', status: 'Streaming' },
+          { token: 'neko-bebop', status: 'Idle' }
+        ]
+      },
+      { type: 'voice', name: 'Mod sync', muted: true },
+      { type: 'voice', name: 'Creator Q&A' }
+    ]
   }
 ];
-
-const FAVORITES = ['marina-valentine', 'neko-bebop'];
 
 const profileData = (u = {}) =>
   `data-profile-name="${u.name || ''}" data-profile-token="${u.token || ''}" data-profile-avatar="${u.avatar || ''}" data-profile-banner="${u.banner || ''}" data-profile-accent="${u.accent || ''}" data-profile-frame="${u.frame || ''}" data-profile-bio="${u.bio || ''}" data-profile-since="${u.memberSince || ''}" data-profile-connections="${(u.connections || []).join(',')}" data-profile-badges="${(u.badges || []).join(',')}" data-profile-streaming="${u.streaming ? 'true' : 'false'}"`;
 
-const renderChannel = (user, meta = {}, active = false) => {
-  if (!user) return '';
-  const { status = '', unread = 0, accent = user.accent || '#6c5dff' } = meta;
+const renderChannel = (channel, usersByToken = {}) => {
+  const stateClass = [
+    channel.active ? 'is-active' : '',
+    channel.mention ? 'has-mention' : '',
+    channel.unread && !channel.active ? 'has-unread' : ''
+  ]
+    .filter(Boolean)
+    .join(' ');
+
   return `
-    <li class="channel-sidebar__item${active ? ' is-active' : ''}" style="--accent:${accent}" ${profileData(user)}>
-      <div class="avatar-wrap channel-sidebar__avatar" style="--avi-width:40px; --avi-height:40px; --frame:url('${user.frame}')">
-        <img class="avatar-image" src="${user.avatar}" alt="${user.name}">
-      </div>
-      <div class="channel-sidebar__meta">
-        <div class="channel-sidebar__name-row">
-          <span class="channel-sidebar__name">${user.name}</span>
-          ${FAVORITES.includes(user.token) ? '<svg class="channel-sidebar__favorite" aria-hidden="true" width="10" height="10"><use href="#svg-star"></use></svg>' : ''}
-          ${unread > 0 ? `<span class="channel-sidebar__badge">${unread}</span>` : ''}
-        </div>
-        <span class="channel-sidebar__status">${status}</span>
-      </div>
+    <li class="channel-sidebar__channel ${stateClass}">
+      <button type="button" class="channel-sidebar__channel-btn">
+        <span class="channel-sidebar__channel-icon" aria-hidden="true">
+          ${channel.type === 'text' ? '#' : '<svg width="16" height="16"><use href="#svg-streams"></use></svg>'}
+        </span>
+        <span class="channel-sidebar__channel-name">${channel.name}</span>
+        ${channel.unread && !channel.active ? `<span class="channel-sidebar__badge">${channel.unread}</span>` : ''}
+        ${channel.mention ? '<span class="channel-sidebar__pill">@</span>' : ''}
+      </button>
+      ${channel.type === 'voice' && channel.users?.length
+        ? `
+            <ul class="channel-sidebar__voice-users">
+              ${channel.users
+                .map((entry) => {
+                  const user = usersByToken[entry.token];
+                  if (!user) return '';
+                  return `
+                    <li class="channel-sidebar__voice-user" ${profileData(user)}>
+                      <span class="channel-sidebar__voice-presence"></span>
+                      <div class="avatar-wrap" style="--avi-width:24px; --avi-height:24px; --frame:url('${user.frame}')">
+                        <img class="avatar-image" src="${user.avatar}" alt="${user.name}">
+                      </div>
+                      <span class="channel-sidebar__voice-name">${user.name}</span>
+                    </li>
+                  `;
+                })
+                .join('')}
+            </ul>
+          `
+        : ''}
     </li>
   `;
 };
 
 export default async function init({ root }) {
-  let currentUser = null;
-  try {
-    const loggedToken = await fetch('/data/logged-in.json').then((res) => res.json());
-    currentUser = loggedToken ? await getUserByToken(loggedToken) : null;
-  } catch (err) {
-    console.warn('[channel-sidebar] failed to load logged-in user', err);
-  }
+  const voiceTokens = CHANNEL_GROUPS.flatMap((group) =>
+    group.channels
+      .filter((channel) => channel.type === 'voice' && channel.users)
+      .flatMap((channel) => channel.users.map((user) => user.token))
+  );
 
-  const dmUsers = (await Promise.all(DM_CHANNELS.map(({ token }) => getUserByToken(token)))).filter(Boolean);
+  const uniqueTokens = [...new Set(voiceTokens)];
+  const voiceUsers = await Promise.all(uniqueTokens.map((token) => getUserByToken(token)));
+  const userMap = voiceUsers.filter(Boolean).reduce((acc, user) => {
+    // eslint-disable-next-line no-param-reassign
+    acc[user.token] = user;
+    return acc;
+  }, {});
 
-  const markup = `
+  root.innerHTML = `
     <aside class="channel-sidebar">
       <header class="channel-sidebar__header">
-        <div class="channel-sidebar__space">
-          <span class="channel-sidebar__space-name">NOIZ Creators</span>
-          <button type="button" class="channel-sidebar__dropdown" aria-label="Switch workspace">
-            <svg width="12" height="12" aria-hidden="true"><use href="#svg-small-arrow"></use></svg>
-          </button>
-        </div>
+        <button type="button" class="channel-sidebar__space" aria-label="Workspace menu">
+          <span class="channel-sidebar__space-name">${SERVER.name}</span>
+          <svg width="12" height="12" aria-hidden="true"><use href="#svg-small-arrow"></use></svg>
+        </button>
         <div class="channel-sidebar__header-actions">
-          <button type="button" class="channel-sidebar__icon-btn" aria-label="Create channel">
-            <svg width="14" height="14" aria-hidden="true"><use href="#svg-plus"></use></svg>
-          </button>
           <button type="button" class="channel-sidebar__icon-btn" aria-label="Inbox">
-            <svg width="18" height="18" aria-hidden="true"><use href="#svg-messages"></use></svg>
+            <svg width="16" height="16" aria-hidden="true"><use href="#svg-messages"></use></svg>
+          </button>
+          <button type="button" class="channel-sidebar__icon-btn" aria-label="Create channel">
+            <svg width="16" height="16" aria-hidden="true"><use href="#svg-plus"></use></svg>
           </button>
         </div>
       </header>
+      <p class="channel-sidebar__status">${SERVER.status}</p>
       <div class="channel-sidebar__search">
         <svg class="channel-sidebar__search-icon" width="16" height="16" aria-hidden="true"><use href="#svg-magnifying-glass"></use></svg>
-        <input type="search" placeholder="Search or start a chat" aria-label="Search direct messages">
+        <input type="search" placeholder="Search" aria-label="Search channels">
       </div>
-      <section class="channel-sidebar__section">
-        <div class="channel-sidebar__section-header">
-          <span>Direct Messages</span>
-          <button type="button" class="channel-sidebar__icon-btn" aria-label="New message">
-            <svg width="12" height="12" aria-hidden="true"><use href="#svg-plus-small"></use></svg>
-          </button>
-        </div>
-        <ul class="channel-sidebar__list">
-          ${dmUsers.map((user, index) => {
-            const meta = DM_CHANNELS.find((entry) => entry.token === user.token) || {};
-            return renderChannel(user, meta, index === 0);
-          }).join('')}
-        </ul>
-      </section>
-      ${currentUser ? `
-        <footer class="channel-sidebar__footer" ${profileData(currentUser)}>
-          <div class="avatar-wrap channel-sidebar__footer-avatar" style="--avi-width:36px; --avi-height:36px; --frame:url('${currentUser.frame}')">
-            <img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}">
-          </div>
-          <div class="channel-sidebar__footer-meta">
-            <span class="channel-sidebar__footer-name">${currentUser.name}</span>
-            <span class="channel-sidebar__footer-status">Online • ${currentUser.status?.online?.watching || 'Ready to chat'}</span>
-          </div>
-          <button type="button" class="channel-sidebar__icon-btn" aria-label="User settings">
-            <svg width="16" height="16" aria-hidden="true"><use href="#svg-settings"></use></svg>
-          </button>
-        </footer>
-      ` : ''}
+      <div class="channel-sidebar__scroll">
+        ${CHANNEL_GROUPS.map(
+          (group) => `
+            <section class="channel-sidebar__section">
+              <header class="channel-sidebar__section-header">
+                <span>${group.label}</span>
+                <button type="button" class="channel-sidebar__icon-btn" aria-label="Add channel to ${group.label}">
+                  <svg width="12" height="12" aria-hidden="true"><use href="#svg-plus-small"></use></svg>
+                </button>
+              </header>
+              <ul class="channel-sidebar__list">
+                ${group.channels.map((channel) => renderChannel(channel, userMap)).join('')}
+              </ul>
+            </section>
+          `
+        ).join('')}
+      </div>
     </aside>
   `;
-
-  root.innerHTML = markup;
 
   return {};
 }

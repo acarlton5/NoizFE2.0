@@ -1,12 +1,5 @@
 import { getUserByToken } from '../users.js';
 
-const CHANNEL_INFO = {
-  name: '#general-creators',
-  topic: 'Announcements, plugin drops and collabs for the NOIZ creator crew.',
-  members: 28,
-  pinned: 12
-};
-
 const MESSAGE_FLOW = [
   {
     token: 'marina-valentine',
@@ -129,34 +122,23 @@ export default async function init({ root }) {
 
   root.innerHTML = `
     <section class="conversation">
-      <header class="conversation__channel">
-        <div class="conversation__channel-meta">
-          <div class="conversation__channel-title">
-            <span class="conversation__channel-badge">${CHANNEL_INFO.name}</span>
-            <button type="button" class="conversation__channel-favorite" aria-label="Mark channel favourite">
-              <svg width="14" height="14" aria-hidden="true"><use href="#svg-star"></use></svg>
-            </button>
-          </div>
-          <p class="conversation__topic">${CHANNEL_INFO.topic}</p>
-        </div>
-        <div class="conversation__channel-actions">
-          <button type="button" class="conversation__channel-pill">
-            <svg width="16" height="16" aria-hidden="true"><use href="#svg-pinned"></use></svg>
-            <span>${CHANNEL_INFO.pinned} pinned</span>
-          </button>
-          <button type="button" class="conversation__channel-pill">
-            <svg width="16" height="16" aria-hidden="true"><use href="#svg-members"></use></svg>
-            <span>${CHANNEL_INFO.members} online</span>
-          </button>
-          <button type="button" class="conversation__channel-icon" aria-label="Notifications">
-            <svg width="18" height="18" aria-hidden="true"><use href="#svg-notification"></use></svg>
-          </button>
-          <button type="button" class="conversation__channel-icon" aria-label="More options">
-            <svg width="18" height="18" aria-hidden="true"><use href="#svg-more-dots"></use></svg>
-          </button>
-        </div>
-      </header>
       <div class="conversation__scroll" data-role="scroll">
+        <aside class="conversation__banner" role="note">
+          <div class="conversation__banner-icon" aria-hidden="true">📌</div>
+          <div class="conversation__banner-copy">
+            <p class="conversation__banner-title">Pinned drops are highlighted for quick access.</p>
+            <p class="conversation__banner-desc">Keep your favourite presets handy and revisit the latest plugin experiments here.</p>
+          </div>
+          <button type="button" class="conversation__banner-action">View pins</button>
+        </aside>
+        <article class="conversation__welcome">
+          <div class="conversation__welcome-icon">#</div>
+          <div class="conversation__welcome-meta">
+            <h2>Welcome to <span>general-chat</span></h2>
+            <p>Introduce yourself, share works in progress, and sync with other NOICE creators.</p>
+          </div>
+          <button type="button" class="conversation__welcome-button">Edit channel</button>
+        </article>
         <div class="conversation__divider"><span>Today</span></div>
         <ul class="conversation__feed">
           ${users.map(({ user, entry }) => renderMessage(user, entry)).join('')}
@@ -173,7 +155,7 @@ export default async function init({ root }) {
           ).join('')}
         </div>
         <div class="conversation__composer-field">
-          <textarea placeholder="Message ${CHANNEL_INFO.name}" rows="1"></textarea>
+          <textarea placeholder="Message #general-chat" rows="1"></textarea>
         </div>
         <button class="conversation__composer-send" type="submit" aria-label="Send message">
           <svg width="18" height="18" aria-hidden="true"><use href="#svg-send-message"></use></svg>
