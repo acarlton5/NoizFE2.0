@@ -15554,21 +15554,40 @@ figure > img {
 
 /*# sourceMappingURL=styles.css.map */
 
+:root {
+  --title-bar-height: 36px;
+  --color-bg-app: #313338;
+  --color-bg-server-rail: #1e1f22;
+  --color-bg-channel: #2b2d31;
+  --color-bg-chat: #313338;
+  --color-bg-member: #2b2d31;
+  --color-surface-raised: #1f2125;
+  --color-border-subtle: #1f2026;
+  --color-scrollbar: #1a1b1f;
+  --color-scrollbar-thumb: #1f2126;
+  --color-text-primary: #f2f3f5;
+  --color-text-muted: #b5bac1;
+  --color-text-tertiary: #949ba4;
+  --color-accent: #5865f2;
+  --color-danger: #ed4245;
+  --shadow-elevated: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
 body {
-  font-family: "Inter", "gg sans", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
-  background: #151622;
-  color: #f7f8ff;
+  font-family: "gg sans", "Inter", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  background: var(--color-bg-app);
+  color: var(--color-text-primary);
   min-height: 100vh;
 }
 
 .app-workspace {
   position: relative;
   display: grid;
-  grid-template-columns: 80px 280px minmax(0, 1fr) 320px;
+  grid-template-columns: 72px 280px minmax(0, 1fr) 320px;
   grid-template-rows: minmax(0, calc(100vh - var(--title-bar-height, 0px)));
   margin-top: calc(var(--title-bar-height, 0px));
   height: calc(100vh - var(--title-bar-height, 0px));
-  background: radial-gradient(circle at top left, rgba(104, 74, 255, 0.18), transparent 38%), #1a1b2b;
+  background: var(--color-bg-app);
   overflow: hidden;
 }
 
@@ -15584,7 +15603,7 @@ body {
 
 @media (max-width: 1400px) {
   .app-workspace {
-    grid-template-columns: 76px 260px minmax(0, 1fr) 300px;
+    grid-template-columns: 72px 260px minmax(0, 1fr) 300px;
   }
 }
 

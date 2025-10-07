@@ -1,7 +1,7 @@
 module[data-module="navigation"] {
   display: block;
-  background: #151626;
-  border-right: 1px solid rgba(36, 40, 68, 0.85);
+  background: var(--color-bg-server-rail);
+  border-right: 1px solid var(--color-border-subtle);
 }
 
 .server-rail {
@@ -10,70 +10,49 @@ module[data-module="navigation"] {
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding: 18px 0 16px;
-  background:
-    linear-gradient(180deg, rgba(74, 60, 140, 0.28) 0%, rgba(20, 21, 38, 0.8) 52%, rgba(16, 17, 28, 0.95) 100%),
-    #16172a;
+  padding: 12px 0 16px;
+  background: var(--color-bg-server-rail);
 }
 
 .server-rail__item {
-  width: 52px;
-  height: 52px;
-  border-radius: 18px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: rgba(22, 24, 44, 0.9);
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #313338;
   display: grid;
   place-items: center;
-  color: rgba(218, 224, 255, 0.85);
+  color: var(--color-text-primary);
   position: relative;
   overflow: hidden;
-  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
+.server-rail__entry.is-active .server-rail__item,
 .server-rail__item:hover,
 .server-rail__item:focus-visible {
-  border-color: rgba(255, 255, 255, 0.3);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 18px rgba(8, 6, 30, 0.4);
+  background: var(--color-accent);
+  color: #fff;
 }
 
 .server-rail__item--brand {
-  width: 56px;
-  height: 56px;
-  border-radius: 20px;
-  background:
-    linear-gradient(140deg, rgba(110, 76, 255, 0.95), rgba(255, 114, 209, 0.88));
-  border: 1px solid rgba(255, 255, 255, 0.25);
-  box-shadow: 0 12px 28px rgba(64, 34, 160, 0.45);
-  flex-direction: column;
-  gap: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: var(--color-accent);
 }
 
 .server-rail__brand-icon {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
 }
 
 .server-rail__brand-name {
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.18em;
-  color: rgba(22, 18, 42, 0.92);
+  display: none;
 }
 
 .server-rail__divider {
   width: 32px;
   height: 2px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  margin: 8px 0;
-}
-
-.server-rail__divider--faded {
-  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+  background: #2b2d31;
+  margin: 6px 0;
 }
 
 .server-rail__list {
@@ -82,7 +61,7 @@ module[data-module="navigation"] {
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   width: 100%;
   align-items: center;
 }
@@ -94,30 +73,30 @@ module[data-module="navigation"] {
 .server-rail__entry::before {
   content: "";
   position: absolute;
-  left: 0;
+  left: -12px;
   top: 50%;
   width: 4px;
   height: 0;
-  border-radius: 0 8px 8px 0;
-  background: var(--accent, rgba(124, 93, 255, 0.95));
-  transform: translate(-14px, -50%);
+  border-radius: 0 4px 4px 0;
+  background: var(--accent, var(--color-accent));
+  transform: translateY(-50%);
   opacity: 0;
   transition: height 180ms ease, opacity 180ms ease;
 }
 
 .server-rail__entry:hover::before {
-  height: 26px;
+  height: 24px;
   opacity: 1;
 }
 
 .server-rail__entry.is-active::before {
-  height: 38px;
+  height: 36px;
   opacity: 1;
 }
 
 .server-rail__item--icon {
-  background: rgba(26, 28, 48, 0.8);
-  color: rgba(198, 204, 245, 0.7);
+  background: #2b2d31;
+  color: var(--color-text-muted);
 }
 
 .server-rail__item--icon svg {
@@ -131,17 +110,17 @@ module[data-module="navigation"] {
   flex-direction: column;
   align-items: center;
   gap: 8px;
-  padding: 10px 0 0;
+  padding: 12px 0 0;
   width: 100%;
-  color: rgba(210, 214, 249, 0.9);
-  font-size: 0.7rem;
-  letter-spacing: 0.12em;
+  color: var(--color-text-muted);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
 }
 
 .server-rail__me .avatar-wrap {
-  --avi-width: 44px;
-  --avi-height: 44px;
+  --avi-width: 40px;
+  --avi-height: 40px;
 }
 
 .server-rail__me-name {

@@ -1,11 +1,3 @@
-:root {
-  --title-bar-height: 34px;
-}
-
-body {
-  padding-top: var(--title-bar-height);
-}
-
 .title-bar {
   position: fixed;
   inset: 0 0 auto 0;
@@ -13,80 +5,66 @@ body {
   align-items: center;
   justify-content: space-between;
   height: var(--title-bar-height);
-  padding: 0 18px;
-  background:
-    linear-gradient(90deg, rgba(26, 24, 48, 0.9) 0%, rgba(40, 30, 70, 0.92) 42%, rgba(70, 40, 120, 0.9) 100%),
-    #181528;
-  border-bottom: 1px solid rgba(124, 115, 190, 0.35);
-  box-shadow: 0 12px 24px rgba(8, 6, 28, 0.42);
-  color: rgba(242, 245, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  padding: 0 12px 0 16px;
+  background: var(--color-bg-server-rail);
+  border-bottom: 1px solid var(--color-border-subtle);
+  color: var(--color-text-primary);
   z-index: 1200;
 }
 
 .title-bar__brand {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-family: "Inter", "gg sans", "Noto Sans", "Helvetica Neue", sans-serif;
+  gap: 8px;
+  font-family: "gg sans", "Inter", "Noto Sans", "Helvetica Neue", sans-serif;
 }
 
 .title-bar__badge {
   position: relative;
-  width: 24px;
-  height: 24px;
-  border-radius: 8px;
+  width: 22px;
+  height: 22px;
+  border-radius: 6px;
   display: grid;
   place-items: center;
-  background: linear-gradient(140deg, rgba(130, 93, 255, 0.95), rgba(255, 114, 209, 0.9));
-  box-shadow: 0 8px 18px rgba(60, 34, 140, 0.45);
-  overflow: hidden;
-}
-
-.title-bar__badge-ring {
-  position: absolute;
-  inset: -30%;
-  border-radius: 50%;
-  border: 1px solid rgba(255, 255, 255, 0.45);
-  opacity: 0.55;
+  background: var(--color-accent);
+  color: #fff;
 }
 
 .title-bar__badge-icon {
   width: 14px;
   height: 14px;
-  position: relative;
-  z-index: 1;
 }
 
 .title-bar__name {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.32em;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
   text-transform: uppercase;
-  color: rgba(235, 238, 255, 0.92);
+  color: var(--color-text-primary);
 }
 
 .title-bar__actions {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 2px;
-  border-radius: 999px;
-  background: rgba(32, 28, 58, 0.8);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+  gap: 6px;
 }
 
 .title-bar__action {
-  width: 28px;
-  height: 28px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  background: rgba(26, 24, 48, 0.8);
-  color: rgba(232, 236, 255, 0.85);
+  width: 26px;
+  height: 26px;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: #2b2d31;
+  color: var(--color-text-primary);
   display: grid;
   place-items: center;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.title-bar__action:hover,
+.title-bar__action:focus-visible {
+  background: #3a3c43;
+  color: #fff;
 }
 
 .title-bar__action-icon {
@@ -96,21 +74,17 @@ body {
 }
 
 @media (max-width: 600px) {
-  :root {
-    --title-bar-height: 32px;
-  }
-
   .title-bar {
-    padding: 0 12px;
+    padding: 0 10px 0 12px;
   }
 
   .title-bar__name {
-    font-size: 0.68rem;
-    letter-spacing: 0.28em;
+    font-size: 0.7rem;
+    letter-spacing: 0.04em;
   }
 
   .title-bar__action {
-    width: 26px;
-    height: 26px;
+    width: 24px;
+    height: 24px;
   }
 }

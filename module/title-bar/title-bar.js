@@ -8,7 +8,6 @@ export default function init({ root }) {
     <header class="title-bar" role="banner">
       <div class="title-bar__brand">
         <span class="title-bar__badge" aria-hidden="true">
-          <span class="title-bar__badge-ring"></span>
           <img src="images/logo_badge.svg" alt="NOIZ" class="title-bar__badge-icon">
         </span>
         <span class="title-bar__name" aria-label="NOIZ">NOIZ</span>
