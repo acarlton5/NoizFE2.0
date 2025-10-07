@@ -75,7 +75,6 @@ export default async function init({ root }) {
           <div class="avatar-wrap" style="--avi-width:40px; --avi-height:40px; --frame:url('${currentUser.frame}')">
             <img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}">
           </div>
-          <span class="server-rail__me-name">${currentUser.name}</span>
         </div>
       ` : ''}
     </nav>

@@ -1,7 +1,6 @@
 module[data-module="navigation"] {
   display: block;
   background: var(--color-bg-server-rail);
-  border-right: 1px solid var(--color-border-subtle);
 }
 
 .server-rail {
@@ -109,25 +108,14 @@ module[data-module="navigation"] {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
+  gap: 0;
   padding: 12px 0 0;
   width: 100%;
-  color: var(--color-text-muted);
-  font-size: 0.68rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
 }
 
 .server-rail__me .avatar-wrap {
   --avi-width: 40px;
   --avi-height: 40px;
-}
-
-.server-rail__me-name {
-  display: block;
-  max-width: 70px;
-  text-align: center;
-  line-height: 1.2;
 }
 
 @media (max-width: 960px) {
