@@ -368,9 +368,13 @@ async function handleRoute() {
       } else {
         LoadMainModule('doc');
       }
+    } else if (mod === 'index.html') {
+      LoadMainModule('discord-home');
     } else {
       LoadMainModule(mod);
     }
+  } else {
+    LoadMainModule('discord-home');
   }
 }
 window.addEventListener("popstate", () => { handleRoute(); });

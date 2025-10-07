@@ -15552,3 +15552,23 @@ figure > img {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+body {
+  background: #313338;
+  color: #f2f3f5;
+  font-family: 'Rajdhani', 'Titillium Web', sans-serif;
+}
+
+.app-stage {
+  margin-left: 72px;
+  padding-top: 56px;
+  min-height: calc(100vh - 56px);
+  background: #313338;
+}
+
+@media (max-width: 991.98px) {
+  .app-stage {
+    margin-left: 0;
+    padding-bottom: 64px;
+  }
+}
