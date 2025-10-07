@@ -9,6 +9,47 @@ const CHANNEL_GROUPS = [
     ]
   },
   {
+    name: 'Direct Messages',
+    items: [
+      {
+        id: 'dm-nova',
+        type: 'dm',
+        label: 'Nova',
+        status: 'online',
+        accent: '#ff5dad',
+        frame: 'conic-gradient(from 140deg, rgba(255, 93, 173, 0.9), rgba(255, 213, 79, 0.9), rgba(109, 200, 255, 0.9), rgba(255, 93, 173, 0.9))',
+        avatar: 'images/avatars/avatar-3.jpg'
+      },
+      {
+        id: 'dm-dex',
+        type: 'dm',
+        label: 'Dex',
+        status: 'idle',
+        accent: '#ff9f4a',
+        frame: 'conic-gradient(from 90deg, rgba(255, 159, 74, 0.9), rgba(247, 113, 185, 0.9), rgba(123, 182, 255, 0.9), rgba(255, 159, 74, 0.9))',
+        avatar: 'images/avatars/avatar-4.jpg'
+      },
+      {
+        id: 'dm-kai',
+        type: 'dm',
+        label: 'Kai',
+        status: 'dnd',
+        accent: '#8a7dff',
+        frame: 'conic-gradient(from 180deg, rgba(96, 87, 255, 0.95), rgba(151, 222, 255, 0.9), rgba(242, 131, 255, 0.9), rgba(96, 87, 255, 0.95))',
+        avatar: 'images/avatars/avatar-7.jpg'
+      },
+      {
+        id: 'dm-iris',
+        type: 'dm',
+        label: 'Iris',
+        status: 'offline',
+        accent: '#5cc3ff',
+        frame: 'conic-gradient(from 120deg, rgba(92, 195, 255, 0.9), rgba(132, 255, 187, 0.9), rgba(255, 190, 244, 0.9), rgba(92, 195, 255, 0.9))',
+        avatar: 'images/avatars/avatar-5.jpg'
+      }
+    ]
+  },
+  {
     name: 'Voice Channels',
     items: [
       { id: 'stage', label: 'Stage Live', icon: '🔊' },
@@ -153,6 +194,47 @@ const renderMessage = (message) => `
   </article>
 `;
 
+const renderChannel = (channel) => {
+  if (channel.type === 'dm') {
+    const accent = channel.accent || '#5865f2';
+    const frame = channel.frame || `conic-gradient(from 90deg, ${accent}, transparent)`;
+    return `
+      <li>
+        <button class="channel channel--dm" type="button" data-channel-id="${channel.id}" ${
+          channel.active ? 'aria-current="true"' : ''
+        } data-status="${channel.status || 'offline'}" style="--dm-accent:${accent};">
+          <span class="channel-dm__media">
+            <span class="avatar-wrap" style="--avi-width:36px; --avi-height:36px; --frame:${frame}; --frame-bleed:18%;">
+              <img class="avatar-image" src="${channel.avatar}" alt="${channel.label}">
+            </span>
+            <span class="channel-dm__presence" aria-hidden="true"></span>
+            <span class="channel-dm__accent" aria-hidden="true"></span>
+          </span>
+          <span class="channel__label">${channel.label}</span>
+        </button>
+      </li>
+    `;
+  }
+
+  return `
+    <li>
+      <button class="channel" type="button" data-channel-id="${channel.id}" ${
+        channel.active ? 'aria-current="true"' : ''
+      }>
+        <span class="channel__icon">${channel.icon === '#' ? '<span>#</span>' : channel.icon}</span>
+        <span class="channel__label">${channel.label}</span>
+        ${channel.badge ? `<span class="channel__badge">${channel.badge}</span>` : ''}
+        ${channel.unread ? `<span class="channel__unread">${channel.unread}</span>` : ''}
+        ${
+          channel.muted
+            ? '<svg class="channel__muted" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3-4 4H8v6h4l4 4zM5 4l14 14-1.5 1.5L3.5 5.5z" /></svg>'
+            : ''
+        }
+      </button>
+    </li>
+  `;
+};
+
 const renderChannelGroup = (group) => `
   <section class="channel-group">
     <header class="channel-group__header">
@@ -162,19 +244,7 @@ const renderChannelGroup = (group) => `
       <span>${group.name}</span>
     </header>
     <ul class="channel-group__list">
-      ${group.items
-        .map((channel) => `
-          <li>
-            <button class="channel" type="button" data-channel-id="${channel.id}" ${channel.active ? 'aria-current="true"' : ''}>
-              <span class="channel__icon">${channel.icon === '#' ? '<span>#</span>' : channel.icon}</span>
-              <span class="channel__label">${channel.label}</span>
-              ${channel.badge ? `<span class="channel__badge">${channel.badge}</span>` : ''}
-              ${channel.unread ? `<span class="channel__unread">${channel.unread}</span>` : ''}
-              ${channel.muted ? '<svg class="channel__muted" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3-4 4H8v6h4l4 4zM5 4l14 14-1.5 1.5L3.5 5.5z" /></svg>' : ''}
-            </button>
-          </li>
-        `)
-        .join('')}
+      ${group.items.map((channel) => renderChannel(channel)).join('')}
     </ul>
   </section>
 `;
