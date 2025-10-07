@@ -1,9 +1,9 @@
 module[data-module="chat-sidebar"] {
   position: fixed;
-  top: 80px;
+  top: var(--header-height);
   right: 72px;
   width: 300px;
-  height: calc(100vh - 80px);
+  height: calc(100vh - var(--header-height));
   background: linear-gradient(180deg, #182235 0%, #0f172a 100%);
   display: flex;
   flex-direction: column;

@@ -1,8 +1,8 @@
 module[data-module="user-rail"] {
   position: fixed;
-  top: 80px;
+  top: var(--header-height);
   right: 0;
-  height: calc(100vh - 80px);
+  height: calc(100vh - var(--header-height));
   width: 72px;
   z-index: 1040;
   background: var(--bg-elevated);

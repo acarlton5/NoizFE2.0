@@ -6,7 +6,7 @@ module[data-module="profile-overlay"] .profile-overlay {
   display: flex;
   justify-content: flex-end;
   align-items: flex-start;
-  padding: 80px 72px 24px 24px;
+  padding: var(--header-height) 72px 24px 24px;
   z-index: 1290;
   pointer-events: none;
   opacity: 0;
@@ -25,7 +25,7 @@ module[data-module="profile-overlay"] .profile-overlay-panel {
   display: flex;
   align-items: stretch;
   justify-content: flex-start;
-  height: calc(100vh - 80px);
+  height: calc(100vh - var(--header-height));
   max-width: min(408px, calc(100vw - 160px));
   width: 100%;
   pointer-events: auto;
@@ -77,11 +77,11 @@ module[data-module="profile-overlay"] .profile-overlay-close:focus-visible {
 
 @media (max-width: 992px) {
   module[data-module="profile-overlay"] .profile-overlay {
-    padding: 64px 16px 16px;
+    padding: calc(var(--header-height) + 8px) 16px 16px;
   }
 
   module[data-module="profile-overlay"] .profile-overlay-panel {
-    height: calc(100vh - 64px);
+    height: calc(100vh - (var(--header-height) + 8px));
     max-width: 100%;
   }
 
