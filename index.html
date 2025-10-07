@@ -10,13 +10,21 @@
 </head>
 <body>
 
-  <!-- Navigation sidebar -->
-  <module data-module="navigation" data-css="true"></module>
+  <div class="app-shell">
+    <!-- Navigation rails -->
+    <module data-module="navigation" data-css="true"></module>
 
-  <!-- Header module -->
-  <module data-module="header" data-css="true"></module>
+    <div class="app-main">
+      <!-- Header module -->
+      <module data-module="header" data-css="true"></module>
 
-  <main class="content-grid" style="position: relative; transform: translate(200.5px); transition: transform 0.4s ease-in-out;"></main>
+      <div class="app-main__scroll">
+        <main class="content-grid"></main>
+      </div>
+    </div>
+
+    <module data-module="user-rail" data-css="true"></module>
+  </div>
 
   <module data-module="profile-overlay" data-css="true"></module>
 
@@ -26,7 +34,6 @@
   <!-- Live chat module (temporarily removed)
   <module data-module="chat" data-css="true"></module>
   -->
-  <module data-module="user-rail" data-css="true"></module>
 
   <!-- Sidebar chat module
   <module data-module="chat-sidebar" data-css="true" class="d-none d-lg-flex"></module>
