@@ -12,7 +12,7 @@ async function fetchLoggedInUser() {
 }
 
 export default async function init({ hub, root, utils }) {
-  const view = buildProfileCard(root);
+  const view = buildProfileCard(root, { variant: 'sidebar' });
   const user = (await fetchLoggedInUser()) || { name: 'Unknown User' };
 
   view.updateUser(user);

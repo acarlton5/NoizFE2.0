@@ -1,48 +1,57 @@
 const TEMPLATE = `
-  <section class="profile-panel">
-    <aside class="profile-sidebar">
-      <div class="profile-hero">
-        <div class="profile-avatar">
-          <div class="avatar-wrap" style="--avi-width:96px; --avi-height:96px;">
-            <img class="avatar-image" alt="" />
+  <aside class="profile-panel" data-variant="sidebar">
+    <div class="profile-scroll">
+      <header class="profile-hero">
+        <div class="profile-hero-sheen"></div>
+        <div class="profile-hero-content">
+          <div class="profile-avatar">
+            <div class="avatar-wrap" style="--avi-width:88px; --avi-height:88px;">
+              <img class="avatar-image" alt="" />
+            </div>
+          </div>
+          <div class="profile-identity">
+            <h1 class="profile-name"></h1>
+            <p class="profile-handle"></p>
+            <span class="profile-status-pill" data-role="presence"></span>
           </div>
         </div>
-        <h1 class="profile-name"></h1>
-        <p class="profile-handle"></p>
-        <span class="profile-status-pill" data-role="presence"></span>
-      </div>
-      <div class="profile-sidebar-body">
-        <div class="profile-actions">
+      </header>
+      <div class="profile-content">
+        <div class="profile-row profile-actions">
           <button class="profile-action primary">Add Friend</button>
           <button class="profile-action secondary" data-role="message-btn">
             Message
             <span class="profile-unread" data-role="unread"></span>
           </button>
         </div>
-        <ul class="profile-stats"></ul>
-        <div class="profile-badges"></div>
-        <div class="profile-social"></div>
+        <div class="profile-row profile-badges" data-role="badges"></div>
+        <section class="profile-section profile-stats-section">
+          <h2>Stats</h2>
+          <ul class="profile-stats"></ul>
+        </section>
+        <section class="profile-section profile-about">
+          <h2>About</h2>
+          <p class="profile-bio"></p>
+        </section>
+        <section class="profile-section profile-member">
+          <h2>Member Since</h2>
+          <p class="profile-member-since"></p>
+        </section>
+        <section class="profile-section profile-topics">
+          <h2>Topics</h2>
+          <ul class="profile-topic-list"></ul>
+        </section>
+        <section class="profile-section profile-earned">
+          <h2>Earned Badges</h2>
+          <ul class="profile-earned-list"></ul>
+        </section>
+        <section class="profile-section profile-social">
+          <h2>Connections</h2>
+          <div class="profile-social-list"></div>
+        </section>
       </div>
-    </aside>
-    <div class="profile-body">
-      <section class="profile-section profile-about">
-        <h2>About</h2>
-        <p class="profile-bio"></p>
-      </section>
-      <section class="profile-section profile-member">
-        <h2>Member Since</h2>
-        <p class="profile-member-since"></p>
-      </section>
-      <section class="profile-section profile-topics">
-        <h2>Topics</h2>
-        <ul class="profile-topic-list"></ul>
-      </section>
-      <section class="profile-section profile-earned">
-        <h2>Earned Badges</h2>
-        <ul class="profile-earned-list"></ul>
-      </section>
     </div>
-  </section>
+  </aside>
 `;
 
 function mixColor(hex, percent) {
@@ -99,10 +108,12 @@ function formatPresence(status = {}) {
   return { state, text: detail ? `${label} · ${detail}` : label };
 }
 
-export function buildProfileCard(root) {
+export function buildProfileCard(root, { variant = 'sidebar' } = {}) {
   root.innerHTML = TEMPLATE;
 
   const panel = root.querySelector('.profile-panel');
+  panel.dataset.variant = variant;
+
   const avatarWrap = root.querySelector('.profile-avatar .avatar-wrap');
   const avatarImg = root.querySelector('.profile-avatar img');
   const nameEl = root.querySelector('.profile-name');
@@ -110,7 +121,8 @@ export function buildProfileCard(root) {
   const presenceEl = root.querySelector('[data-role="presence"]');
   const statsList = root.querySelector('.profile-stats');
   const badgesWrap = root.querySelector('.profile-badges');
-  const socialWrap = root.querySelector('.profile-social');
+  const socialSection = root.querySelector('.profile-section.profile-social');
+  const socialWrap = root.querySelector('.profile-social-list');
   const bioEl = root.querySelector('.profile-bio');
   const memberEl = root.querySelector('.profile-member-since');
   const topicsList = root.querySelector('.profile-topic-list');
@@ -173,23 +185,23 @@ export function buildProfileCard(root) {
 
     if (user.badges && user.badges.length) {
       badgesWrap.innerHTML = user.badges
-        .slice(0, 6)
+        .slice(0, 8)
         .map((badge) => `<img src="${badge}" alt="badge" loading="lazy" />`)
         .join('');
-      badgesWrap.style.display = '';
+      badgesWrap.hidden = false;
     } else {
       badgesWrap.innerHTML = '';
-      badgesWrap.style.display = 'none';
+      badgesWrap.hidden = true;
     }
 
     if (user.connections && user.connections.length) {
       socialWrap.innerHTML = user.connections
         .map((icon) => `<img src="${icon}" alt="connection" loading="lazy" />`)
         .join('');
-      socialWrap.style.display = '';
+      if (socialSection) socialSection.hidden = false;
     } else {
       socialWrap.innerHTML = '';
-      socialWrap.style.display = 'none';
+      if (socialSection) socialSection.hidden = true;
     }
 
     bioEl.textContent = user.bio || 'No bio provided yet.';
@@ -245,7 +257,8 @@ export function buildProfileCard(root) {
     updateUser,
     updateUnread,
     elements: {
-      messageBtn
+      messageBtn,
+      panel,
     }
   };
 }

@@ -1,7 +1,7 @@
 import { buildProfileCard } from './profile-view.js';
 
 export default async function init({ hub, root, utils, props }) {
-  const view = buildProfileCard(root);
+  const view = buildProfileCard(root, { variant: 'page' });
   const user = props?.user || { name: 'Unknown User' };
 
   view.updateUser(user);
