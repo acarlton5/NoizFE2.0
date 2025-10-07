@@ -9,7 +9,12 @@ export default async function init({ root, hub }) {
           <span class="title-bar__rail-indicator"></span>
         </button>
       </div>
-      <div class="title-bar__title" data-role="header-title">Noiz</div>
+      <div class="title-bar__title">
+        <div class="title-bar__brand">
+          <img class="title-bar__mark" src="images/logo_badge.svg" alt="NOIZ logo" />
+          <span class="title-bar__wordmark" data-role="header-title">NOIZ</span>
+        </div>
+      </div>
       <div class="title-bar__actions">
         <button class="title-bar__action" type="button" aria-label="Notifications">
           <svg class="title-bar__icon" width="18" height="18"><use xlink:href="#svg-bell"></use></svg>
