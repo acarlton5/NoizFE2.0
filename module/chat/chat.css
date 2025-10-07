@@ -1,27 +1,25 @@
 module[data-module="chat"] {
   position: fixed;
-  top: var(--header-height);
+  top: 80px;
   right: 72px;
   width: 360px;
-  height: calc(100vh - var(--header-height));
-  background: var(--bg-floating);
-  box-shadow: -4px 0 16px rgba(0, 0, 0, 0.35);
+  height: calc(100vh - 80px);
+  background: #fff;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
   display: flex;
   flex-direction: column;
   font-size: 14px;
   z-index: 1030;
-  color: var(--text-primary);
 }
 
 module[data-module="chat"] .chat-header {
-  padding: 12px 16px;
-  border-bottom: 1px solid var(--surface-border);
+  padding: 8px 12px;
 }
 
 module[data-module="chat"] .chat-dono-scroller {
-  border-top: 1px solid var(--surface-border);
-  border-bottom: 1px solid var(--surface-border);
-  padding: 6px 16px;
+  border-top: 1px solid #ddd;
+  border-bottom: 1px solid #ddd;
+  padding: 4px 12px;
   display: flex;
   gap: 0.5rem;
   flex-wrap: nowrap;
@@ -37,35 +35,25 @@ module[data-module="chat"] .chat-dono-scroller::-webkit-scrollbar {
 }
 
 module[data-module="chat"] .chat-header .title {
-  font-weight: 700;
-  font-family: var(--font-accent);
+  font-weight: 600;
 }
 
 module[data-module="chat"] .chat-header .meta {
   font-size: 12px;
-  color: var(--text-muted);
+  color: #666;
 }
 
 module[data-module="chat"] .chat-body {
   flex: 1;
   overflow-y: auto;
-  padding: 12px 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  padding: 8px;
 }
 
 module[data-module="chat"] .chat-message {
   display: flex;
   gap: 8px;
+  margin-bottom: 4px;
   align-items: flex-start;
-  padding: 6px 8px;
-  border-radius: 8px;
-  transition: background-color 0.2s ease;
-}
-
-module[data-module="chat"] .chat-message:hover {
-  background-color: var(--interactive-hover);
 }
 
 module[data-module="chat"] .msg-avatar {
@@ -114,13 +102,12 @@ module[data-module="chat"] .user-meta {
 }
 
 module[data-module="chat"] .chat-message .time {
-  color: var(--text-muted);
+  color: #888;
   font-size: 12px;
 }
 
 module[data-module="chat"] .chat-message .name {
   font-weight: 600;
-  font-family: var(--font-primary);
 }
 
 module[data-module="chat"] .badges {
@@ -135,9 +122,9 @@ module[data-module="chat"] .badges img {
 }
 
 module[data-module="chat"] .chat-message.sticker {
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 8px;
-  padding: 6px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  padding: 4px;
 }
 
 module[data-module="chat"] .chat-message.sticker .sticker-meta {
@@ -159,30 +146,29 @@ module[data-module="chat"] .chat-message.sticker .sticker {
 }
 
 module[data-module="chat"] .chat-form {
-  padding: 12px 16px 16px;
-  border-top: 1px solid var(--surface-border);
+  padding: 8px;
+  border-top: 1px solid #ddd;
   position: relative;
-  }
+}
 
 module[data-module="chat"] .chat-input-group {
-  border: 1px solid var(--surface-border);
-  border-radius: 12px;
-  background-color: var(--bg-elevated);
+  border: 1px solid #ccc;
+  border-radius: 6px;
 }
 
 module[data-module="chat"] .chat-input-top {
   display: flex;
   align-items: center;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--surface-border-subtle);
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
 }
 
 module[data-module="chat"] .chat-avatar {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: var(--accent);
-  color: var(--text-primary);
+  background: #933;
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -198,7 +184,6 @@ module[data-module="chat"] .chat-input-wrapper {
 module[data-module="chat"] .chat-user {
   font-weight: 600;
   font-size: 12px;
-  color: var(--text-muted);
 }
 
 module[data-module="chat"] .chat-input {
@@ -206,15 +191,13 @@ module[data-module="chat"] .chat-input {
   border: none;
   outline: none;
   padding: 0;
-  background: transparent;
-  color: var(--text-primary);
 }
 
 module[data-module="chat"] .chat-input-bottom {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 8px 12px;
+  padding: 4px 8px;
 }
 
 module[data-module="chat"] .chat-actions {
@@ -234,9 +217,6 @@ module[data-module="chat"] .chat-actions button {
   border: none;
   cursor: pointer;
   padding: 4px;
-  color: var(--text-muted);
-  border-radius: 6px;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 module[data-module="chat"] .chat-actions button {
@@ -249,40 +229,31 @@ module[data-module="chat"] .chat-tools button {
   font-size: 18px;
 }
 
-module[data-module="chat"] .chat-tools button:hover,
-module[data-module="chat"] .chat-actions button:hover,
-module[data-module="chat"] .chat-tools button:focus-visible,
-module[data-module="chat"] .chat-actions button:focus-visible {
-  background: var(--interactive-hover);
-  color: var(--text-primary);
-  outline: none;
-}
-
 module[data-module="chat"] .chat-count {
   font-size: 12px;
-  color: var(--text-muted);
+  color: #666;
   margin-right: 8px;
 }
 
 module[data-module="chat"] .chat-send-icon {
   width: 20px;
   height: 20px;
-  fill: var(--accent);
+  fill: #06c;
 }
 
 module[data-module="chat"] .chat-hide {
-  border-top: 1px solid var(--surface-border);
+  border-top: 1px solid #ddd;
   width: 100%;
   text-align: center;
-  color: var(--text-link);
+  color: #06c;
   padding: 6px;
-  background: var(--bg-elevated);
+  background: #fff;
 }
 
 module[data-module="chat"] .chat-donation {
-  background: rgba(88, 101, 242, 0.18);
-  border-radius: 8px;
-  padding: 8px 10px;
+  background: #e9ffe5;
+  border-radius: 6px;
+  padding: 8px;
   margin: 4px 0;
 }
 
@@ -297,11 +268,11 @@ module[data-module="chat"] .dono-pill {
   flex: 0 0 auto;
   display: inline-flex;
   align-items: center;
-  background: var(--accent);
-  color: var(--text-primary);
+  background: var(--accent, #1a2232);
+  color: #fff;
   border-radius: 9999px;
   padding: 0.25rem 0.5rem 0.25rem 0.25rem;
-  font-family: var(--font-accent);
+  font-family: "Rajdhani", sans-serif;
   font-weight: 600;
   overflow: hidden;
 }
@@ -321,8 +292,8 @@ module[data-module="chat"] .dono-pill .avatar {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.35);
-  color: var(--text-primary);
+  background: #fff;
+  color: #1a2232;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -342,8 +313,8 @@ module[data-module="chat"] .chat-drawer {
   left: 0;
   right: 0;
   bottom: 100%;
-  background: var(--bg-elevated);
-  border-top: 1px solid var(--surface-border);
+  background: #fff;
+  border-top: 1px solid #ddd;
   transform: translateY(100%);
   transition: transform 0.2s ease, opacity 0.2s ease;
   display: flex;
@@ -372,19 +343,16 @@ module[data-module="chat"] .emote-set-header {
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
-  color: var(--text-muted);
 }
 
 module[data-module="chat"] .emote-set-header .streamer-avatar {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  box-shadow: 0 0 0 1px var(--surface-border-subtle);
 }
 
 module[data-module="chat"] .emote-set-header .streamer-name {
   font-weight: 600;
-  color: var(--text-primary);
 }
 
 module[data-module="chat"] .emote-list {
@@ -398,8 +366,6 @@ module[data-module="chat"] .emote-list .emote {
   border: none;
   background: none;
   cursor: pointer;
-  border-radius: 6px;
-  transition: background-color 0.2s ease;
 }
 
 module[data-module="chat"] .emote-list .emote img {
@@ -407,14 +373,8 @@ module[data-module="chat"] .emote-list .emote img {
   height: 32px;
 }
 
-module[data-module="chat"] .emote-list .emote:hover,
-module[data-module="chat"] .emote-list .emote:focus-visible {
-  background: var(--interactive-hover);
-  outline: none;
-}
-
 module[data-module="chat"] .resonance-grid {
-  padding: 8px 12px;
+  padding: 8px;
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
   gap: 8px;
@@ -422,21 +382,13 @@ module[data-module="chat"] .resonance-grid {
 
 module[data-module="chat"] .resonance-item {
   border: none;
-  background: var(--interactive-hover);
-  border-radius: 10px;
-  padding: 6px;
+  background: #f8f8f8;
+  border-radius: 6px;
+  padding: 4px;
   display: flex;
   flex-direction: column;
   align-items: center;
   cursor: pointer;
-  transition: transform 0.2s ease, background-color 0.2s ease;
-}
-
-module[data-module="chat"] .resonance-item:hover,
-module[data-module="chat"] .resonance-item:focus-visible {
-  transform: translateY(-2px);
-  background: var(--interactive-active);
-  outline: none;
 }
 
 module[data-module="chat"] .resonance-item .resonance-sticker {
@@ -451,7 +403,6 @@ module[data-module="chat"] .resonance-cost {
   gap: 4px;
   font-weight: 600;
   margin-top: 4px;
-  color: var(--text-primary);
 }
 
 module[data-module="chat"] .resonance-cost .resonance-badge {
@@ -488,10 +439,9 @@ module[data-module="chat"] .resonance-use-effects {
 }
 
 module[data-module="chat"] .resonance-use-effects li {
-  background: var(--interactive-hover);
+  background: #f0f0f0;
   padding: 2px 6px;
   border-radius: 4px;
-  color: var(--text-muted);
 }
 
 module[data-module="chat"] .resonance-use-actions {
@@ -504,27 +454,11 @@ module[data-module="chat"] .resonance-use-actions button {
   flex: 1;
   padding: 4px 8px;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
-  font-weight: 600;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 module[data-module="chat"] .resonance-use-actions .resonance-use-btn {
-  background: var(--accent);
-  color: var(--text-primary);
-}
-
-module[data-module="chat"] .resonance-use-actions .resonance-use-btn:hover {
-  background: var(--accent-hover);
-}
-
-module[data-module="chat"] .resonance-use-actions .resonance-cancel-btn {
-  background: var(--interactive-hover);
-  color: var(--text-muted);
-}
-
-module[data-module="chat"] .resonance-use-actions .resonance-cancel-btn:hover {
-  background: var(--interactive-active);
-  color: var(--text-primary);
+  background: #06c;
+  color: #fff;
 }

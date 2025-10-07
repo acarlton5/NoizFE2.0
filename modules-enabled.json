@@ -7,13 +7,13 @@
     "header": false,
     "services": false
   },
-  "header": {
-    "name": "header",
+  "title-bar": {
+    "name": "title-bar",
     "icon": "home",
     "status": "enabled",
     "navigation": false,
     "header": false,
-    "services": true
+    "services": false
   },
   "user-rail": {
     "name": "user-rail",

@@ -1,312 +1,105 @@
 module[data-module="user-rail"] {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  height: calc(100vh - 80px);
+  width: 72px;
+  z-index: 1040;
+  background: #fff;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 16px 0;
   display: flex;
-  flex-direction: column;
-  background: var(--bg-elevated);
-  border-left: 1px solid rgba(255, 255, 255, 0.05);
-  min-width: 320px;
-  max-width: 340px;
-  height: 100%;
-}
-
-module[data-module="user-rail"] .member-sidebar {
-  flex: 1;
-  display: flex;
-  padding: 0;
+  --avi-width: 40px;
+  --avi-height: 40px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  --indicator-gap: 8px;
+  --indicator-width: 4px;
+  --indicator-hover-h: 24px;
+  --indicator-active-h: 32px;
+  --dot-size: 8px;
 }
 
-module[data-module="user-rail"] .member-card {
-  --accent: #5865f2;
+module[data-module="user-rail"] .user-rail {
   display: flex;
   flex-direction: column;
   width: 100%;
-  min-height: 100%;
-  background: var(--bg-elevated);
-  border-left: 1px solid rgba(255, 255, 255, 0.02);
 }
 
-module[data-module="user-rail"] .member-card.is-empty {
-  background: var(--bg-elevated);
-}
-
-module[data-module="user-rail"] .member-card.is-empty .member-card__body {
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  gap: 12px;
-  color: var(--text-muted);
-}
-
-module[data-module="user-rail"] .member-card.is-empty .member-card__identity::after {
-  display: none;
-}
-
-module[data-module="user-rail"] .member-card__hero {
-  position: relative;
-  height: 172px;
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 90%, rgba(0, 0, 0, 0.35) 10%), rgba(0, 0, 0, 0.55));
-}
-
-module[data-module="user-rail"] .member-card__banner {
-  position: absolute;
-  inset: 0;
-  background: var(--banner-image, linear-gradient(135deg, rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.75)));
-  background-size: cover;
-  background-position: center;
-  filter: saturate(1.1);
-}
-
-module[data-module="user-rail"] .member-card__avatar {
-  position: absolute;
-  left: 32px;
-  bottom: -42px;
-  --frame-opacity: 1;
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-}
-
-module[data-module="user-rail"] .member-card__body {
-  padding: 64px 28px 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  background: var(--bg-elevated);
-}
-
-module[data-module="user-rail"] .member-card__identity {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-module[data-module="user-rail"] .member-card__identity::after {
-  content: '';
-  display: block;
-  height: 1px;
-  margin-top: 16px;
-  background: rgba(255, 255, 255, 0.06);
-}
-
-module[data-module="user-rail"] .member-card__name-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-module[data-module="user-rail"] .member-card__name {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin: 0;
-  color: var(--text-primary);
-}
-
-module[data-module="user-rail"] .member-card__tag {
-  color: var(--text-muted);
-  font-size: 0.85rem;
-}
-
-module[data-module="user-rail"] .member-card__presence {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-module[data-module="user-rail"] .member-card__presence .status-indicator {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
-  background: #6a7480;
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55);
-}
-
-module[data-module="user-rail"] .member-card__presence.status--online .status-indicator {
-  background: #3ba55d;
-}
-
-module[data-module="user-rail"] .member-card__presence.status--idle .status-indicator {
-  background: #f0b232;
-}
-
-module[data-module="user-rail"] .member-card__presence.status--dnd .status-indicator {
-  background: #ed4245;
-}
-
-module[data-module="user-rail"] .member-card__presence.status--streaming .status-indicator {
-  background: #593695;
-}
-
-module[data-module="user-rail"] .member-card__bio {
-  margin: 0;
-  font-size: 0.95rem;
-  color: var(--text-muted);
-  line-height: 1.5;
-}
-
-module[data-module="user-rail"] .member-card__stats {
-  display: grid;
-  gap: 12px;
-  padding: 16px;
-  background: rgba(0, 0, 0, 0.35);
-  border-radius: 14px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
-}
-
-module[data-module="user-rail"] .member-card__stat {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 12px;
-  padding: 10px 12px;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-}
-
-module[data-module="user-rail"] .member-card__stat .label {
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  font-size: 0.7rem;
-}
-
-module[data-module="user-rail"] .member-card__stat .value {
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-module[data-module="user-rail"] .member-card__stat .value--icons {
-  display: flex;
-  gap: 8px;
-}
-
-module[data-module="user-rail"] .member-card__stat .value--icons img {
-  width: 20px;
-  height: 20px;
-  border-radius: 6px;
-}
-
-module[data-module="user-rail"] .member-card__section {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-module[data-module="user-rail"] .member-card__section:first-of-type {
-  padding-top: 0;
-  border-top: none;
-}
-
-module[data-module="user-rail"] .member-card__section h3 {
-  margin: 0;
-  font-size: 0.75rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--text-muted);
-}
-
-module[data-module="user-rail"] .member-card__mutuals {
+module[data-module="user-rail"] .user-rail-list {
   list-style: none;
-  padding: 0;
   margin: 0;
+  padding: 0 0 0 12px;
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
+  gap: 12px;
 }
 
-module[data-module="user-rail"] .member-card__mutual { 
-  padding: 6px 10px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.07);
-  font-size: 0.8rem;
-  color: var(--text-primary);
-}
-
-module[data-module="user-rail"] .member-card__badges {
+module[data-module="user-rail"] .user-rail-item {
+  width: calc(var(--avi-width) + 12px);
+  height: calc(var(--avi-height) + 12px);
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-module[data-module="user-rail"] .member-card__badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 12px;
-  background: rgba(0, 0, 0, 0.35);
-  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
-}
-
-module[data-module="user-rail"] .member-card__badge img {
-  width: 24px;
-  height: 24px;
-}
-
-module[data-module="user-rail"] .member-card__footer {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
-}
-
-module[data-module="user-rail"] .member-card__primary,
-module[data-module="user-rail"] .member-card__secondary {
-  flex: 1;
-  border: none;
-  border-radius: 12px;
-  padding: 10px 14px;
-  font-size: 0.9rem;
+  position: relative;
+  overflow: visible;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
 }
 
-module[data-module="user-rail"] .member-card__primary {
-  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 70%, #ffffff 10%), color-mix(in srgb, var(--accent) 50%, #000000 20%));
-  color: #fff;
+module[data-module="user-rail"] .user-rail-item .avatar-wrap {
+  --frame-opacity: 0;
 }
 
-module[data-module="user-rail"] .member-card__primary:hover,
-module[data-module="user-rail"] .member-card__primary:focus-visible {
-  outline: none;
-  transform: translateY(-1px);
-  filter: brightness(1.05);
+module[data-module="user-rail"] .user-rail-item .avatar-wrap::after {
+  transition: opacity 0.16s ease;
 }
 
-module[data-module="user-rail"] .member-card__secondary {
-  background: rgba(255, 255, 255, 0.08);
-  color: var(--text-primary);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+module[data-module="user-rail"] .user-rail-item:hover .avatar-wrap,
+module[data-module="user-rail"] .user-rail-item.active .avatar-wrap {
+  --frame-opacity: 1;
 }
 
-module[data-module="user-rail"] .member-card__secondary:hover,
-module[data-module="user-rail"] .member-card__secondary:focus-visible {
-  outline: none;
-  background: rgba(255, 255, 255, 0.16);
+module[data-module="user-rail"] .user-rail-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+  top: 50%;
+  width: var(--indicator-width);
+  height: 0;
+  background: var(--accent, #ff72b6);
+  border-radius: 0 10px 10px 0;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: height 0.16s ease, opacity 0.16s ease;
 }
 
-module[data-module="user-rail"] button:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-  transform: none !important;
+module[data-module="user-rail"] .user-rail-item:hover::before {
+  height: var(--indicator-hover-h);
+  opacity: 1;
 }
 
-module[data-module="user-rail"]::-webkit-scrollbar {
-  width: 8px;
+module[data-module="user-rail"] .user-rail-item.active::before {
+  height: var(--indicator-active-h);
+  opacity: 1;
 }
 
-module[data-module="user-rail"]::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.08);
-  border-radius: 4px;
+module[data-module="user-rail"] .user-rail-item.has-notification::before {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  left: calc(-1 * (var(--indicator-gap) + var(--dot-size)));
+  border-radius: 50%;
+  opacity: 1;
+  transition: width 0.16s ease, height 0.16s ease, left 0.16s ease, border-radius 0.16s ease, opacity 0.16s ease;
 }
 
-@media (max-width: 1360px) {
-  module[data-module="user-rail"] {
-    min-width: 280px;
-  }
+module[data-module="user-rail"] .user-rail-item.has-notification:hover::before,
+module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+  width: var(--indicator-width);
+  height: var(--indicator-hover-h);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+  border-radius: 0 10px 10px 0;
+}
+
+module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+  height: var(--indicator-active-h);
 }

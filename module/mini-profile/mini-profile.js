@@ -15,37 +15,36 @@ export default async function init({ hub, root, utils }) {
   };
   root.innerHTML = `
     <div class="mini-profile hidden" role="dialog" aria-modal="false" aria-hidden="true">
-      <div class="mp-surface">
-        <aside class="mp-sidebar">
-          <div class="mp-avatar"><img alt="" /></div>
-          <h2 class="mp-name"></h2>
-          <p class="mp-tagline"></p>
-          <div class="mp-badges"></div>
-          <div class="mp-actions"></div>
-        </aside>
-        <div class="mp-body">
-          <div class="mp-section mp-about-section">
-            <h3>About Me</h3>
-            <p class="mp-about"></p>
-          </div>
-          <div class="mp-section mp-member">
-            <h3>Member Since</h3>
-            <p class="mp-member-date"></p>
-          </div>
-          <div class="mp-section mp-connections">
-            <h3>Connections</h3>
-            <div class="mp-conn-list"></div>
-          </div>
-          <div class="mp-section mp-activity">
-            <h3>Activity</h3>
-            <ul class="mp-activity-list"></ul>
-          </div>
+      <div class="mp-banner"></div>
+      <div class="mp-accent"></div>
+      <div class="mp-body">
+        <div class="mp-avatar"><img alt="" /></div>
+        <h2 class="mp-name"></h2>
+        <p class="mp-tagline"></p>
+        <div class="mp-badges"></div>
+        <div class="mp-actions"></div>
+        <div class="mp-section mp-about-section">
+          <h3>About Me</h3>
+          <p class="mp-about"></p>
+        </div>
+        <div class="mp-section mp-member">
+          <h3>Member Since</h3>
+          <p class="mp-member-date"></p>
+        </div>
+        <div class="mp-section mp-connections">
+          <h3>Connections</h3>
+          <div class="mp-conn-list"></div>
+        </div>
+        <div class="mp-section mp-activity">
+          <h3>Activity</h3>
+          <ul class="mp-activity-list"></ul>
         </div>
       </div>
     </div>
   `;
 
   const card = root.querySelector('.mini-profile');
+  const banner = card.querySelector('.mp-banner');
   const avatarImg = card.querySelector('.mp-avatar img');
   const nameEl = card.querySelector('.mp-name');
   const tagEl = card.querySelector('.mp-tagline');
@@ -135,39 +134,10 @@ export default async function init({ hub, root, utils }) {
     return cards;
   }
 
-  function mixColor(hex, percent) {
-    const match = typeof hex === 'string' && hex.trim().match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
-    if (!match) {
-      return hex;
-    }
-
-    let value = match[1];
-    if (value.length === 3) {
-      value = value
-        .split('')
-        .map((c) => c + c)
-        .join('');
-    }
-
-    const num = parseInt(value, 16);
-    const r = (num >> 16) & 255;
-    const g = (num >> 8) & 255;
-    const b = num & 255;
-    const target = percent < 0 ? 0 : 255;
-    const ratio = Math.min(1, Math.max(0, Math.abs(percent)));
-    const mix = (channel) => Math.round((target - channel) * ratio + channel);
-    return `rgb(${mix(r)}, ${mix(g)}, ${mix(b)})`;
-  }
-
   function fill(user = {}) {
-    const accent = user.accent || '#5865f2';
-    const accentLight = mixColor(accent, 0.35) || accent;
-    const accentDark = mixColor(accent, -0.35) || accent;
-
-    card.style.setProperty('--accent', accent);
-    card.style.setProperty('--accent-light', accentLight);
-    card.style.setProperty('--accent-dark', accentDark);
+    card.style.setProperty('--accent', user.accent || '#5865f2');
     card.style.setProperty('--frame', user.frame ? `url('${user.frame}')` : 'none');
+    banner.style.backgroundImage = user.banner ? `url("${user.banner}")` : 'none';
     avatarImg.src = user.avatar || '';
     avatarImg.alt = user.name || '';
     nameEl.textContent = user.name || '';
