@@ -1,12 +1,5 @@
 import { getUserByToken } from '../users.js';
 
-const SERVER_GROUPS = [
-  { id: 'discover', name: 'Discover NOIZ', badge: 'images/home-icon.svg', accent: '#5865f2' },
-  { id: 'events', name: 'Events', badge: 'images/ui/category.png', accent: '#f471ff' },
-  { id: 'creator-hub', name: 'Creator Hub', badge: 'images/ui/channel_mod.png', accent: '#ffb347' },
-  { id: 'raids', name: 'Raid Party', badge: 'images/ui/members.png', accent: '#72ffb6' }
-];
-
 const FALLBACK_DM_TOKENS = [
   'marina-valentine',
   'neko-bebop',
@@ -86,21 +79,35 @@ export default async function init({ hub, root, utils }) {
 
     root.innerHTML = `
       <div class="nav-shell">
-        <aside class="nav-server-rail" aria-label="Server navigation">
+        <aside class="nav-server-rail" aria-label="Pinned conversations">
           <button class="server-pill server-pill--home" type="button" aria-label="NOIZ Home">
             <img src="images/logo_badge.svg" alt="" />
           </button>
           <div class="server-divider"></div>
-          <ul class="server-list">
-            ${SERVER_GROUPS.map((group) => `
+          <ul class="server-list" data-role="dm-rail">
+            ${dmUsers.map((user) => `
               <li>
-                <button class="server-pill" type="button" data-server="${group.id}" aria-label="${group.name}" style="--server-accent:${group.accent}">
-                  ${group.badge ? `<img src="${group.badge}" alt="" />` : `<span>${group.name.charAt(0)}</span>`}
+                <button
+                  class="server-pill server-pill--dm${user.token === activeToken ? ' active' : ''}"
+                  type="button"
+                  data-dm-token="${user.token}"
+                  aria-label="${user.name}"
+                  ${profileAttrs(user)}
+                >
+                  <span class="server-pill__avatar avatar-wrap"
+                    style="--avi-width:40px; --avi-height:40px;${user.frame ? ` --frame:url('${user.frame}')` : ''} --accent:${user.accent || '#5865f2'};"
+                  >
+                    <img class="avatar-image" src="${user.avatar}" alt="${user.name}" />
+                  </span>
+                  <span class="server-pill__status ${presenceClass(user)}" aria-hidden="true">
+                    <span class="status-indicator"></span>
+                  </span>
                 </button>
               </li>
             `).join('')}
+            ${dmUsers.length === 0 ? '<li class="server-empty">No direct messages</li>' : ''}
           </ul>
-          <button class="server-pill server-pill--add" type="button" aria-label="Add server">
+          <button class="server-pill server-pill--add" type="button" aria-label="Create DM">
             <span>+</span>
           </button>
         </aside>
@@ -160,6 +167,9 @@ export default async function init({ hub, root, utils }) {
     if (!token || !dmMap.has(token)) return;
     activeToken = token;
     root.querySelectorAll('[data-dm-token]').forEach((btn) => {
+      btn.classList.toggle('active', btn.getAttribute('data-dm-token') === activeToken);
+    });
+    root.querySelectorAll('.server-pill--dm').forEach((btn) => {
       btn.classList.toggle('active', btn.getAttribute('data-dm-token') === activeToken);
     });
     const activeUser = dmMap.get(activeToken);

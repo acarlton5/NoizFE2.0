@@ -4,14 +4,14 @@ module[data-module="user-rail"] {
   background: var(--bg-elevated);
   border-left: 1px solid rgba(255, 255, 255, 0.05);
   min-width: 320px;
-  max-width: 360px;
+  max-width: 340px;
   height: 100%;
 }
 
 module[data-module="user-rail"] .member-sidebar {
   flex: 1;
   display: flex;
-  padding: 24px 24px 32px;
+  padding: 0;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
 }
@@ -20,23 +20,32 @@ module[data-module="user-rail"] .member-card {
   --accent: #5865f2;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, rgba(34, 35, 45, 0.95), rgba(26, 27, 36, 0.9));
-  border-radius: 18px;
   width: 100%;
-  box-shadow: var(--shadow-elevated);
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  min-height: 100%;
+  background: var(--bg-elevated);
+  border-left: 1px solid rgba(255, 255, 255, 0.02);
 }
 
 module[data-module="user-rail"] .member-card.is-empty {
-  background: linear-gradient(180deg, rgba(30, 31, 34, 0.9), rgba(24, 25, 28, 0.92));
-  box-shadow: none;
+  background: var(--bg-elevated);
+}
+
+module[data-module="user-rail"] .member-card.is-empty .member-card__body {
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  color: var(--text-muted);
+}
+
+module[data-module="user-rail"] .member-card.is-empty .member-card__identity::after {
+  display: none;
 }
 
 module[data-module="user-rail"] .member-card__hero {
   position: relative;
-  height: 140px;
-  background: radial-gradient(circle at top right, color-mix(in srgb, var(--accent) 70%, transparent) 0%, transparent 65%);
+  height: 172px;
+  background: linear-gradient(135deg, color-mix(in srgb, var(--accent) 90%, rgba(0, 0, 0, 0.35) 10%), rgba(0, 0, 0, 0.55));
 }
 
 module[data-module="user-rail"] .member-card__banner {
@@ -50,23 +59,32 @@ module[data-module="user-rail"] .member-card__banner {
 
 module[data-module="user-rail"] .member-card__avatar {
   position: absolute;
-  left: 24px;
-  bottom: -36px;
+  left: 32px;
+  bottom: -42px;
   --frame-opacity: 1;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
 }
 
 module[data-module="user-rail"] .member-card__body {
-  padding: 56px 24px 24px;
+  padding: 64px 28px 28px;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
+  background: var(--bg-elevated);
 }
 
 module[data-module="user-rail"] .member-card__identity {
   display: flex;
   flex-direction: column;
   gap: 10px;
+}
+
+module[data-module="user-rail"] .member-card__identity::after {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-top: 16px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 module[data-module="user-rail"] .member-card__name-group {
@@ -129,15 +147,19 @@ module[data-module="user-rail"] .member-card__bio {
 module[data-module="user-rail"] .member-card__stats {
   display: grid;
   gap: 12px;
+  padding: 16px;
+  background: rgba(0, 0, 0, 0.35);
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
 }
 
 module[data-module="user-rail"] .member-card__stat {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(255, 255, 255, 0.04);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 12px;
-  padding: 10px 14px;
+  padding: 10px 12px;
   font-size: 0.85rem;
   color: var(--text-muted);
 }
@@ -168,6 +190,13 @@ module[data-module="user-rail"] .member-card__section {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+module[data-module="user-rail"] .member-card__section:first-of-type {
+  padding-top: 0;
+  border-top: none;
 }
 
 module[data-module="user-rail"] .member-card__section h3 {
@@ -187,7 +216,7 @@ module[data-module="user-rail"] .member-card__mutuals {
   gap: 8px;
 }
 
-module[data-module="user-rail"] .member-card__mutual {
+module[data-module="user-rail"] .member-card__mutual { 
   padding: 6px 10px;
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.07);
@@ -222,13 +251,15 @@ module[data-module="user-rail"] .member-card__footer {
   display: flex;
   gap: 12px;
   margin-top: auto;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 module[data-module="user-rail"] .member-card__primary,
 module[data-module="user-rail"] .member-card__secondary {
   flex: 1;
   border: none;
-  border-radius: 10px;
+  border-radius: 12px;
   padding: 10px 14px;
   font-size: 0.9rem;
   cursor: pointer;
