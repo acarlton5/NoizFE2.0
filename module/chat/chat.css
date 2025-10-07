@@ -1,464 +1,365 @@
 module[data-module="chat"] {
-  position: fixed;
-  top: 80px;
-  right: 72px;
-  width: 360px;
-  height: calc(100vh - 80px);
-  background: #fff;
-  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+  display: block;
+  height: 100%;
+  background: #11111d;
+}
+
+.conversation {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  font-size: 14px;
-  z-index: 1030;
+  background:
+    linear-gradient(180deg, rgba(23, 26, 48, 0.9) 0%, rgba(15, 16, 28, 0.94) 100%),
+    radial-gradient(circle at top right, rgba(104, 74, 255, 0.25), transparent 60%),
+    #16172a;
+  color: #f5f7ff;
 }
 
-module[data-module="chat"] .chat-header {
-  padding: 8px 12px;
-}
-
-module[data-module="chat"] .chat-dono-scroller {
-  border-top: 1px solid #ddd;
-  border-bottom: 1px solid #ddd;
-  padding: 4px 12px;
+.conversation__channel {
+  padding: 18px 28px 14px;
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-  overflow-y: hidden;
-  scrollbar-width: none;
-  height: 48px;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(12, 14, 28, 0.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.conversation__channel-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.conversation__channel-title {
+  display: flex;
   align-items: center;
+  gap: 10px;
 }
 
-module[data-module="chat"] .chat-dono-scroller::-webkit-scrollbar {
-  display: none;
-}
-
-module[data-module="chat"] .chat-header .title {
+.conversation__channel-badge {
+  padding: 6px 14px;
+  border-radius: 999px;
+  background:
+    linear-gradient(120deg, rgba(122, 93, 255, 0.28), rgba(255, 114, 209, 0.24));
+  border: 1px solid rgba(255, 255, 255, 0.18);
   font-weight: 600;
+  letter-spacing: 0.12em;
+  font-size: 0.78rem;
+  text-transform: uppercase;
 }
 
-module[data-module="chat"] .chat-header .meta {
-  font-size: 12px;
-  color: #666;
+.conversation__channel-favorite {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.05);
+  color: rgba(255, 212, 107, 0.9);
+  display: grid;
+  place-items: center;
 }
 
-module[data-module="chat"] .chat-body {
+.conversation__topic {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(193, 200, 240, 0.74);
+}
+
+.conversation__channel-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.conversation__channel-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(28, 30, 52, 0.6);
+  color: rgba(215, 220, 248, 0.85);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.conversation__channel-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(26, 27, 48, 0.75);
+  display: grid;
+  place-items: center;
+  color: rgba(215, 220, 248, 0.7);
+}
+
+.conversation__scroll {
   flex: 1;
   overflow-y: auto;
-  padding: 8px;
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
-module[data-module="chat"] .chat-message {
+.conversation__divider {
   display: flex;
-  gap: 8px;
-  margin-bottom: 4px;
+  justify-content: center;
+  position: relative;
+}
+
+.conversation__divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.conversation__divider span {
+  position: relative;
+  padding: 4px 16px;
+  border-radius: 999px;
+  background: rgba(20, 22, 40, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(188, 196, 233, 0.7);
+}
+
+.conversation__feed {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.conversation__message {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 14px;
   align-items: flex-start;
 }
 
-module[data-module="chat"] .msg-avatar {
-  --avi-width: 24px;
-  --avi-height: 24px;
-  --frame-opacity: 0;
-  --frame: url('https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/astronaut_helmet.png');
-  flex-shrink: 0;
+.conversation__avatar .avatar-wrap {
+  --frame-opacity: 0.7;
 }
 
-module[data-module="chat"] .msg-avatar::after {
-  transition: opacity 0.16s ease;
-}
-
-module[data-module="chat"] .chat-message:hover .msg-avatar,
-module[data-module="chat"] .msg-avatar:hover {
-  --frame-opacity: 1;
-}
-
-module[data-module="chat"] .msg-avatar .avatar-letter {
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 600;
-}
-
-module[data-module="chat"] .msg-body {
-  flex: 1;
-}
-
-module[data-module="chat"] .msg-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-module[data-module="chat"] .user-meta {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-module[data-module="chat"] .chat-message .time {
-  color: #888;
-  font-size: 12px;
-}
-
-module[data-module="chat"] .chat-message .name {
-  font-weight: 600;
-}
-
-module[data-module="chat"] .badges {
-  display: inline-flex;
-  gap: 2px;
-  margin-left: 2px;
-}
-
-module[data-module="chat"] .badges img {
-  width: 16px;
-  height: 16px;
-}
-
-module[data-module="chat"] .chat-message.sticker {
-  background: #f8f8f8;
-  border-radius: 6px;
-  padding: 4px;
-}
-
-module[data-module="chat"] .chat-message.sticker .sticker-meta {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
-  margin-top: 2px;
-}
-
-module[data-module="chat"] .chat-message.sticker .sticker-badge {
-  width: 16px;
-  height: 16px;
-}
-
-module[data-module="chat"] .chat-message.sticker .sticker {
-  max-width: 80px;
-  margin-top: 4px;
-}
-
-module[data-module="chat"] .chat-form {
-  padding: 8px;
-  border-top: 1px solid #ddd;
-  position: relative;
-}
-
-module[data-module="chat"] .chat-input-group {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-}
-
-module[data-module="chat"] .chat-input-top {
-  display: flex;
-  align-items: center;
-  padding: 8px;
-  border-bottom: 1px solid #ddd;
-}
-
-module[data-module="chat"] .chat-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #933;
-  color: #fff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 600;
-  margin-right: 8px;
-}
-
-module[data-module="chat"] .chat-input-wrapper {
-  flex: 1;
-}
-
-module[data-module="chat"] .chat-user {
-  font-weight: 600;
-  font-size: 12px;
-}
-
-module[data-module="chat"] .chat-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  padding: 0;
-}
-
-module[data-module="chat"] .chat-input-bottom {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 4px 8px;
-}
-
-module[data-module="chat"] .chat-actions {
-  display: flex;
-  align-items: center;
-}
-
-module[data-module="chat"] .chat-tools {
-  display: flex;
-  gap: 4px;
-  margin-right: 8px;
-}
-
-module[data-module="chat"] .chat-tools button,
-module[data-module="chat"] .chat-actions button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-
-module[data-module="chat"] .chat-actions button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-module[data-module="chat"] .chat-tools button {
-  font-size: 18px;
-}
-
-module[data-module="chat"] .chat-count {
-  font-size: 12px;
-  color: #666;
-  margin-right: 8px;
-}
-
-module[data-module="chat"] .chat-send-icon {
-  width: 20px;
-  height: 20px;
-  fill: #06c;
-}
-
-module[data-module="chat"] .chat-hide {
-  border-top: 1px solid #ddd;
-  width: 100%;
-  text-align: center;
-  color: #06c;
-  padding: 6px;
-  background: #fff;
-}
-
-module[data-module="chat"] .chat-donation {
-  background: #e9ffe5;
-  border-radius: 6px;
-  padding: 8px;
-  margin: 4px 0;
-}
-
-module[data-module="chat"] .donation-header {
-  display: flex;
-  justify-content: space-between;
-  font-weight: 600;
-}
-
-module[data-module="chat"] .dono-pill {
-  position: relative;
-  flex: 0 0 auto;
-  display: inline-flex;
-  align-items: center;
-  background: var(--accent, #1a2232);
-  color: #fff;
-  border-radius: 9999px;
-  padding: 0.25rem 0.5rem 0.25rem 0.25rem;
-  font-family: "Rajdhani", sans-serif;
-  font-weight: 600;
-  overflow: hidden;
-}
-
-module[data-module="chat"] .dono-pill .dono-timer {
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  width: 100%;
-  background-color: rgba(255, 255, 255, 0.2);
-  transition: width linear;
-  z-index: 0;
-}
-
-module[data-module="chat"] .dono-pill .avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-  background: #fff;
-  color: #1a2232;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-right: 0.25rem;
-  font-weight: 600;
-  flex-shrink: 0;
-  z-index: 1;
-}
-
-module[data-module="chat"] .dono-pill .amount {
-  position: relative;
-  z-index: 1;
-}
-
-module[data-module="chat"] .chat-drawer {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 100%;
-  background: #fff;
-  border-top: 1px solid #ddd;
-  transform: translateY(100%);
-  transition: transform 0.2s ease, opacity 0.2s ease;
+.conversation__bubble {
+  background: rgba(18, 19, 34, 0.78);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 16px;
+  padding: 12px 18px;
+  box-shadow: 0 14px 32px rgba(10, 8, 32, 0.35);
   display: flex;
   flex-direction: column;
-  max-height: 200px;
-  overflow-y: auto;
-  z-index: 10;
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+  gap: 10px;
 }
 
-module[data-module="chat"] .chat-drawer.open {
-  transform: translateY(0);
-  opacity: 1;
-  visibility: visible;
-  pointer-events: auto;
-}
-
-module[data-module="chat"] .emote-set {
-  padding: 8px;
-}
-
-module[data-module="chat"] .emote-set-header {
+.conversation__header {
   display: flex;
-  align-items: center;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.conversation__author {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.conversation__role {
+  font-size: 0.7rem;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(205, 212, 247, 0.8);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.conversation__timestamp {
+  font-size: 0.75rem;
+  color: rgba(164, 172, 210, 0.6);
+}
+
+.conversation__body {
+  display: flex;
+  flex-direction: column;
   gap: 8px;
-  margin-bottom: 8px;
+  font-size: 0.92rem;
+  color: rgba(232, 236, 255, 0.92);
 }
 
-module[data-module="chat"] .emote-set-header .streamer-avatar {
-  width: 24px;
-  height: 24px;
-  border-radius: 50%;
-}
-
-module[data-module="chat"] .emote-set-header .streamer-name {
-  font-weight: 600;
-}
-
-module[data-module="chat"] .emote-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
-  gap: 4px;
-}
-
-module[data-module="chat"] .emote-list .emote {
-  padding: 0;
-  border: none;
-  background: none;
-  cursor: pointer;
-}
-
-module[data-module="chat"] .emote-list .emote img {
-  width: 32px;
-  height: 32px;
-}
-
-module[data-module="chat"] .resonance-grid {
-  padding: 8px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  gap: 8px;
-}
-
-module[data-module="chat"] .resonance-item {
-  border: none;
-  background: #f8f8f8;
-  border-radius: 6px;
-  padding: 4px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  cursor: pointer;
-}
-
-module[data-module="chat"] .resonance-item .resonance-sticker {
-  width: 56px;
-  height: 56px;
-  object-fit: contain;
-}
-
-module[data-module="chat"] .resonance-cost {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-weight: 600;
-  margin-top: 4px;
-}
-
-module[data-module="chat"] .resonance-cost .resonance-badge {
-  width: 16px;
-  height: 16px;
-}
-
-module[data-module="chat"] .resonance-drawer .resonance-icon {
-  width: 20px;
-  height: 20px;
-}
-
-module[data-module="chat"] .resonance-use-content {
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-}
-
-module[data-module="chat"] .resonance-use-sticker {
-  max-width: 120px;
-  max-height: 120px;
-}
-
-module[data-module="chat"] .resonance-use-effects {
-  list-style: none;
-  padding: 0;
+.conversation__body p {
   margin: 0;
+  line-height: 1.6;
+}
+
+.conversation__mention {
+  color: #8f9dff;
+  background: rgba(104, 94, 255, 0.12);
+  padding: 0 6px;
+  border-radius: 6px;
+}
+
+.conversation__attachments {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-  font-size: 12px;
+  flex-direction: column;
+  gap: 10px;
 }
 
-module[data-module="chat"] .resonance-use-effects li {
-  background: #f0f0f0;
-  padding: 2px 6px;
-  border-radius: 4px;
+.conversation__attachment {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(26, 28, 48, 0.7);
 }
 
-module[data-module="chat"] .resonance-use-actions {
+.conversation__attachment-icon {
+  font-size: 1.25rem;
+}
+
+.conversation__attachment-name {
+  font-weight: 600;
+}
+
+.conversation__attachment-info {
+  display: block;
+  font-size: 0.78rem;
+  color: rgba(172, 180, 217, 0.7);
+}
+
+.conversation__attachment-action {
+  margin-left: auto;
+  padding: 6px 12px;
+  border-radius: 8px;
+  border: 1px solid rgba(124, 93, 255, 0.55);
+  background: rgba(124, 93, 255, 0.2);
+  color: rgba(215, 220, 255, 0.9);
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.conversation__reactions {
   display: flex;
   gap: 8px;
+}
+
+.conversation__reaction {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 23, 40, 0.65);
+  color: rgba(232, 235, 255, 0.9);
+  font-size: 0.8rem;
+}
+
+.conversation__composer {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: end;
+  gap: 12px;
+  padding: 16px 24px 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(12, 14, 26, 0.78);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.conversation__composer-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.conversation__composer-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(24, 25, 44, 0.8);
+  color: rgba(220, 226, 255, 0.78);
+  display: grid;
+  place-items: center;
+}
+
+.conversation__composer-field {
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(18, 19, 36, 0.85);
+  padding: 10px 14px;
+}
+
+.conversation__composer textarea {
   width: 100%;
-}
-
-module[data-module="chat"] .resonance-use-actions button {
-  flex: 1;
-  padding: 4px 8px;
+  background: transparent;
   border: none;
-  border-radius: 4px;
-  cursor: pointer;
+  resize: none;
+  outline: none;
+  color: rgba(232, 236, 255, 0.92);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
-module[data-module="chat"] .resonance-use-actions .resonance-use-btn {
-  background: #06c;
-  color: #fff;
+.conversation__composer textarea::placeholder {
+  color: rgba(170, 180, 225, 0.5);
+}
+
+.conversation__composer-send {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  border: 1px solid rgba(124, 93, 255, 0.6);
+  background: linear-gradient(160deg, rgba(124, 93, 255, 0.42), rgba(255, 114, 209, 0.32));
+  color: rgba(240, 244, 255, 0.9);
+  display: grid;
+  place-items: center;
+}
+
+@media (max-width: 1100px) {
+  .conversation__channel {
+    padding: 16px 18px 12px;
+    flex-direction: column;
+  }
+
+  .conversation__channel-actions {
+    align-self: stretch;
+    justify-content: space-between;
+  }
+
+  .conversation__scroll {
+    padding: 20px 18px;
+  }
+}
+
+@media (max-width: 720px) {
+  .conversation__composer {
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+  }
+
+  .conversation__composer-actions {
+    order: 2;
+  }
+
+  .conversation__composer-send {
+    justify-self: end;
+  }
 }

@@ -12,6 +12,7 @@
 ------------------*/
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,900&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Rajdhani:400,500,600,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 *,
 *::before,
 *::after {
@@ -15552,3 +15553,57 @@ figure > img {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+body {
+  font-family: "Inter", "gg sans", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  background: #151622;
+  color: #f7f8ff;
+  min-height: 100vh;
+}
+
+.app-workspace {
+  position: relative;
+  display: grid;
+  grid-template-columns: 80px 280px minmax(0, 1fr) 320px;
+  grid-template-rows: minmax(0, calc(100vh - var(--title-bar-height, 0px)));
+  margin-top: calc(var(--title-bar-height, 0px));
+  height: calc(100vh - var(--title-bar-height, 0px));
+  background: radial-gradient(circle at top left, rgba(104, 74, 255, 0.18), transparent 38%), #1a1b2b;
+  overflow: hidden;
+}
+
+.app-workspace > module,
+.app-workspace > main {
+  min-width: 0;
+}
+
+.app-workspace__main {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1400px) {
+  .app-workspace {
+    grid-template-columns: 76px 260px minmax(0, 1fr) 300px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-workspace {
+    grid-template-columns: 72px 240px minmax(0, 1fr);
+  }
+
+  .app-workspace__members {
+    display: none !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .app-workspace {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .app-workspace__channels {
+    display: none !important;
+  }
+}

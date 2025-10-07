@@ -1,215 +1,158 @@
-.navigation-small {
-  position: fixed;
-  top: 80px;
-  left: 0;
-  height: calc(100vh - 80px);
-  width: 80px;
-  padding-top: 20px;
-  background-color: #ffffff;
+module[data-module="navigation"] {
+  display: block;
+  background: #151626;
+  border-right: 1px solid rgba(36, 40, 68, 0.85);
+}
+
+.server-rail {
+  height: calc(100vh - var(--title-bar-height, 0px));
   display: flex;
   flex-direction: column;
   align-items: center;
-  border-right: 1px solid #e5e7eb;
-  z-index: 1040;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-}
-.navigation-small.hidden {
-  display: none;
-}
-.navigation-avatar {
-  margin-bottom: 32px;
-  --avi-width: 48px;
-  --avi-height: 48px;
+  gap: 12px;
+  padding: 18px 0 16px;
+  background:
+    linear-gradient(180deg, rgba(74, 60, 140, 0.28) 0%, rgba(20, 21, 38, 0.8) 52%, rgba(16, 17, 28, 0.95) 100%),
+    #16172a;
 }
 
+.server-rail__item {
+  width: 52px;
+  height: 52px;
+  border-radius: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: rgba(22, 24, 44, 0.9);
+  display: grid;
+  place-items: center;
+  color: rgba(218, 224, 255, 0.85);
+  position: relative;
+  overflow: hidden;
+  transition: transform 160ms ease, border-color 160ms ease, box-shadow 160ms ease;
+}
 
-.navigation-small-menu {
+.server-rail__item:hover,
+.server-rail__item:focus-visible {
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 18px rgba(8, 6, 30, 0.4);
+}
+
+.server-rail__item--brand {
+  width: 56px;
+  height: 56px;
+  border-radius: 20px;
+  background:
+    linear-gradient(140deg, rgba(110, 76, 255, 0.95), rgba(255, 114, 209, 0.88));
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 12px 28px rgba(64, 34, 160, 0.45);
+  flex-direction: column;
+  gap: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.server-rail__brand-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.server-rail__brand-name {
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  color: rgba(22, 18, 42, 0.92);
+}
+
+.server-rail__divider {
+  width: 32px;
+  height: 2px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  margin: 8px 0;
+}
+
+.server-rail__divider--faded {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0));
+}
+
+.server-rail__list {
   list-style: none;
   margin: 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 10px;
   width: 100%;
   align-items: center;
 }
-.navigation-small-link {
+
+.server-rail__entry {
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  color: #8b97b7;
-  border-radius: 12px;
-  text-decoration: none;
-  transition: background-color 0.2s ease, color 0.2s ease;
 }
-.navigation-small-link:hover {
-  background-color: #f0f2f5;
-  color: #1f2937;
-}
-/* Tooltip rendered via JavaScript */
-.navigation-small-tooltip {
-  position: fixed;
+
+.server-rail__entry::before {
+  content: "";
+  position: absolute;
   left: 0;
-  top: 0;
-  transform: translateY(-50%) translateX(10px);
-  background-color: #1d2333;
-  color: #fff;
-  padding: 4px 8px;
-  border-radius: 12px;
-  font-size: 14px;
-  white-space: nowrap;
-  pointer-events: none;
+  top: 50%;
+  width: 4px;
+  height: 0;
+  border-radius: 0 8px 8px 0;
+  background: var(--accent, rgba(124, 93, 255, 0.95));
+  transform: translate(-14px, -50%);
   opacity: 0;
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  z-index: 1050;
+  transition: height 180ms ease, opacity 180ms ease;
 }
 
-.navigation-small-tooltip.visible {
+.server-rail__entry:hover::before {
+  height: 26px;
   opacity: 1;
-  transform: translateY(-50%) translateX(0);
 }
 
-.navigation-large {
-  position: fixed;
-  top: 80px;
-  left: 10px;
-  height: calc(100vh - 80px);
-  width: 265px;
-  background-color: #ffffff;
-  border-right: 1px solid #e5e7eb;
-  transform: translateX(-100%);
-  transition: transform 0.3s ease;
-  z-index: 1030;
-  overflow-y: auto;
+.server-rail__entry.is-active::before {
+  height: 38px;
+  opacity: 1;
 }
 
-.navigation-large.open {
-  transform: translateX(0);
+.server-rail__item--icon {
+  background: rgba(26, 28, 48, 0.8);
+  color: rgba(198, 204, 245, 0.7);
 }
 
-.navigation-large-profile {
-  position: relative;
-  padding: 80px 20px 20px;
-  text-align: center;
+.server-rail__item--icon svg {
+  width: 22px;
+  height: 22px;
 }
 
-.navigation-large-profile .profile-banner {
-  display: block;
-  width: calc(100% + 30px);
-  height: 80px;
-  margin: -80px -10px 0;
-}
-
-.navigation-large-profile .avatar-wrap {
-  margin: -45px auto 20px;
-  --avi-width: 90px;
-  --avi-height: 90px;
-}
-
-
-.navigation-large-profile .user-name {
-  font-family: "Rajdhani", sans-serif;
-  font-weight: 700;
-  font-size: 1.125rem;
-  margin-bottom: 0;
-}
-
-.navigation-large-profile .user-url {
-  font-size: 0.875rem;
-  color: #8b97b7;
-  margin-bottom: 20px;
-}
-
-.profile-stats {
+.server-rail__me {
+  margin-top: auto;
   display: flex;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 30px;
-  background-color: #1d2333;
-  border-radius: 12px;
-  overflow: hidden;
-}
-
-.profile-stat {
-  flex: 1;
-  padding: 8px 0;
-  text-align: center;
-}
-
-.profile-stat:not(:last-child) {
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.profile-stat .stat-value {
-  display: block;
-  font-family: "Rajdhani", sans-serif;
-  font-weight: 700;
-  font-size: 0.875rem;
-  color: #e5e7eb;
-}
-
-.profile-stat .stat-label {
-  display: block;
-  font-size: 0.75rem;
-  color: #8b97b7;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0 0;
+  width: 100%;
+  color: rgba(210, 214, 249, 0.9);
+  font-size: 0.7rem;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
 }
 
-.user-badges {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-  list-style: none;
-  padding: 0;
-  margin: 0 0 30px;
+.server-rail__me .avatar-wrap {
+  --avi-width: 44px;
+  --avi-height: 44px;
 }
 
-.user-badges .badge-icon {
-  width: 24px;
-  height: 24px;
+.server-rail__me-name {
   display: block;
-  fill: currentColor;
+  max-width: 70px;
+  text-align: center;
+  line-height: 1.2;
 }
 
-.navigation-large-menu {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 20px;
-}
-
-.navigation-large-link {
-  display: flex;
-  align-items: center;
-  padding: 12px 20px;
-  color: #1f2937;
-  text-decoration: none;
-  font-family: "Rajdhani", sans-serif;
-  font-weight: 500;
-  transition: background-color 0.2s ease;
-}
-
-.navigation-large-link .icon {
-  margin-right: 12px;
-  fill: currentColor;
-}
-
-.navigation-large-link:hover {
-  background-color: #f0f2f5;
-  color: #1f2937;
-}
-
-@media (max-width: 991.98px) {
-  .navigation-small,
-  .navigation-large {
+@media (max-width: 960px) {
+  module[data-module="navigation"] {
     display: none;
-  }
-  .navigation-large.mobile-open {
-    display: block;
-    left: 0;
-    transform: translateX(0);
   }
 }

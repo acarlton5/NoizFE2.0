@@ -15,6 +15,14 @@
     "header": false,
     "services": false
   },
+  "channel-sidebar": {
+    "name": "channel-sidebar",
+    "icon": "messages",
+    "status": "enabled",
+    "navigation": false,
+    "header": false,
+    "services": false
+  },
   "user-rail": {
     "name": "user-rail",
     "icon": "user-group",

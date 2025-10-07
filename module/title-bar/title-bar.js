@@ -1,7 +1,3 @@
-// module/title-bar/title-bar.js
-// Minimal top-level title bar that matches the supplied reference header.
-// Provides a compact brand lockup on the left and two utility icons on the right.
-
 const ACTIONS = [
   { id: 'notifications', icon: 'notification', label: 'Notifications' },
   { id: 'settings', icon: 'settings', label: 'Settings' }
@@ -11,9 +7,9 @@ export default function init({ root }) {
   root.innerHTML = `
     <header class="title-bar" role="banner">
       <div class="title-bar__brand">
-        <span class="title-bar__logo" aria-hidden="true">
-          <span class="title-bar__logo-glow"></span>
-          <span class="title-bar__logo-letter">N</span>
+        <span class="title-bar__badge" aria-hidden="true">
+          <span class="title-bar__badge-ring"></span>
+          <img src="images/logo_badge.svg" alt="NOIZ" class="title-bar__badge-icon">
         </span>
         <span class="title-bar__name" aria-label="NOIZ">NOIZ</span>
       </div>
