@@ -86,7 +86,7 @@ module[data-module="user-rail"] {
 
 .member-sidebar__person {
   display: grid;
-  grid-template-columns: auto auto 1fr auto;
+  grid-template-columns: auto 1fr auto auto;
   align-items: center;
   gap: 10px;
   padding: 6px 8px;
@@ -103,6 +103,7 @@ module[data-module="user-rail"] {
   height: 10px;
   border-radius: 50%;
   background: #3ba55d;
+  justify-self: end;
 }
 
 .member-sidebar__presence--dnd {

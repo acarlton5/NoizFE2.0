@@ -27,7 +27,6 @@ const renderMember = (user, meta = {}) => {
   if (!user) return '';
   return `
     <li class="member-sidebar__person" ${profileData(user)}>
-      <span class="member-sidebar__presence member-sidebar__presence--${meta.presence || 'online'}"></span>
       <div class="avatar-wrap member-sidebar__avatar" style="--avi-width:32px; --avi-height:32px; --frame:url('${user.frame}')">
         <img class="avatar-image" src="${user.avatar}" alt="${user.name}">
       </div>
@@ -38,6 +37,7 @@ const renderMember = (user, meta = {}) => {
       <button class="member-sidebar__message" type="button" aria-label="Message ${user.name}">
         <svg width="14" height="14" aria-hidden="true"><use href="#svg-messages"></use></svg>
       </button>
+      <span class="member-sidebar__presence member-sidebar__presence--${meta.presence || 'online'}"></span>
     </li>
   `;
 };

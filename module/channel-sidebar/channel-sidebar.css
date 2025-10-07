@@ -103,10 +103,24 @@ module[data-module="channel-sidebar"] {
   flex: 1;
   min-height: 0;
   overflow-y: auto;
-  padding-right: 4px;
+  padding: 0 4px 0 16px;
   display: flex;
   flex-direction: column;
   gap: 18px;
+  position: relative;
+}
+
+.channel-sidebar__scroll::before {
+  content: "";
+  position: absolute;
+  left: 4px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  opacity: 0.65;
+  pointer-events: none;
 }
 
 .channel-sidebar__section {
