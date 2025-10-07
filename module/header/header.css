@@ -78,12 +78,6 @@
   display: none;
 }
 
-[data-role="header"] .menu-main-item-link:hover,
-[data-role="header"] .menu-main-item-link:focus {
-  color: var(--text-primary);
-  background-color: var(--interactive-hover);
-}
-
 [data-role="header"] .search-bar {
   flex: 1;
   padding: 0 24px;
