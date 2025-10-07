@@ -85,26 +85,31 @@ export default async function init({ hub, root, utils }) {
           </button>
           <div class="server-divider"></div>
           <ul class="server-list" data-role="dm-rail">
-            ${dmUsers.map((user) => `
-              <li>
-                <button
-                  class="server-pill server-pill--dm${user.token === activeToken ? ' active' : ''}"
-                  type="button"
-                  data-dm-token="${user.token}"
-                  aria-label="${user.name}"
-                  ${profileAttrs(user)}
-                >
-                  <span class="server-pill__avatar avatar-wrap"
-                    style="--avi-width:40px; --avi-height:40px;${user.frame ? ` --frame:url('${user.frame}')` : ''} --accent:${user.accent || '#5865f2'};"
+            ${dmUsers.map((user) => {
+              const accent = user.accent || '#5865f2';
+              const frameVar = user.frame ? ` --frame:url('${user.frame}');` : '';
+              return `
+                <li>
+                  <button
+                    class="server-pill server-pill--dm${user.token === activeToken ? ' active' : ''}"
+                    type="button"
+                    data-dm-token="${user.token}"
+                    aria-label="${user.name}"
+                    style="--accent:${accent};"
+                    ${profileAttrs(user)}
                   >
-                    <img class="avatar-image" src="${user.avatar}" alt="${user.name}" />
-                  </span>
-                  <span class="server-pill__status ${presenceClass(user)}" aria-hidden="true">
-                    <span class="status-indicator"></span>
-                  </span>
-                </button>
-              </li>
-            `).join('')}
+                    <span class="server-pill__avatar avatar-wrap"
+                      style="--avi-width:40px; --avi-height:40px;${frameVar}"
+                    >
+                      <img class="avatar-image" src="${user.avatar}" alt="${user.name}" />
+                    </span>
+                    <span class="server-pill__status ${presenceClass(user)}" aria-hidden="true">
+                      <span class="status-indicator"></span>
+                    </span>
+                  </button>
+                </li>
+              `;
+            }).join('')}
             ${dmUsers.length === 0 ? '<li class="server-empty">No direct messages</li>' : ''}
           </ul>
           <button class="server-pill server-pill--add" type="button" aria-label="Create DM">
@@ -123,9 +128,16 @@ export default async function init({ hub, root, utils }) {
           <ul class="channel-list" data-role="dm-list">
             ${filteredUsers.map((user) => {
               const active = user.token === activeToken;
+              const accent = user.accent || '#5865f2';
               return `
                 <li>
-                  <button type="button" class="channel-item${active ? ' active' : ''}" data-dm-token="${user.token}" ${profileAttrs(user)}>
+                  <button
+                    type="button"
+                    class="channel-item${active ? ' active' : ''}"
+                    data-dm-token="${user.token}"
+                    style="--accent:${accent};"
+                    ${profileAttrs(user)}
+                  >
                     <span class="channel-avatar avatar-wrap" style="--avi-width:32px; --avi-height:32px; --frame:url('${user.frame || ''}');">
                       <img class="avatar-image" src="${user.avatar}" alt="${user.name}" />
                     </span>
