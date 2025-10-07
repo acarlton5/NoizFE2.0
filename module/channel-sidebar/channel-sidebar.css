@@ -1,0 +1,298 @@
+module[data-module="channel-sidebar"] {
+  display: block;
+  background: var(--color-bg-channel);
+  border-right: 1px solid #1f2026;
+}
+
+.channel-sidebar {
+  position: relative;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-bg-channel);
+  color: var(--color-text-primary);
+  padding: 16px 16px 12px 28px;
+  gap: 12px;
+}
+
+.channel-sidebar::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 8px;
+  background: linear-gradient(180deg, rgba(88, 101, 242, 0.85) 0%, rgba(88, 101, 242, 0.55) 100%);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--color-accent) 85%, transparent) 0%, color-mix(in srgb, var(--color-accent) 55%, transparent) 100%);
+  border-radius: 0 10px 10px 0;
+  pointer-events: none;
+}
+
+.channel-sidebar__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.channel-sidebar__space {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background: #3a3c43;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  font-size: 0.82rem;
+}
+
+.channel-sidebar__space svg {
+  width: 12px;
+  height: 12px;
+  fill: currentColor;
+}
+
+.channel-sidebar__header-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.channel-sidebar__icon-btn {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: none;
+  background: #232428;
+  color: var(--color-text-muted);
+  display: grid;
+  place-items: center;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+.channel-sidebar__icon-btn:hover,
+.channel-sidebar__icon-btn:focus-visible {
+  background: #2f3136;
+  color: var(--color-text-primary);
+}
+
+.channel-sidebar__status {
+  font-size: 0.72rem;
+  color: var(--color-text-tertiary);
+  padding: 0 2px;
+}
+
+.channel-sidebar__search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0 10px;
+  height: 32px;
+  border-radius: 6px;
+  background: #1e1f22;
+  border: 1px solid #1f2026;
+  color: var(--color-text-tertiary);
+}
+
+.channel-sidebar__search input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  color: var(--color-text-primary);
+  font-size: 0.8rem;
+}
+
+.channel-sidebar__search input::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.channel-sidebar__search-icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}
+
+.channel-sidebar__scroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 0 6px 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.channel-sidebar__section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.channel-sidebar__section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.7rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-text-tertiary);
+  padding: 0 4px;
+}
+
+.channel-sidebar__list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.channel-sidebar__channel {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  position: relative;
+}
+
+.channel-sidebar__channel::before {
+  content: "";
+  position: absolute;
+  left: -20px;
+  top: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--accent, var(--color-accent));
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 160ms ease, height 160ms ease, width 160ms ease, border-radius 160ms ease, top 160ms ease, transform 160ms ease;
+}
+
+.channel-sidebar__channel-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--color-text-muted);
+  border: none;
+  font-size: 0.85rem;
+  text-align: left;
+  position: relative;
+  transition: background-color 140ms ease, color 140ms ease;
+}
+
+.channel-sidebar__channel.has-unread::before,
+.channel-sidebar__channel.has-mention::before {
+  opacity: 1;
+}
+
+.channel-sidebar__channel:hover::before,
+.channel-sidebar__channel:focus-within::before {
+  opacity: 1;
+  width: 4px;
+  height: 22px;
+  border-radius: 999px;
+}
+
+.channel-sidebar__channel.is-active::before {
+  opacity: 1;
+  left: -19px;
+  width: 4px;
+  height: calc(100% - 12px);
+  top: 6px;
+  border-radius: 999px;
+  transform: none;
+}
+
+.channel-sidebar__channel-btn:hover,
+.channel-sidebar__channel-btn:focus-visible {
+  background: #35373e;
+  color: var(--color-text-primary);
+}
+
+.channel-sidebar__channel.is-active .channel-sidebar__channel-btn {
+  background: rgba(88, 101, 242, 0.2);
+  color: var(--color-text-primary);
+}
+
+.channel-sidebar__channel-icon {
+  width: 18px;
+  display: grid;
+  place-items: center;
+  color: inherit;
+  font-weight: 600;
+}
+
+.channel-sidebar__channel-name {
+  flex: 1;
+  min-width: 0;
+  text-transform: lowercase;
+}
+
+.channel-sidebar__badge {
+  margin-left: auto;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+}
+
+.channel-sidebar__pill {
+  margin-left: 6px;
+  min-width: 18px;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: #f23f43;
+  color: #fff;
+  font-size: 0.68rem;
+  text-align: center;
+}
+
+.channel-sidebar__voice-users {
+  list-style: none;
+  margin: 4px 0 0;
+  padding: 0 0 6px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.channel-sidebar__voice-user {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--color-text-muted);
+  font-size: 0.75rem;
+}
+
+.channel-sidebar__voice-presence {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #3ba55d;
+}
+
+.channel-sidebar__voice-name {
+  flex: 1;
+  min-width: 0;
+}
+
+.channel-sidebar__voice-user .avatar-wrap {
+  --avi-width: 22px;
+  --avi-height: 22px;
+}
+
+.channel-sidebar__voice-user:hover .channel-sidebar__voice-name {
+  color: var(--color-text-primary);
+}
+
+@media (max-width: 960px) {
+  module[data-module="channel-sidebar"] {
+    display: none;
+  }
+}

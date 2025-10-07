@@ -12,6 +12,7 @@
 ------------------*/
 @import url("https://fonts.googleapis.com/css?family=Titillium+Web:400,900&display=swap");
 @import url("https://fonts.googleapis.com/css?family=Rajdhani:400,500,600,700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
 *,
 *::before,
 *::after {
@@ -15552,3 +15553,77 @@ figure > img {
 }
 
 /*# sourceMappingURL=styles.css.map */
+
+:root {
+  --title-bar-height: 48px;
+  --color-bg-app: #313338;
+  --color-bg-server-rail: #1e1f22;
+  --color-bg-channel: #2b2d31;
+  --color-bg-chat: #313338;
+  --color-bg-member: #2b2d31;
+  --color-surface-raised: #1f2125;
+  --color-border-subtle: #1f2026;
+  --color-scrollbar: #1a1b1f;
+  --color-scrollbar-thumb: #1f2126;
+  --color-text-primary: #f2f3f5;
+  --color-text-muted: #b5bac1;
+  --color-text-tertiary: #949ba4;
+  --color-accent: #5865f2;
+  --color-accent-user: #5865f2;
+  --color-danger: #ed4245;
+  --shadow-elevated: 0 8px 16px rgba(0, 0, 0, 0.25);
+}
+
+body {
+  font-family: "gg sans", "Inter", "Noto Sans", "Helvetica Neue", Arial, sans-serif;
+  background: var(--color-bg-app);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+}
+
+.app-workspace {
+  position: relative;
+  display: grid;
+  grid-template-columns: 72px 280px minmax(0, 1fr) 320px;
+  grid-template-rows: minmax(0, calc(100vh - var(--title-bar-height, 0px)));
+  margin-top: calc(var(--title-bar-height, 0px));
+  height: calc(100vh - var(--title-bar-height, 0px));
+  background: var(--color-bg-app);
+  overflow: hidden;
+}
+
+.app-workspace > module,
+.app-workspace > main {
+  min-width: 0;
+}
+
+.app-workspace__main {
+  position: relative;
+  overflow: hidden;
+}
+
+@media (max-width: 1400px) {
+  .app-workspace {
+    grid-template-columns: 72px 260px minmax(0, 1fr) 300px;
+  }
+}
+
+@media (max-width: 1100px) {
+  .app-workspace {
+    grid-template-columns: 72px 240px minmax(0, 1fr);
+  }
+
+  .app-workspace__members {
+    display: none !important;
+  }
+}
+
+@media (max-width: 960px) {
+  .app-workspace {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .app-workspace__channels {
+    display: none !important;
+  }
+}

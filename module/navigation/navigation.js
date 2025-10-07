@@ -1,180 +1,191 @@
 import { getUserByToken } from '../users.js';
 
-export default async function init({ hub, root, utils }) {
-  const res = await fetch('modules-enabled.json');
-  const mods = await res.json();
-  const links = Object.values(mods)
-    .filter((m) => m.status === 'enabled' && m.navigation)
-    .map((m) => ({
-      title: m.name.charAt(0).toUpperCase() + m.name.slice(1),
-      module: m.name,
-      icon: `#svg-${m.icon}`
-    }));
+const SERVER_TOKENS = ['marina-valentine', 'nick-grissom', 'neko-bebop', 'sarah-diamond'];
 
-  const loggedToken = await fetch('/data/logged-in.json').then(r => r.json());
-  const currentUser = await getUserByToken(loggedToken);
+const STATIC_ITEMS = [
+  {
+    id: 'discover',
+    icon: '#svg-grid',
+    label: 'Discover'
+  },
+  {
+    id: 'add',
+    icon: '#svg-plus',
+    label: 'Add Server'
+  }
+];
+
+const profileData = (u = {}) =>
+  `data-profile-name="${u.name || ''}" data-profile-token="${u.token || ''}" data-profile-avatar="${u.avatar || ''}" data-profile-banner="${u.banner || ''}" data-profile-accent="${u.accent || ''}" data-profile-frame="${u.frame || ''}" data-profile-bio="${u.bio || ''}" data-profile-since="${u.memberSince || ''}" data-profile-connections="${(u.connections || []).join(',')}" data-profile-badges="${(u.badges || []).join(',')}" data-profile-streaming="${u.streaming ? 'true' : 'false'}"`;
+
+const fallbackAccent = '#7c5dff';
+
+const readProfileFromElement = (element, map) => {
+  const token = element?.dataset?.profileToken;
+  if (!token) return null;
+  if (map.has(token)) return map.get(token);
+  return {
+    token,
+    name: element?.dataset?.profileName || '',
+    avatar: element?.dataset?.profileAvatar || '',
+    banner: element?.dataset?.profileBanner || '',
+    accent: element?.dataset?.profileAccent || '',
+    frame: element?.dataset?.profileFrame || '',
+    bio: element?.dataset?.profileBio || '',
+    memberSince: element?.dataset?.profileSince || '',
+    connections: (element?.dataset?.profileConnections || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean),
+    badges: (element?.dataset?.profileBadges || '')
+      .split(',')
+      .map((item) => item.trim())
+      .filter(Boolean),
+    streaming: element?.dataset?.profileStreaming === 'true'
+  };
+};
+
+const applyAccent = (accent) => {
+  if (accent) {
+    document.documentElement.style.setProperty('--color-accent', accent);
+  } else {
+    document.documentElement.style.removeProperty('--color-accent');
+  }
+};
+
+const syncChannelSidebar = async (hub, user) => {
+  if (!user) return;
+  try {
+    const api = await hub.require('channel-sidebar');
+    if (typeof api?.loadForUser === 'function') {
+      await api.loadForUser(user);
+    }
+  } catch (err) {
+    console.warn('[navigation] failed to sync channel sidebar', err);
+  }
+};
+
+export default async function init({ hub, root, utils }) {
+  let currentUser = null;
+  try {
+    const loggedToken = await fetch('/data/logged-in.json').then((res) => res.json());
+    currentUser = loggedToken ? await getUserByToken(loggedToken) : null;
+  } catch (err) {
+    console.warn('[navigation] failed to load logged-in user', err);
+  }
+
+  if (currentUser?.accent) {
+    document.documentElement.style.setProperty('--color-accent-user', currentUser.accent);
+  } else {
+    document.documentElement.style.removeProperty('--color-accent-user');
+  }
+
+  const servers = (await Promise.all(SERVER_TOKENS.map((token) => getUserByToken(token)))).filter(Boolean);
+
+  const userMap = new Map();
+  servers.forEach((server) => {
+    if (server?.token) userMap.set(server.token, server);
+  });
+  if (currentUser?.token) {
+    userMap.set(currentUser.token, currentUser);
+  }
 
   root.innerHTML = `
-    <nav class="navigation-small" data-role="small">
-      <a href="#" class="navigation-avatar avatar-wrap" style="--avi-width:48px; --avi-height:48px; --frame:url('${currentUser.frame}');" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}">
-        <img
-          class="avatar-image"
-          src="${currentUser.avatar}"
-          alt="${currentUser.name}"
-        />
-      </a>
-      <ul class="navigation-small-menu">
-        ${links
+    <nav class="server-rail" aria-label="Servers">
+      <button class="server-rail__item server-rail__item--brand" type="button" aria-label="NOIZ Home">
+        <img src="images/logo_badge.svg" alt="NOIZ" class="server-rail__brand-icon"/>
+        <span class="server-rail__brand-name">NOIZ</span>
+      </button>
+      <div class="server-rail__divider" role="presentation"></div>
+      <ul class="server-rail__list">
+        ${servers
           .map(
-            (l) => `
-        <li class="navigation-small-item">
-          <a href="#" class="navigation-small-link" data-title="${l.title}" data-module="${l.module}">
-            <svg class="icon" width="20" height="20"><use xlink:href="${l.icon}"></use></svg>
-          </a>
-        </li>`
+            (server, index) => `
+              <li class="server-rail__entry${index === 0 ? ' is-active' : ''}" style="--accent:${server.accent || fallbackAccent}" ${profileData(server)}>
+                <button class="server-rail__item" type="button" aria-label="${server.name}">
+                  <div class="avatar-wrap" style="--avi-width:46px; --avi-height:46px; --frame:url('${server.frame}')">
+                    <img class="avatar-image" src="${server.avatar}" alt="${server.name}">
+                  </div>
+                </button>
+              </li>
+            `
           )
           .join('')}
       </ul>
-    </nav>
-    <nav class="navigation-large" data-role="large">
-      <div class="navigation-large-profile">
-        <img
-          class="profile-banner"
-          src="${currentUser.banner}"
-          alt=""
-          aria-hidden="true"
-        />
-        <div class="avatar-wrap" style="--avi-width:90px; --avi-height:90px; --frame:url('${currentUser.frame}');" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}">
-          <img
-            class="avatar-image"
-            src="${currentUser.avatar}"
-            alt="${currentUser.name}"
-          />
+      <div class="server-rail__divider server-rail__divider--faded" role="presentation"></div>
+      <ul class="server-rail__list server-rail__list--static">
+        ${STATIC_ITEMS.map(
+          (item) => `
+            <li class="server-rail__entry" data-item="${item.id}">
+              <button class="server-rail__item server-rail__item--icon" type="button" aria-label="${item.label}">
+                <svg aria-hidden="true" width="22" height="22"><use href="${item.icon}"></use></svg>
+              </button>
+            </li>
+          `
+        ).join('')}
+      </ul>
+      ${currentUser ? `
+        <div class="server-rail__me" ${profileData(currentUser)}>
+          <button class="server-rail__item server-rail__item--me" type="button" aria-label="${currentUser.name}">
+            <div class="avatar-wrap" style="--avi-width:40px; --avi-height:40px; --frame:url('${currentUser.frame}')">
+              <img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}">
+            </div>
+          </button>
         </div>
-        <h3 class="user-name" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}">${currentUser.name}</h3>
-        <p class="user-url">www.gamehuntress.com</p>
-        <ul class="profile-stats">
-          <li class="profile-stat"><span class="stat-value">930</span><span class="stat-label">Posts</span></li>
-          <li class="profile-stat"><span class="stat-value">82</span><span class="stat-label">Friends</span></li>
-          <li class="profile-stat"><span class="stat-value">5.7K</span><span class="stat-label">Visits</span></li>
-        </ul>
-        <ul class="user-badges">
-          <li><svg class="badge-icon" width="24" height="24"><use xlink:href="#svg-facebook"></use></svg></li>
-          <li><svg class="badge-icon" width="24" height="24"><use xlink:href="#svg-twitter"></use></svg></li>
-          <li><svg class="badge-icon" width="24" height="24"><use xlink:href="#svg-instagram"></use></svg></li>
-          <li><svg class="badge-icon" width="24" height="24"><use xlink:href="#svg-discord"></use></svg></li>
-          <li><svg class="badge-icon" width="24" height="24"><use xlink:href="#svg-google"></use></svg></li>
-        </ul>
-      </div>
-      <ul class="navigation-large-menu">
-        ${links
-          .map(
-            (l) => `
-        <li class="navigation-large-item">
-          <a href="#" class="navigation-large-link" data-module="${l.module}">
-            <svg class="icon" width="20" height="20"><use xlink:href="${l.icon}"></use></svg>
-            <span>${l.title}</span>
-          </a>
-        </li>`
-          )
-          .join('')}
-      </ul>
+      ` : ''}
     </nav>
   `;
 
-  const small = root.querySelector('[data-role="small"]');
-  const large = root.querySelector('[data-role="large"]');
-  const main = document.querySelector('main');
+  const meNode = root.querySelector('.server-rail__me');
+  const staticLists = root.querySelectorAll('.server-rail__list--static .server-rail__entry');
+  staticLists.forEach((entry) => entry.classList.remove('is-active'));
 
-  utils.delegate(root, 'click', '.navigation-small-link, .navigation-large-link', (e, link) => {
-    e.preventDefault();
-    const mod = link.getAttribute('data-module');
-    if (mod === 'profile') {
-      const rect = link.getBoundingClientRect();
-      hub.api['mini-profile'].show(
-        currentUser,
-        rect.left + rect.width / 2 + window.scrollX,
-        rect.bottom + window.scrollY
-      );
-    } else if (mod) {
-      window.LoadMainModule(mod);
+  let activeElement = root.querySelector('.server-rail__entry.is-active') || null;
+
+  const activate = async (element) => {
+    if (!element) return;
+    if (activeElement === element) return;
+    if (activeElement) activeElement.classList.remove('is-active');
+    if (meNode && activeElement === meNode) {
+      meNode.classList.remove('is-active');
     }
+    activeElement = element;
+    activeElement.classList.add('is-active');
+
+    const profile = readProfileFromElement(activeElement, userMap);
+    const accent = profile?.accent || fallbackAccent;
+    applyAccent(accent);
+    await syncChannelSidebar(hub, profile);
+  };
+
+  utils.delegate(root, 'click', '.server-rail__list .server-rail__item', async (event, target) => {
+    const entry = target.closest('.server-rail__entry');
+    if (!entry || entry.dataset.item) return;
+    event.preventDefault();
+    if (meNode) meNode.classList.remove('is-active');
+    await activate(entry);
   });
 
-  // Tooltip handling for compact navigation
-  let tooltip;
-  const showTooltip = (e) => {
-    const link = e.currentTarget;
-    const title = link.getAttribute('data-title');
-    if (!title) return;
-    tooltip = document.createElement('div');
-    tooltip.className = 'navigation-small-tooltip';
-    tooltip.textContent = title;
-    document.body.appendChild(tooltip);
-    const rect = link.getBoundingClientRect();
-    tooltip.style.top = `${rect.top + rect.height / 2}px`;
-    tooltip.style.left = `${rect.right}px`;
-    requestAnimationFrame(() => tooltip.classList.add('visible'));
-  };
-
-  const hideTooltip = () => {
-    if (tooltip) {
-      tooltip.remove();
-      tooltip = null;
-    }
-  };
-
-  small.querySelectorAll('.navigation-small-link').forEach((link) => {
-    link.addEventListener('mouseenter', showTooltip);
-    link.addEventListener('mouseleave', hideTooltip);
-  });
-  small.addEventListener('scroll', hideTooltip);
-
-  const api = {
-    showSmall() {
-      large.classList.remove('mobile-open');
-      const apply = () => {
-        small.classList.remove('hidden');
-        main.style.transform = 'translate(200.5px)';
-        main.style.transition = 'transform 0.4s ease-in-out';
-      };
-      if (large.classList.contains('open')) {
-        large.addEventListener(
-          'transitionend',
-          apply,
-          { once: true }
-        );
-        large.classList.remove('open');
-      } else {
-        apply();
+  if (meNode) {
+    utils.listen(meNode, 'click', async (event) => {
+      event.preventDefault();
+      if (activeElement && activeElement !== meNode) {
+        activeElement.classList.remove('is-active');
       }
-    },
-    showLarge() {
-      small.classList.add('hidden');
-      large.classList.remove('mobile-open');
-      main.style.transform = 'translate(300.5px)';
-      main.style.transition = 'transform 0.4s ease-in-out';
-      requestAnimationFrame(() => {
-        large.classList.add('open');
-      });
-    },
-    toggle() {
-      if (window.innerWidth < 992) {
-        large.classList.toggle('mobile-open');
-        if (large.classList.contains('mobile-open')) {
-          main.style.transform = 'translate(300.5px)';
-          main.style.transition = 'transform 0.4s ease-in-out';
-        } else {
-          main.style.transform = '';
-          main.style.transition = '';
-        }
-      } else if (large.classList.contains('open')) {
-        api.showSmall();
-      } else {
-        api.showLarge();
-      }
-    }
-  };
+      meNode.classList.add('is-active');
+      activeElement = meNode;
+      const profile = readProfileFromElement(meNode, userMap) || currentUser;
+      const accent = profile?.accent || currentUser?.accent || fallbackAccent;
+      applyAccent(accent);
+      await syncChannelSidebar(hub, profile);
+    });
+  }
 
-  return api;
+  const initialProfile = activeElement
+    ? readProfileFromElement(activeElement, userMap)
+    : servers[0] || currentUser;
+  applyAccent(initialProfile?.accent || fallbackAccent);
+  await syncChannelSidebar(hub, initialProfile);
+
+  return {};
 }
