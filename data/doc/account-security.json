@@ -1,0 +1,39 @@
+{
+  "id": "doc-005",
+  "slug": "account-security",
+  "title": "Account Security: Best Practices for Creators & Viewers",
+  "author_token": "john-viking",
+  "created_at": "2025-09-07T12:00:00Z",
+  "cover": "https://odindesignthemes.com/vikinger/img/cover/19.jpg",
+  "tags": ["Guide", "Quick-Start", "Overall"],
+  "sections": [
+    {
+      "heading": "Introduction",
+      "content": "Security on NOIZ starts with both creators and viewers taking simple but effective precautions. This guide outlines the most important steps."
+    },
+    {
+      "heading": "Two-Factor Authentication",
+      "content": "We strongly recommend enabling two-factor authentication (2FA) via the Constellation app. This adds an extra layer of security beyond your initial login handshake.",
+      "blurbs": [
+        {
+          "label": "Quick Reminder",
+          "text": "Always verify that you are logging in through the official Constellation app. NOIZ does not use email/password logins."
+        }
+      ]
+    },
+    {
+      "heading": "Recognizing Suspicious Activity",
+      "content": "If you receive unexpected messages, support requests, or encounter unusual login activity, report them immediately through the in-app security tools."
+    },
+    {
+      "heading": "Assigning Editors & Mods",
+      "content": "Be cautious when assigning editor or moderator roles. These permissions grant access to sensitive areas of your channel.",
+      "blurbs": [
+        {
+          "label": "Tip for Streamers",
+          "text": "Assign channel editors carefully — only grant access to those you fully trust."
+        }
+      ]
+    }
+  ]
+}

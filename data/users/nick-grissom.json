@@ -1,0 +1,95 @@
+{
+  "id": 4,
+  "token": "nick-grissom",
+  "name": "Nick Grissom",
+  "avatar": "https://odindesignthemes.com/vikinger/img/avatar/03.jpg",
+  "frame": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/a_hint_of_clove.png",
+  "banner": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/nameplates/black_mana.png",
+  "hasNotification": false,
+  "accent": "#ffd059",
+  "bio": "Speedrunner chasing the highest NOIZ scores.",
+  "memberSince": "May 2021",
+  "streaming": false,
+  "connections": [
+    "images/ui/emote.png",
+    "images/ui/gift.png"
+  ],
+  "topics": [
+    {
+      "id": "77777777-7777-7777-7777-777777777777",
+      "name": "Game Dev",
+      "permissions": ["viewer"]
+    },
+    {
+      "id": "88888888-8888-8888-8888-888888888888",
+      "name": "Bug Reports",
+      "permissions": ["mod"]
+    }
+  ],
+  "badges": [
+    "images/badges/admin.png",
+    "images/badges/artist.png",
+    "images/badges/mod.png",
+    "images/badges/vip.png",
+    "images/badges/clipper.png"
+  ],
+  "following": ["john-viking", "neko-bebop"],
+  "followers": ["john-viking", "sarah-diamond"],
+  "subscribedTo": [],
+  "subscribers": ["john-viking"],
+  "lang": "en",
+  "status": {
+    "streaming": null,
+    "online": { "watching": "speedrun clips" },
+    "away": null,
+    "dnd": null
+  },
+  "hosting": null,
+  "set-badges": ["admin", "artist", "mod", "vip", "clipper"],
+  "earned-badges": [
+    {
+      "id": "admin",
+      "icon": "images/badges/admin.png",
+      "name": "Admin",
+      "description": "Server administrator",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Jan 14, 2019"
+    },
+    {
+      "id": "artist",
+      "icon": "images/badges/artist.png",
+      "name": "Artist",
+      "description": "Shared five original artworks",
+      "awardedFor": "NOIZ Summer Event",
+      "awardedOn": "Mar 26, 2019"
+    },
+    {
+      "id": "mod",
+      "icon": "images/badges/mod.png",
+      "name": "Moderator",
+      "description": "Keeps the community in check",
+      "awardedFor": "NOIZ",
+      "awardedOn": "May 2, 2018"
+    },
+    {
+      "id": "vip",
+      "icon": "images/badges/vip.png",
+      "name": "VIP",
+      "description": "Recognized supporter",
+      "awardedFor": "DbD Campaign 2025",
+      "awardedOn": "Jan 9, 2018"
+    },
+    {
+      "id": "clipper",
+      "icon": "images/badges/clipper.png",
+      "name": "Clipper",
+      "description": "Shared 100+ clips",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Feb 1, 2019"
+    }
+  ],
+  "BadgeID": "speedrunner",
+  "VODs": true,
+  "extensions": { "enabled": [], "disabled": [] },
+  "plugins": { "enabled": [], "disabled": [] }
+}

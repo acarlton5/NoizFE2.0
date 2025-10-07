@@ -1,0 +1,22 @@
+{
+  "documents": [
+    {
+      "slug": "hello-world",
+      "title": "Hello World",
+      "summary": "Get an overview of how the NOIZ documentation module renders content and supports author profiles.",
+      "cover": "https://odindesignthemes.com/vikinger/img/cover/19.jpg",
+      "tags": ["Guide", "Basics"],
+      "author": "Marina Valentine",
+      "date": "2024-06-20"
+    },
+    {
+      "slug": "account-security",
+      "title": "Account Security: Best Practices for Creators & Viewers",
+      "summary": "Protect your channel with practical tips on 2FA, spotting suspicious activity, and safely assigning team roles.",
+      "cover": "https://odindesignthemes.com/vikinger/img/cover/19.jpg",
+      "tags": ["Guide", "Quick-Start", "Overall"],
+      "author": "NOIZ Trust & Safety Team",
+      "created_at": "2025-09-07T12:00:00Z"
+    }
+  ]
+}

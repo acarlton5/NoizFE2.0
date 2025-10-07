@@ -1,0 +1,99 @@
+.profile {
+  max-width: 960px;
+  margin: 0 auto;
+  background: #fff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.profile-banner {
+  height: 240px;
+  background: var(--banner, none) center/cover no-repeat;
+}
+
+.profile-content {
+  position: relative;
+  margin-top: -80px;
+  padding: 100px 2rem 2rem;
+  background: #fff;
+  text-align: center;
+}
+
+.profile-avatar {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.profile-actions {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.profile-stats {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.profile-stat {
+  text-align: center;
+  padding: 0 2rem;
+}
+
+.profile-stat:not(:last-child) {
+  border-right: 1px solid #e6e6e6;
+}
+
+.profile-stat .stat-number {
+  font-weight: 700;
+  font-size: 1.125rem;
+}
+
+.profile-stat .stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  color: #666;
+}
+
+.profile-name {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.profile-website {
+  color: #888;
+  font-size: 0.875rem;
+}
+
+.profile-social {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.social-item {
+  --color: #999;
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  background: var(--color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.social-item .icon {
+  width: 16px;
+  height: 16px;
+  fill: currentColor;
+}

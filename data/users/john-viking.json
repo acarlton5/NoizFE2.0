@@ -1,0 +1,102 @@
+{
+  "id": 1,
+  "token": "john-viking",
+  "name": "John Viking",
+  "avatar": "https://odindesignthemes.com/vikinger/img/avatar/05.jpg",
+  "frame": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/afternoon_breeze.png",
+  "banner": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/nameplates/cat_beans.png",
+  "hasNotification": false,
+  "accent": "#72ffb6",
+  "bio": "Leader of the NOIZ raid party and digital explorer.",
+  "memberSince": "March 2023",
+  "streaming": false,
+  "connections": [
+    "images/ui/gift.png",
+    "images/ui/follow.png"
+  ],
+  "topics": [
+    {
+      "id": "11111111-1111-1111-1111-111111111111",
+      "name": "Raids",
+      "permissions": ["viewer"]
+    },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "name": "Speedruns",
+      "permissions": ["sub", "mod"]
+    }
+  ],
+  "badges": [
+    "images/badges/admin.png",
+    "images/badges/artist.png",
+    "images/badges/mod.png",
+    "images/badges/vip.png",
+    "images/badges/clipper.png"
+  ],
+  "following": ["neko-bebop", "nick-grissom", "sarah-diamond"],
+  "followers": ["marina-valentine", "neko-bebop"],
+  "subscribedTo": ["marina-valentine", "neko-bebop"],
+  "subscribers": ["neko-bebop"],
+  "lang": "en",
+  "status": {
+    "streaming": null,
+    "online": { "watching": "home feed" },
+    "away": null,
+    "dnd": null
+  },
+  "hosting": {
+    "id": "host123",
+    "title": "Raid Night",
+    "category": 42,
+    "audience": "everyone",
+    "costream": null,
+    "thumbnailId": "images/thumbs/catcafe.jpg"
+  },
+  "set-badges": ["admin", "artist", "mod", "vip", "clipper"],
+  "earned-badges": [
+    {
+      "id": "admin",
+      "icon": "images/badges/admin.png",
+      "name": "Admin",
+      "description": "Server administrator",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Jan 14, 2019"
+    },
+    {
+      "id": "artist",
+      "icon": "images/badges/artist.png",
+      "name": "Artist",
+      "description": "Shared five original artworks",
+      "awardedFor": "NOIZ Summer Event",
+      "awardedOn": "Mar 26, 2019"
+    },
+    {
+      "id": "mod",
+      "icon": "images/badges/mod.png",
+      "name": "Moderator",
+      "description": "Keeps the community in check",
+      "awardedFor": "NOIZ",
+      "awardedOn": "May 2, 2018"
+    },
+    {
+      "id": "vip",
+      "icon": "images/badges/vip.png",
+      "name": "VIP",
+      "description": "Recognized supporter",
+      "awardedFor": "DbD Campaign 2025",
+      "awardedOn": "Jan 9, 2018"
+    },
+    {
+      "id": "clipper",
+      "icon": "images/badges/clipper.png",
+      "name": "Clipper",
+      "description": "Shared 100+ clips",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Feb 1, 2019"
+    }
+  ],
+  "BadgeID": "founder",
+  "VODs": true,
+  "extensions": { "enabled": [], "disabled": [] },
+  "plugins": { "enabled": [], "disabled": [] }
+}

@@ -1,0 +1,95 @@
+{
+  "id": 5,
+  "token": "sarah-diamond",
+  "name": "Sarah Diamond",
+  "avatar": "https://odindesignthemes.com/vikinger/img/avatar/04.jpg",
+  "frame": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/aespa_fanlight.png",
+  "banner": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/nameplates/blue_mana.png",
+  "hasNotification": false,
+  "accent": "#b06dff",
+  "bio": "Cosplayer weaving NOIZ magic on stream.",
+  "memberSince": "September 2020",
+  "streaming": false,
+  "connections": [
+    "images/ui/follow.png",
+    "images/ui/emote.png"
+  ],
+  "topics": [
+    {
+      "id": "99999999-9999-9999-9999-999999999999",
+      "name": "Photography",
+      "permissions": ["viewer"]
+    },
+    {
+      "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
+      "name": "Travel Vlogs",
+      "permissions": ["sub"]
+    }
+  ],
+  "badges": [
+    "images/badges/admin.png",
+    "images/badges/artist.png",
+    "images/badges/mod.png",
+    "images/badges/vip.png",
+    "images/badges/clipper.png"
+  ],
+  "following": ["john-viking", "marina-valentine"],
+  "followers": ["john-viking", "neko-bebop"],
+  "subscribedTo": ["marina-valentine"],
+  "subscribers": ["john-viking"],
+  "lang": "en",
+  "status": {
+    "streaming": null,
+    "online": { "watching": "cosplay how-tos" },
+    "away": null,
+    "dnd": null
+  },
+  "hosting": null,
+  "set-badges": ["admin", "artist", "mod", "vip", "clipper"],
+  "earned-badges": [
+    {
+      "id": "admin",
+      "icon": "images/badges/admin.png",
+      "name": "Admin",
+      "description": "Server administrator",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Jan 14, 2019"
+    },
+    {
+      "id": "artist",
+      "icon": "images/badges/artist.png",
+      "name": "Artist",
+      "description": "Shared five original artworks",
+      "awardedFor": "NOIZ Summer Event",
+      "awardedOn": "Mar 26, 2019"
+    },
+    {
+      "id": "mod",
+      "icon": "images/badges/mod.png",
+      "name": "Moderator",
+      "description": "Keeps the community in check",
+      "awardedFor": "NOIZ",
+      "awardedOn": "May 2, 2018"
+    },
+    {
+      "id": "vip",
+      "icon": "images/badges/vip.png",
+      "name": "VIP",
+      "description": "Recognized supporter",
+      "awardedFor": "DbD Campaign 2025",
+      "awardedOn": "Jan 9, 2018"
+    },
+    {
+      "id": "clipper",
+      "icon": "images/badges/clipper.png",
+      "name": "Clipper",
+      "description": "Shared 100+ clips",
+      "awardedFor": "NOIZ",
+      "awardedOn": "Feb 1, 2019"
+    }
+  ],
+  "BadgeID": "cosplayer",
+  "VODs": true,
+  "extensions": { "enabled": [], "disabled": [] },
+  "plugins": { "enabled": [], "disabled": [] }
+}

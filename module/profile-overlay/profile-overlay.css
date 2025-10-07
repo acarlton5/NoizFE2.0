@@ -1,0 +1,369 @@
+module[data-module="profile-overlay"] .profile-overlay {
+  position: fixed;
+  top: 80px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+module[data-module="profile-overlay"] .profile-overlay.hidden {
+  display: none;
+}
+
+module[data-module="profile-overlay"] .po-card {
+  background: #ffffff;
+  color: #1f2937;
+  width: 720px;
+  max-width: 100%;
+  border-radius: 8px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.2);
+  display: grid;
+  grid-template-columns: 340px 1fr;
+  overflow: hidden;
+  position: relative;
+}
+
+module[data-module="profile-overlay"] .po-left {
+  background: #f9fafb;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+module[data-module="profile-overlay"] .po-banner {
+  height: 120px;
+  background-color: #f3f4f6;
+  background-position: right top;
+  background-size: cover;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+module[data-module="profile-overlay"] .po-banner::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 20%, rgba(255,255,255,.35) 100%);
+}
+
+module[data-module="profile-overlay"] .po-accent {
+  height: 4px;
+  background: var(--accent, #5865f2);
+}
+
+module[data-module="profile-overlay"] .po-left-body {
+  padding: 0 16px 24px;
+  margin-top: -48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+module[data-module="profile-overlay"] .po-avatar {
+  position: relative;
+  width: 96px;
+  height: 96px;
+  border-radius: 50%;
+  overflow: visible;
+  isolation: isolate;
+}
+
+module[data-module="profile-overlay"] .po-avatar::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: #ffffff;
+  z-index: 0;
+}
+
+module[data-module="profile-overlay"] .po-avatar img {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+module[data-module="profile-overlay"] .po-avatar::after {
+  content: "";
+  position: absolute;
+  inset: -18%;
+  background: var(--frame, none) center/contain no-repeat;
+  pointer-events: none;
+  z-index: 2;
+}
+
+module[data-module="profile-overlay"] .po-name {
+  margin-top: 12px;
+  font-size: 1.25rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+module[data-module="profile-overlay"] .po-tagline {
+  margin-top: 4px;
+  font-size: 0.875rem;
+  color: #6b7280;
+}
+
+module[data-module="profile-overlay"] .po-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+module[data-module="profile-overlay"] .po-action {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent, #5865f2);
+  border: none;
+  color: #ffffff;
+  padding: 0;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+module[data-module="profile-overlay"] .po-action svg {
+  width: 20px;
+  height: 20px;
+}
+
+module[data-module="profile-overlay"] .po-badges {
+  margin-top: 4px;
+  display: none;
+  gap: 4px;
+  justify-content: center;
+}
+
+module[data-module="profile-overlay"] .po-badges img {
+  width: 24px;
+  height: 24px;
+}
+
+module[data-module="profile-overlay"] .po-about {
+  margin-top: 0;
+  font-size: 0.875rem;
+  color: #374151;
+  white-space: pre-wrap;
+}
+
+module[data-module="profile-overlay"] .po-section {
+  margin-top: 24px;
+  width: 100%;
+  text-align: left;
+}
+
+module[data-module="profile-overlay"] .po-section h3 {
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #6b7280;
+  margin-bottom: 8px;
+}
+
+module[data-module="profile-overlay"] .po-member-date {
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+module[data-module="profile-overlay"] .po-conn-list {
+  display: flex;
+  gap: 8px;
+}
+
+module[data-module="profile-overlay"] .po-conn-list img {
+  width: 24px;
+  height: 24px;
+}
+
+
+module[data-module="profile-overlay"] .po-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+module[data-module="profile-overlay"] .po-activity-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #f3f4f6;
+  border-radius: 4px;
+  padding: 6px 8px;
+  font-size: 0.875rem;
+  color: #1f2937;
+}
+
+module[data-module="profile-overlay"] .po-activity-list img {
+  width: 40px;
+  height: 24px;
+  object-fit: cover;
+  border-radius: 2px;
+}
+
+module[data-module="profile-overlay"] .po-activity-list .act-info {
+  display: flex;
+  flex-direction: column;
+}
+
+module[data-module="profile-overlay"] .po-activity-list .act-info span {
+  font-size: 0.75rem;
+  color: #6b7280;
+}
+
+module[data-module="profile-overlay"] .po-activity-list .act-btn {
+  margin-left: auto;
+  background: var(--accent, #5865f2);
+  border: none;
+  color: #ffffff;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  border-radius: 4px;
+  cursor: pointer;
+  width: auto;
+}
+
+module[data-module="profile-overlay"] .po-right {
+  background: #ffffff;
+  padding: 16px 24px;
+  display: flex;
+  flex-direction: column;
+}
+
+module[data-module="profile-overlay"] .po-tabs {
+  display: flex;
+  gap: 16px;
+  border-bottom: 1px solid #e5e7eb;
+  margin-bottom: 16px;
+}
+
+module[data-module="profile-overlay"] .po-tab {
+  background: none;
+  border: none;
+  padding: 0 0 8px;
+  font-weight: 600;
+  color: #6b7280;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+}
+
+module[data-module="profile-overlay"] .po-tab.active {
+  color: #111827;
+  border-color: var(--accent, #5865f2);
+}
+
+module[data-module="profile-overlay"] .po-footer {
+  margin-top: 16px;
+  border-top: 1px solid #e5e7eb;
+  padding-top: 16px;
+  text-align: right;
+}
+
+module[data-module="profile-overlay"] .po-footer .po-close {
+  background: #f3f4f6;
+  border: 1px solid #e5e7eb;
+  padding: 8px 12px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: #1f2937;
+  cursor: pointer;
+}
+
+module[data-module="profile-overlay"] .po-panels {
+  flex: 1;
+  overflow-y: auto;
+}
+
+module[data-module="profile-overlay"] .po-panel {
+  display: none;
+  height: 100%;
+}
+
+module[data-module="profile-overlay"] .po-panel.active {
+  display: block;
+}
+
+module[data-module="profile-overlay"] .po-empty {
+  text-align: center;
+  color: #6b7280;
+  padding: 40px 0;
+}
+
+module[data-module="profile-overlay"] .po-topic-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+module[data-module="profile-overlay"] .po-topic-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+module[data-module="profile-overlay"] .po-topic-perms {
+  color: #6b7280;
+  font-size: 0.875rem;
+}
+
+module[data-module="profile-overlay"] .po-badge-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+module[data-module="profile-overlay"] .po-badge-item {
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+module[data-module="profile-overlay"] .po-badge-item img {
+  width: 48px;
+  height: 48px;
+  margin-right: 12px;
+}
+
+module[data-module="profile-overlay"] .po-badge-info {
+  display: flex;
+  flex-direction: column;
+}
+
+module[data-module="profile-overlay"] .po-badge-name {
+  font-weight: 600;
+  margin: 0;
+}
+
+module[data-module="profile-overlay"] .po-badge-desc {
+  font-size: 0.875rem;
+  color: #374151;
+  margin: 4px 0;
+}
+
+module[data-module="profile-overlay"] .po-badge-meta {
+  font-size: 0.75rem;
+  color: #6b7280;
+}

@@ -1,0 +1,105 @@
+module[data-module="user-rail"] {
+  position: fixed;
+  top: 80px;
+  right: 0;
+  height: calc(100vh - 80px);
+  width: 72px;
+  z-index: 1040;
+  background: #fff;
+  box-shadow: -4px 0 8px rgba(0, 0, 0, 0.1);
+  padding: 16px 0;
+  display: flex;
+  --avi-width: 40px;
+  --avi-height: 40px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  --indicator-gap: 8px;
+  --indicator-width: 4px;
+  --indicator-hover-h: 24px;
+  --indicator-active-h: 32px;
+  --dot-size: 8px;
+}
+
+module[data-module="user-rail"] .user-rail {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+module[data-module="user-rail"] .user-rail-list {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+module[data-module="user-rail"] .user-rail-item {
+  width: calc(var(--avi-width) + 12px);
+  height: calc(var(--avi-height) + 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: visible;
+  cursor: pointer;
+}
+
+module[data-module="user-rail"] .user-rail-item .avatar-wrap {
+  --frame-opacity: 0;
+}
+
+module[data-module="user-rail"] .user-rail-item .avatar-wrap::after {
+  transition: opacity 0.16s ease;
+}
+
+module[data-module="user-rail"] .user-rail-item:hover .avatar-wrap,
+module[data-module="user-rail"] .user-rail-item.active .avatar-wrap {
+  --frame-opacity: 1;
+}
+
+module[data-module="user-rail"] .user-rail-item::before {
+  content: "";
+  position: absolute;
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+  top: 50%;
+  width: var(--indicator-width);
+  height: 0;
+  background: var(--accent, #ff72b6);
+  border-radius: 0 10px 10px 0;
+  transform: translateY(-50%);
+  opacity: 0;
+  transition: height 0.16s ease, opacity 0.16s ease;
+}
+
+module[data-module="user-rail"] .user-rail-item:hover::before {
+  height: var(--indicator-hover-h);
+  opacity: 1;
+}
+
+module[data-module="user-rail"] .user-rail-item.active::before {
+  height: var(--indicator-active-h);
+  opacity: 1;
+}
+
+module[data-module="user-rail"] .user-rail-item.has-notification::before {
+  width: var(--dot-size);
+  height: var(--dot-size);
+  left: calc(-1 * (var(--indicator-gap) + var(--dot-size)));
+  border-radius: 50%;
+  opacity: 1;
+  transition: width 0.16s ease, height 0.16s ease, left 0.16s ease, border-radius 0.16s ease, opacity 0.16s ease;
+}
+
+module[data-module="user-rail"] .user-rail-item.has-notification:hover::before,
+module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+  width: var(--indicator-width);
+  height: var(--indicator-hover-h);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+  border-radius: 0 10px 10px 0;
+}
+
+module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+  height: var(--indicator-active-h);
+}
