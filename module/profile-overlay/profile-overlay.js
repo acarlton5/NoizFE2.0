@@ -3,7 +3,7 @@ import { getUserByToken } from '../users.js';
 
 export default async function init({ hub, root, utils }) {
   root.innerHTML = `
-    <div class="profile-overlay hidden" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="profile-overlay" role="dialog" aria-modal="true" aria-hidden="true">
       <div class="profile-overlay-panel">
         <button type="button" class="profile-overlay-close" aria-label="Close profile">×</button>
         <div class="profile-overlay-body"></div>
@@ -43,26 +43,15 @@ export default async function init({ hub, root, utils }) {
     });
   }
 
-  let hideTimer;
-  utils.onCleanup(() => window.clearTimeout(hideTimer));
-  const hideWithDelay = () => {
-    window.clearTimeout(hideTimer);
-    hideTimer = window.setTimeout(() => {
-      overlay.classList.add('hidden');
-    }, 200);
-  };
-
   function show(user = {}) {
-    window.clearTimeout(hideTimer);
-    overlay.classList.remove('hidden');
+    overlay.classList.add('visible');
     overlay.setAttribute('aria-hidden', 'false');
-    requestAnimationFrame(() => overlay.classList.add('visible'));
 
     view.updateUser(user);
 
     if (user && user.token) {
       getUserByToken(user.token)
-        .then((full) => view.updateUser({ ...full, ...user }))
+        .then((full) => view.updateUser({ ...user, ...full }))
         .catch(() => {});
     }
 
@@ -74,7 +63,6 @@ export default async function init({ hub, root, utils }) {
   function hide() {
     overlay.classList.remove('visible');
     overlay.setAttribute('aria-hidden', 'true');
-    hideWithDelay();
   }
 
   utils.listen(closeBtn, 'click', hide);

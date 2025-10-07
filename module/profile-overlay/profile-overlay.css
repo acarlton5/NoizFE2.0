@@ -5,51 +5,41 @@ module[data-module="profile-overlay"] .profile-overlay {
   inset: 0;
   display: flex;
   justify-content: flex-end;
-  align-items: stretch;
-  background: rgba(0, 0, 0, 0.6);
-  z-index: 1300;
+  align-items: flex-start;
+  padding: 80px 72px 24px 24px;
+  z-index: 1290;
+  pointer-events: none;
   opacity: 0;
-  transform: translateX(24px);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-module[data-module="profile-overlay"] .profile-overlay.hidden {
-  display: none;
+  transform: translateX(32px);
+  transition: opacity 0.22s ease, transform 0.22s ease;
 }
 
 module[data-module="profile-overlay"] .profile-overlay.visible {
   opacity: 1;
   transform: translateX(0);
+  pointer-events: auto;
 }
 
 module[data-module="profile-overlay"] .profile-overlay-panel {
   position: relative;
-  height: 100%;
   display: flex;
   align-items: stretch;
-  padding: 0 0 0 24px;
-}
-
-module[data-module="profile-overlay"] .profile-overlay-panel::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  width: 24px;
-  background: linear-gradient(90deg, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.25) 100%);
-  pointer-events: none;
+  justify-content: flex-start;
+  height: calc(100vh - 80px);
+  max-width: min(408px, calc(100vw - 160px));
+  width: 100%;
+  pointer-events: auto;
 }
 
 module[data-module="profile-overlay"] .profile-overlay-body {
-  height: 100%;
+  flex: 1;
   display: flex;
 }
 
 module[data-module="profile-overlay"] .profile-overlay-body .profile-panel {
   height: 100%;
   border-right: none;
-  box-shadow: -12px 0 36px rgba(0, 0, 0, 0.5);
+  box-shadow: -12px 0 36px rgba(0, 0, 0, 0.45);
 }
 
 module[data-module="profile-overlay"] .profile-overlay-close {
@@ -59,50 +49,45 @@ module[data-module="profile-overlay"] .profile-overlay-close {
   width: 36px;
   height: 36px;
   border: none;
-  border-radius: 999px;
-  background: var(--bg-floating);
-  color: var(--text-muted);
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.35);
+  color: #fff;
   font-size: 1.25rem;
   line-height: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-  transition: background 0.2s ease, color 0.2s ease;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, background 0.2s ease;
   z-index: 2;
 }
 
 module[data-module="profile-overlay"] .profile-overlay-close:hover,
 module[data-module="profile-overlay"] .profile-overlay-close:focus-visible {
-  background: var(--interactive-hover);
-  color: var(--text-primary);
+  transform: translateY(-1px);
+  background: rgba(0, 0, 0, 0.55);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 1200px) {
   module[data-module="profile-overlay"] .profile-overlay {
-    justify-content: center;
-    transform: translateY(24px);
+    padding-right: 24px;
   }
+}
 
-  module[data-module="profile-overlay"] .profile-overlay.visible {
-    transform: translateY(0);
+@media (max-width: 992px) {
+  module[data-module="profile-overlay"] .profile-overlay {
+    padding: 64px 16px 16px;
   }
 
   module[data-module="profile-overlay"] .profile-overlay-panel {
-    padding: 0;
-  }
-
-  module[data-module="profile-overlay"] .profile-overlay-panel::before {
-    display: none;
+    height: calc(100vh - 64px);
+    max-width: 100%;
   }
 
   module[data-module="profile-overlay"] .profile-overlay-body .profile-panel {
     border-radius: 24px;
     box-shadow: var(--shadow-elevated);
-  }
-
-  module[data-module="profile-overlay"] .profile-overlay-close {
-    right: 18px;
+    border-right: 1px solid var(--surface-border);
   }
 }
