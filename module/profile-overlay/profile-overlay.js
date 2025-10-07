@@ -16,10 +16,86 @@ export default async function init({ hub, root, utils }) {
   const closeBtn = root.querySelector('.profile-overlay-close');
 
   const view = buildProfileCard(body, { variant: 'overlay' });
+  const { setLoading } = view;
   const cardPanel = view.elements.panel;
   if (cardPanel) {
     cardPanel.setAttribute('tabindex', '-1');
   }
+
+  const prefetchCache = new Map();
+  const resolvedTokens = new Set();
+  const warmedTokens = new Set();
+
+  const prefetchToken = (token) => {
+    if (!token) return null;
+    if (prefetchCache.has(token)) {
+      return prefetchCache.get(token);
+    }
+    warmedTokens.add(token);
+    const request = getUserByToken(token)
+      .then((data) => {
+        resolvedTokens.add(token);
+        return data;
+      })
+      .catch((error) => {
+        prefetchCache.delete(token);
+        resolvedTokens.delete(token);
+        warmedTokens.delete(token);
+        throw error;
+      });
+    prefetchCache.set(token, request);
+    return request;
+  };
+
+  const warmElementToken = (el) => {
+    if (!el || !el.dataset) return;
+    const token = el.dataset.profileToken;
+    if (!token || warmedTokens.has(token)) return;
+    prefetchToken(token);
+  };
+
+  const scanForTokens = (scope = document) => {
+    if (!scope) return;
+    if (scope.querySelectorAll) {
+      let warmedCount = 0;
+      const limit = scope === document ? 24 : Infinity;
+      scope.querySelectorAll('[data-profile-token]').forEach((element) => {
+        if (scope === document && warmedCount >= limit) return;
+        const token = element.dataset ? element.dataset.profileToken : null;
+        if (!token || warmedTokens.has(token)) return;
+        prefetchToken(token);
+        warmedCount += 1;
+      });
+    }
+    if (scope !== document && scope.dataset && scope.dataset.profileToken) {
+      warmElementToken(scope);
+    }
+  };
+
+  scanForTokens(document);
+
+  const observer = new MutationObserver((records) => {
+    records.forEach((record) => {
+      record.addedNodes.forEach((node) => {
+        if (!node || node.nodeType !== 1) return;
+        const el = /** @type {Element} */ (node);
+        warmElementToken(el);
+        if (el.querySelectorAll) {
+          el.querySelectorAll('[data-profile-token]').forEach(warmElementToken);
+        }
+      });
+    });
+  });
+
+  observer.observe(document.body, { childList: true, subtree: true });
+  utils.onCleanup(() => observer.disconnect());
+
+  utils.delegate(document, 'mouseover', '[data-profile-token]', (event, el) => {
+    warmElementToken(el);
+  });
+
+  let loadSequence = 0;
+  let currentTicket = 0;
 
   const applyUnread = (count = 0) => view.updateUnread(count);
   try {
@@ -49,10 +125,28 @@ export default async function init({ hub, root, utils }) {
 
     view.updateUser(user);
 
+    const ticket = ++loadSequence;
+    currentTicket = ticket;
+
     if (user && user.token) {
-      getUserByToken(user.token)
-        .then((full) => view.updateUser({ ...user, ...full }))
-        .catch(() => {});
+      const token = user.token;
+      const request = prefetchToken(token);
+      const shouldShowLoader = !resolvedTokens.has(token);
+      setLoading(shouldShowLoader);
+      if (request) {
+        request
+          .then((full) => view.updateUser({ ...user, ...full }))
+          .catch(() => {})
+          .finally(() => {
+            if (currentTicket === ticket) {
+              setLoading(false);
+            }
+          });
+      } else if (currentTicket === ticket) {
+        setLoading(false);
+      }
+    } else if (currentTicket === ticket) {
+      setLoading(false);
     }
 
     if (cardPanel) {
@@ -63,6 +157,8 @@ export default async function init({ hub, root, utils }) {
   function hide() {
     overlay.classList.remove('visible');
     overlay.setAttribute('aria-hidden', 'true');
+    currentTicket = 0;
+    setLoading(false);
   }
 
   utils.listen(closeBtn, 'click', hide);

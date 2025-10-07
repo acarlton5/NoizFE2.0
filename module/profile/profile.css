@@ -21,6 +21,7 @@ module[data-module="profile"] {
   color: inherit;
   display: flex;
   flex-direction: column;
+  position: relative;
   overflow: hidden;
   min-height: 0;
   width: 100%;
@@ -43,6 +44,54 @@ module[data-module="profile"] {
   flex-direction: column;
   height: 100%;
   overflow: hidden;
+}
+
+.profile-loading {
+  position: absolute;
+  inset: 0;
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  background: linear-gradient(160deg, rgba(12, 15, 23, 0.84), rgba(24, 28, 40, 0.74));
+  backdrop-filter: blur(6px);
+  color: #fff;
+  text-align: center;
+  padding: 2rem;
+  z-index: 5;
+}
+
+.profile-panel.is-loading .profile-loading {
+  display: flex;
+}
+
+.profile-panel.is-loading .profile-scroll {
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.profile-spinner {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid rgba(255, 255, 255, 0.25);
+  border-top-color: #fff;
+  animation: profile-spinner 0.85s linear infinite;
+}
+
+.profile-loading-text {
+  margin: 0;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+@keyframes profile-spinner {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .profile-panel[data-variant="sidebar"] .profile-scroll,

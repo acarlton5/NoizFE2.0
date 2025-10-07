@@ -1,5 +1,9 @@
 const TEMPLATE = `
   <aside class="profile-panel" data-variant="sidebar">
+    <div class="profile-loading" data-role="loader" hidden aria-hidden="true">
+      <div class="profile-spinner" aria-hidden="true"></div>
+      <p class="profile-loading-text">Loading profile…</p>
+    </div>
     <div class="profile-scroll">
       <header class="profile-hero">
         <div class="profile-hero-sheen"></div>
@@ -114,6 +118,8 @@ export function buildProfileCard(root, { variant = 'sidebar' } = {}) {
   const panel = root.querySelector('.profile-panel');
   panel.dataset.variant = variant;
 
+  const loaderEl = root.querySelector('[data-role="loader"]');
+
   const avatarWrap = root.querySelector('.profile-avatar .avatar-wrap');
   const avatarImg = root.querySelector('.profile-avatar img');
   const nameEl = root.querySelector('.profile-name');
@@ -135,6 +141,15 @@ export function buildProfileCard(root, { variant = 'sidebar' } = {}) {
     const count = Number(value) || 0;
     unreadBadge.textContent = count;
     unreadBadge.hidden = count <= 0;
+  };
+
+  const setLoading = (isLoading) => {
+    const active = Boolean(isLoading);
+    panel.classList.toggle('is-loading', active);
+    if (loaderEl) {
+      loaderEl.hidden = !active;
+      loaderEl.setAttribute('aria-hidden', active ? 'false' : 'true');
+    }
   };
 
   const updateUser = (user = {}) => {
@@ -252,10 +267,12 @@ export function buildProfileCard(root, { variant = 'sidebar' } = {}) {
   };
 
   updateUnread(0);
+  setLoading(false);
 
   return {
     updateUser,
     updateUnread,
+    setLoading,
     elements: {
       messageBtn,
       panel,
