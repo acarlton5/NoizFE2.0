@@ -85,11 +85,12 @@ module[data-module="user-rail"] {
 }
 
 .member-sidebar__person {
+  position: relative;
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 10px;
-  padding: 6px 8px;
+  padding: 6px 18px 6px 8px;
   border-radius: 8px;
   transition: background-color 140ms ease;
 }
@@ -99,11 +100,15 @@ module[data-module="user-rail"] {
 }
 
 .member-sidebar__presence {
+  position: absolute;
+  right: 0;
+  top: 50%;
   width: 10px;
   height: 10px;
   border-radius: 50%;
   background: #3ba55d;
-  justify-self: end;
+  transform: translateY(-50%);
+  box-shadow: 0 0 0 2px var(--color-bg-member);
 }
 
 .member-sidebar__presence--dnd {
