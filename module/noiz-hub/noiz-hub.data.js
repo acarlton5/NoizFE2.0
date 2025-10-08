@@ -41,7 +41,7 @@ export const CHANNEL_GROUPS = [
       { id: 'going-live', icon: '📡', iconType: 'emoji', separator: '│', label: 'going-live' },
       { id: 'memes', icon: '😂', iconType: 'emoji', separator: '│', label: 'memes' },
       { id: 'twitch-extension-beta', icon: '🧪', iconType: 'emoji', separator: '│', label: 'twitch-extension-beta' },
-      { id: 'discord-community-talk', icon: '💬', iconType: 'emoji', separator: '│', label: 'discord-community-talk' }
+      { id: 'noiz-community-talk', icon: '💬', iconType: 'emoji', separator: '│', label: 'noiz-community-talk' }
     ]
   },
   {
@@ -92,7 +92,7 @@ export const MESSAGES = [
     },
     timestamp: 'Today at 4:39 PM',
     body: [
-      'Let’s rebuild the hub using the Discord-style layout from the mock.',
+      'Let’s rebuild the hub using the NOIZ-style layout from the mock.',
       'Key beats to cover:',
       [
         'Server rail with badges + tooltips',

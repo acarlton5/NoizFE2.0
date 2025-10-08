@@ -25,7 +25,7 @@ const renderMemberGroup = (group) => `
 export default async function init({ root, props = {} }) {
   const groups = props.groups || [];
 
-  root.classList.add('discord-members');
+  root.classList.add('noiz-members');
   root.innerHTML = `
     <div class="member-column">
       <div class="member-scroll">

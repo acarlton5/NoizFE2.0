@@ -1308,7 +1308,7 @@ textarea::placeholder {
 .icon-youtube,
 .icon-instagram,
 .icon-patreon,
-.icon-discord,
+.icon-noiz,
 .icon-google,
 .icon-behance,
 .icon-deviantart,
@@ -2439,7 +2439,7 @@ figure > img {
   background-color: #ff7a51;
 }
 
-.social-link.discord {
+.social-link.noiz {
   background-color: #7289da;
 }
 

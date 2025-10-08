@@ -15,8 +15,8 @@
   font-family: 'Rajdhani', sans-serif;
 }
 
-.discord-topbar__left,
-.discord-topbar__right {
+.noiz-topbar__left,
+.noiz-topbar__right {
   display: flex;
   align-items: center;
   gap: 12px;
@@ -156,7 +156,7 @@
     left: 0;
     padding-right: 12px;
   }
-  .discord-topbar__left {
+  .noiz-topbar__left {
     display: none;
   }
   .topbar-search {

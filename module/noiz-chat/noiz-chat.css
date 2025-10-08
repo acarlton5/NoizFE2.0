@@ -1,4 +1,4 @@
-module[data-module="discord-chat"] {
+module[data-module="noiz-chat"] {
   background: #313338;
   display: flex;
   flex-direction: column;
@@ -295,7 +295,7 @@ module[data-module="discord-chat"] {
 }
 
 @media (max-width: 900px) {
-  module[data-module="discord-chat"] {
+  module[data-module="noiz-chat"] {
     min-height: 60vh;
   }
 

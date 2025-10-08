@@ -24,8 +24,8 @@ export default async function init({ hub, root }) {
   const user = loggedToken ? await getUserByToken(loggedToken) : null;
 
   root.innerHTML = `
-    <header class="discord-topbar" data-role="header">
-      <div class="discord-topbar__left">
+    <header class="noiz-topbar" data-role="header">
+      <div class="noiz-topbar__left">
         <button class="guild-switcher" type="button" aria-haspopup="true" aria-expanded="false">
           <span class="guild-switcher__name">GG Circle</span>
           <svg viewBox="0 0 20 20" aria-hidden="true"><path d="M5 7l5 6 5-6z" /></svg>
@@ -39,7 +39,7 @@ export default async function init({ hub, root }) {
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 4 16 8-16 8 4-8z" /></svg>
         </button>
       </div>
-      <div class="discord-topbar__right">
+      <div class="noiz-topbar__right">
         <div class="topbar-search">
           <input type="search" placeholder="Search" aria-label="Search server" />
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10.5 3a7.5 7.5 0 1 1-4.88 13.17l-3.3 3.29-1.42-1.41 3.3-3.3A7.5 7.5 0 0 1 10.5 3zm0 2a5.5 5.5 0 1 0 5.5 5.5 5.51 5.51 0 0 0-5.5-5.5z" /></svg>

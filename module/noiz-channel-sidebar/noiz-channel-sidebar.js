@@ -1,4 +1,4 @@
-import { ICONS as DEFAULT_ICONS } from '../discord-home/discord-home.data.js';
+import { ICONS as DEFAULT_ICONS } from '../noiz-hub/noiz-hub.data.js';
 
 const DEFAULT_ACCENT = '#5865f2';
 
@@ -131,7 +131,7 @@ export default async function init({ root, props = {}, utils }) {
   const boostGoal = props.boostGoal;
   const channelGroups = props.channelGroups || [];
 
-  root.classList.add('discord-channel-sidebar');
+  root.classList.add('noiz-channel-sidebar');
   root.style.setProperty('--channel-accent', accent);
 
   root.innerHTML = `

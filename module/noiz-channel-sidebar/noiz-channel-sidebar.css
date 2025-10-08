@@ -1,11 +1,11 @@
-module[data-module="discord-channel-sidebar"] {
+module[data-module="noiz-channel-sidebar"] {
   position: relative;
   background: #2b2d31;
   border-right: 1px solid #1f2124;
   color: inherit;
 }
 
-module[data-module="discord-channel-sidebar"]::before {
+module[data-module="noiz-channel-sidebar"]::before {
   content: '';
   position: absolute;
   top: 0;
@@ -18,7 +18,7 @@ module[data-module="discord-channel-sidebar"]::before {
   z-index: 1;
 }
 
-module[data-module="discord-channel-sidebar"] > * {
+module[data-module="noiz-channel-sidebar"] > * {
   position: relative;
   z-index: 2;
 }
@@ -560,7 +560,7 @@ module[data-module="discord-channel-sidebar"] > * {
 }
 
 @media (max-width: 900px) {
-  module[data-module="discord-channel-sidebar"] {
+  module[data-module="noiz-channel-sidebar"] {
     border-right: none;
     border-bottom: 1px solid #1f2124;
   }

@@ -53,7 +53,7 @@ const renderMessage = (message) => `
 export default async function init({ root, props = {}, utils }) {
   const messages = props.messages || [];
 
-  root.classList.add('discord-chat');
+  root.classList.add('noiz-chat');
   root.innerHTML = `
     <div class="chat-column">
       <header class="chat-header">

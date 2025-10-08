@@ -1,44 +1,44 @@
-module[data-module="discord-home"] {
+module[data-module="noiz-hub"] {
   display: block;
   height: calc(100vh - 56px);
   color: #f2f3f5;
   font-family: 'Rajdhani', sans-serif;
 }
 
-.discord-home__layout {
+.noiz-hub__layout {
   display: grid;
   grid-template-columns: 260px 1fr 260px;
   height: 100%;
   background: #313338;
 }
 
-.discord-home__layout > module[data-module] {
+.noiz-hub__layout > module[data-module] {
   display: flex;
   flex-direction: column;
   min-height: 0;
 }
 
 @media (max-width: 1100px) {
-  .discord-home__layout {
+  .noiz-hub__layout {
     grid-template-columns: 260px 1fr;
   }
 
-  .discord-home__layout > module[data-module="discord-members"] {
+  .noiz-hub__layout > module[data-module="noiz-members"] {
     display: none;
   }
 }
 
 @media (max-width: 900px) {
-  module[data-module="discord-home"] {
+  module[data-module="noiz-hub"] {
     height: auto;
     min-height: calc(100vh - 56px);
   }
 
-  .discord-home__layout {
+  .noiz-hub__layout {
     grid-template-columns: 1fr;
   }
 
-  .discord-home__layout > module[data-module="discord-channel-sidebar"] {
+  .noiz-hub__layout > module[data-module="noiz-channel-sidebar"] {
     order: -1;
   }
 }

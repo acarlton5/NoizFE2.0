@@ -15,32 +15,32 @@
     "header": false,
     "services": true
   },
-  "discord-home": {
-    "name": "discord-home",
+  "noiz-hub": {
+    "name": "noiz-hub",
     "icon": "messages",
     "status": "enabled",
     "navigation": true,
     "header": false,
     "services": false
   },
-  "discord-channel-sidebar": {
-    "name": "discord-channel-sidebar",
+  "noiz-channel-sidebar": {
+    "name": "noiz-channel-sidebar",
     "icon": "hash",
     "status": "enabled",
     "navigation": false,
     "header": false,
     "services": false
   },
-  "discord-chat": {
-    "name": "discord-chat",
+  "noiz-chat": {
+    "name": "noiz-chat",
     "icon": "comments",
     "status": "enabled",
     "navigation": false,
     "header": false,
     "services": false
   },
-  "discord-members": {
-    "name": "discord-members",
+  "noiz-members": {
+    "name": "noiz-members",
     "icon": "users",
     "status": "enabled",
     "navigation": false,

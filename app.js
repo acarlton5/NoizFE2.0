@@ -369,12 +369,12 @@ async function handleRoute() {
         LoadMainModule('doc');
       }
     } else if (mod === 'index.html') {
-      LoadMainModule('discord-home');
+      LoadMainModule('noiz-hub');
     } else {
       LoadMainModule(mod);
     }
   } else {
-    LoadMainModule('discord-home');
+    LoadMainModule('noiz-hub');
   }
 }
 window.addEventListener("popstate", () => { handleRoute(); });

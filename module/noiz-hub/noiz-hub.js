@@ -1,5 +1,5 @@
 import { getUserByToken } from '../users.js';
-import { BOOST_GOAL, CHANNEL_GROUPS, ICONS, MEMBER_GROUPS, MESSAGES } from './discord-home.data.js';
+import { BOOST_GOAL, CHANNEL_GROUPS, ICONS, MEMBER_GROUPS, MESSAGES } from './noiz-hub.data.js';
 
 const DEFAULT_ACCENT = '#5865f2';
 
@@ -8,11 +8,11 @@ export default async function init({ root }) {
   const currentUser = loggedToken ? await getUserByToken(loggedToken).catch(() => null) : null;
   const accent = currentUser?.accent || DEFAULT_ACCENT;
 
-  root.classList.add('discord-home');
+  root.classList.add('noiz-hub');
   root.innerHTML = '';
 
   const layout = document.createElement('div');
-  layout.className = 'discord-home__layout';
+  layout.className = 'noiz-hub__layout';
 
   const createModule = (name, props) => {
     const node = document.createElement('module');
@@ -27,23 +27,23 @@ export default async function init({ root }) {
   root.appendChild(layout);
 
   layout.append(
-    createModule('discord-channel-sidebar', {
+    createModule('noiz-channel-sidebar', {
       accent,
       boostGoal: BOOST_GOAL,
       channelGroups: CHANNEL_GROUPS,
       icons: ICONS,
       user: currentUser
     }),
-    createModule('discord-chat', { messages: MESSAGES }),
-    createModule('discord-members', { groups: MEMBER_GROUPS })
+    createModule('noiz-chat', { messages: MESSAGES }),
+    createModule('noiz-members', { groups: MEMBER_GROUPS })
   );
 
   return {
     getSections() {
       return [
-        { name: 'discord-channel-sidebar', role: 'Channels, hero, and boost goal' },
-        { name: 'discord-chat', role: 'Channel header, transcript, and composer' },
-        { name: 'discord-members', role: 'Member presence list' }
+        { name: 'noiz-channel-sidebar', role: 'Channels, hero, and boost goal' },
+        { name: 'noiz-chat', role: 'Channel header, transcript, and composer' },
+        { name: 'noiz-members', role: 'Member presence list' }
       ];
     },
     getAccent() {
