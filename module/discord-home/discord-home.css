@@ -30,9 +30,9 @@ module[data-module="discord-home"] {
   top: 0;
   bottom: 0;
   left: 0;
-  width: 8px;
+  width: 4px;
   background: var(--active-guild-accent, #5865f2);
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.4), 0 0 24px var(--active-guild-accent, #5865f2);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.32), 0 0 16px var(--active-guild-accent, #5865f2);
   pointer-events: none;
   z-index: 1;
 }

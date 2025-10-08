@@ -82,14 +82,15 @@ module[data-module="navigation"] {
 .guild-rail__indicator {
   position: absolute;
   top: 50%;
-  right: -8px;
-  width: 16px;
+  right: -6px;
+  width: 12px;
   height: 14px;
   border-radius: 999px;
   background: var(--accent);
   opacity: 0;
   transform: translateY(-50%);
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.35);
+  box-shadow: 0 0 12px rgba(0, 0, 0, 0.32);
+  clip-path: inset(0 50% 0 0);
   transition: opacity 0.2s ease, height 0.2s ease, right 0.2s ease;
 }
 
@@ -97,12 +98,12 @@ module[data-module="navigation"] {
 .guild-rail__button--profile:focus .guild-rail__indicator,
 .guild-rail__button--profile:focus-visible .guild-rail__indicator {
   opacity: 1;
-  height: 22px;
+  height: 20px;
 }
 
 .guild-rail__button--profile.is-active .guild-rail__indicator {
   opacity: 1;
-  height: 32px;
+  height: 28px;
 }
 
 .guild-rail__ring {
