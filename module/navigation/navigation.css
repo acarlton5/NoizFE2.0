@@ -35,6 +35,7 @@ module[data-module="navigation"] {
 }
 
 .guild-rail__button {
+  --accent: #5865f2;
   position: relative;
   width: 48px;
   height: 48px;
@@ -45,19 +46,82 @@ module[data-module="navigation"] {
   display: grid;
   place-items: center;
   cursor: pointer;
-  transition: border-radius 0.15s ease, background 0.15s ease;
+  transition: border-radius 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
 .guild-rail__button:hover,
 .guild-rail__button:focus {
   border-radius: 16px;
   outline: none;
+}
+
+.guild-rail__button:not(.guild-rail__button--profile):hover,
+.guild-rail__button:not(.guild-rail__button--profile):focus {
   background: #5865f2;
 }
 
-.guild-rail__button.is-active {
+.guild-rail__button:not(.guild-rail__button--profile).is-active {
   border-radius: 16px;
   background: #5865f2;
+}
+
+.guild-rail__button--profile {
+  background: #2b2d31;
+}
+
+.guild-rail__button--profile:hover,
+.guild-rail__button--profile:focus-visible {
+  background: #404249;
+}
+
+.guild-rail__button--profile.is-active {
+  background: #404249;
+  box-shadow: 0 0 0 2px var(--accent);
+}
+
+.guild-rail__indicator {
+  position: absolute;
+  top: 50%;
+  left: -6px;
+  width: 6px;
+  height: 14px;
+  border-radius: 999px;
+  background: var(--accent);
+  opacity: 0;
+  transform: translateY(-50%);
+  transition: opacity 0.2s ease, height 0.2s ease;
+}
+
+.guild-rail__button--profile:hover .guild-rail__indicator,
+.guild-rail__button--profile:focus .guild-rail__indicator,
+.guild-rail__button--profile:focus-visible .guild-rail__indicator {
+  opacity: 1;
+  height: 22px;
+}
+
+.guild-rail__button--profile.is-active .guild-rail__indicator {
+  opacity: 1;
+  height: 32px;
+}
+
+.guild-rail__ring {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+
+.guild-rail__button--profile .avatar-wrap {
+  --avi-width: 40px;
+  --avi-height: 40px;
+  --frame-bleed: 18%;
+  --frame-opacity: 1;
+}
+
+.guild-rail__button--profile .avatar-wrap .avatar-image {
+  border-radius: 50%;
 }
 
 .guild-rail__button--home {
@@ -95,6 +159,40 @@ module[data-module="navigation"] {
   text-transform: uppercase;
 }
 
+.guild-rail__presence {
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 3px solid #1e1f22;
+  background: #23a559;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.5);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.guild-rail__button[data-status] .guild-rail__presence {
+  opacity: 1;
+}
+
+.guild-rail__button[data-status='idle'] .guild-rail__presence {
+  background: #f0b232;
+}
+
+.guild-rail__button[data-status='dnd'] .guild-rail__presence {
+  background: #f23f42;
+}
+
+.guild-rail__button[data-status='offline'] .guild-rail__presence {
+  background: #80848e;
+}
+
+.guild-rail__button[data-status='streaming'] .guild-rail__presence {
+  background: #593695;
+}
+
 .guild-rail__footer {
   display: flex;
   flex-direction: column;
@@ -123,14 +221,12 @@ module[data-module="navigation"] {
 }
 
 .guild-rail__button--dm {
-  overflow: hidden;
-  background: #313338;
+  overflow: visible;
 }
-.guild-rail__avatar {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
+
+.guild-rail__button--dm .guild-rail__ring {
+  width: 40px;
+  height: 40px;
 }
 
 @media (max-width: 991.98px) {
@@ -162,5 +258,24 @@ module[data-module="navigation"] {
   .guild-rail__button {
     width: 44px;
     height: 44px;
+  }
+  .guild-rail__button--profile .guild-rail__indicator {
+    left: -5px;
+    width: 5px;
+  }
+  .guild-rail__button--profile .avatar-wrap {
+    --avi-width: 36px;
+    --avi-height: 36px;
+  }
+  .guild-rail__button--profile .guild-rail__ring {
+    width: 36px;
+    height: 36px;
+  }
+  .guild-rail__button--profile .guild-rail__presence {
+    bottom: 2px;
+    right: 2px;
+    width: 12px;
+    height: 12px;
+    border-width: 2px;
   }
 }

@@ -7,55 +7,95 @@ const GUILDS = [
     initials: 'GG',
     color: '#5865F2',
     module: 'discord-home',
-    description: 'Design hub'
+    description: 'Design hub',
+    userToken: 'john-viking'
   },
   {
     id: 'playmakers',
     name: 'Playmakers',
     initials: 'P',
     color: '#FEE75C',
-    description: 'Scrims'
+    description: 'Scrims',
+    userToken: 'marina-valentine'
   },
   {
     id: 'team-alpha',
     name: 'Team Alpha',
     initials: 'TA',
     color: '#F23F42',
-    description: 'Competitive'
+    description: 'Competitive',
+    userToken: 'nick-grissom'
   },
   {
     id: 'noiz-lab',
     name: 'Noiz Lab',
     initials: 'NL',
     color: '#43B581',
-    description: 'Experiments'
+    description: 'Experiments',
+    userToken: 'neko-bebop'
   },
   {
     id: 'orbit',
     name: 'Orbit',
     initials: 'O',
     color: '#EB459E',
-    description: 'Creator collabs'
+    description: 'Creator collabs',
+    userToken: 'sarah-diamond'
   }
 ];
 
-const createGuildButton = ({ id, name, initials, color, module, description }) => `
-  <button
-    class="guild-rail__button"
-    type="button"
-    data-guild-id="${id}"
-    ${module ? `data-module="${module}"` : ''}
-    data-title="${name}"
-  >
-    <span class="guild-rail__badge" style="background:${color}">${initials}</span>
-    <span class="visually-hidden">${description || name}</span>
-  </button>
-`;
+const getPresenceState = (user) => {
+  if (!user || !user.status) return '';
+  if (user.status.streaming) return 'streaming';
+  if (user.status.dnd) return 'dnd';
+  if (user.status.away) return 'idle';
+  if (user.status.online) return 'online';
+  return 'offline';
+};
+
+const createGuildButton = ({ id, name, initials, color, module, description, user }) => {
+  const label = description || name;
+  const accent = (user && user.accent) || color || '#5865F2';
+  const status = user ? getPresenceState(user) : '';
+  const accentStyle = accent ? ` style="--accent:${accent}"` : '';
+  const statusAttr = status ? ` data-status="${status}"` : '';
+  const frameVar = user && user.frame ? `--frame:url('${user.frame}')` : '--frame:none';
+  const avatarMarkup = user && user.avatar
+    ? `<span class="avatar-wrap guild-rail__avatar" style="--avi-width:40px; --avi-height:40px; --frame-bleed:18%; --frame-opacity:1; ${frameVar};"><img class="avatar-image" src="${user.avatar}" alt="${user.name || name}"></span>`
+    : `<span class="guild-rail__badge" style="background:${accent};">${initials || (name ? name.slice(0, 2) : '?')}</span>`;
+
+  return `
+    <button
+      class="guild-rail__button guild-rail__button--profile"
+      type="button"
+      data-guild-id="${id}"
+      ${module ? `data-module="${module}"` : ''}
+      data-title="${name}"${accentStyle}${statusAttr}
+    >
+      <span class="guild-rail__indicator" aria-hidden="true"></span>
+      <span class="guild-rail__ring">${avatarMarkup}</span>
+      ${status ? '<span class="guild-rail__presence" aria-hidden="true"></span>' : ''}
+      <span class="visually-hidden">${label}</span>
+    </button>
+  `;
+};
 
 export default async function init({ hub, root, utils }) {
   let currentModule = 'discord-home';
   const loggedToken = await fetch('/data/logged-in.json').then((r) => r.json()).catch(() => null);
   const currentUser = loggedToken ? await getUserByToken(loggedToken) : null;
+  const currentStatus = currentUser ? getPresenceState(currentUser) : '';
+  const guildProfiles = await Promise.all(
+    GUILDS.map(async (guild) => {
+      if (!guild.userToken) return guild;
+      try {
+        const user = await getUserByToken(guild.userToken);
+        return { ...guild, user };
+      } catch (error) {
+        return guild;
+      }
+    })
+  );
 
   // Render the guild rail (Discord-style server switcher)
   root.innerHTML = `
@@ -68,7 +108,7 @@ export default async function init({ hub, root, utils }) {
           <span class="visually-hidden">Home</span>
         </button>
         <div class="guild-rail__divider" role="presentation"></div>
-        ${GUILDS.map(createGuildButton).join('')}
+        ${guildProfiles.map(createGuildButton).join('')}
       </div>
       <div class="guild-rail__footer">
         <button class="guild-rail__button guild-rail__button--add" type="button" aria-label="Add a server">+</button>
@@ -80,8 +120,14 @@ export default async function init({ hub, root, utils }) {
           </svg>
         </button>
         ${currentUser ? `
-        <button class="guild-rail__button guild-rail__button--dm" type="button" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}">
-          ${currentUser.avatar ? `<img class="guild-rail__avatar" src="${currentUser.avatar}" alt="${currentUser.name}">` : `<span class="guild-rail__badge" style="background:${currentUser.accent || '#5865F2'}">${(currentUser.name || '?').slice(0,2)}</span>`}
+        <button class="guild-rail__button guild-rail__button--profile guild-rail__button--dm" type="button" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}" style="--accent:${currentUser.accent || '#5865F2'}"${currentStatus ? ` data-status="${currentStatus}"` : ''}>
+          <span class="guild-rail__indicator" aria-hidden="true"></span>
+          <span class="guild-rail__ring">
+            ${currentUser.avatar
+              ? `<span class="avatar-wrap guild-rail__avatar" style="--avi-width:40px; --avi-height:40px; --frame-bleed:18%; --frame-opacity:1; ${currentUser.frame ? `--frame:url('${currentUser.frame}')` : '--frame:none'};"><img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}"></span>`
+              : `<span class="guild-rail__badge" style="background:${currentUser.accent || '#5865F2'};">${(currentUser.name || '?').slice(0, 2)}</span>`}
+          </span>
+          ${currentStatus ? '<span class="guild-rail__presence" aria-hidden="true"></span>' : ''}
           <span class="visually-hidden">Direct messages</span>
         </button>` : ''}
       </div>
