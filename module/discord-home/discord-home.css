@@ -107,15 +107,18 @@ module[data-module="discord-home"] {
 }
 
 .channel--dm {
+  position: relative;
   grid-template-columns: auto 1fr;
   gap: 12px;
+  padding-left: 18px;
 }
 
 .channel-dm__media {
   position: relative;
   display: grid;
   place-items: center;
-  padding-right: 10px;
+  padding-right: 0;
+  z-index: 1;
 }
 
 .channel-dm__media .avatar-wrap {
@@ -129,7 +132,7 @@ module[data-module="discord-home"] {
 .channel-dm__presence {
   position: absolute;
   bottom: 2px;
-  right: 12px;
+  right: -2px;
   width: 14px;
   height: 14px;
   border-radius: 50%;
@@ -151,26 +154,54 @@ module[data-module="discord-home"] {
 
 .channel-dm__accent {
   position: absolute;
+  left: 8px;
   top: 50%;
-  right: 0;
-  transform: translate(50%, -50%);
+  transform: translate(-50%, -50%);
   width: 6px;
-  height: 28px;
+  height: 32px;
   border-radius: 999px;
   background: var(--dm-accent, #5865f2);
-  box-shadow: 0 0 14px rgba(0, 0, 0, 0.45), 0 0 12px var(--dm-accent, #5865f2);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.45), 0 0 14px var(--dm-accent, #5865f2);
+  opacity: 0.85;
+  pointer-events: none;
+  z-index: 2;
 }
 
 .channel--dm[aria-current="true"] .channel-dm__accent,
 .channel--dm:hover .channel-dm__accent,
 .channel--dm:focus .channel-dm__accent {
   box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.55), 0 0 18px var(--dm-accent, #5865f2);
+  opacity: 1;
+}
+
+.channel--dm::after {
+  content: '';
+  position: absolute;
+  inset: 2px 8px;
+  border-radius: 6px;
+  background: rgba(88, 101, 242, 0.12);
+  background: color-mix(in srgb, var(--dm-accent, #5865f2) 18%, transparent);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.channel--dm:hover::after,
+.channel--dm:focus::after,
+.channel--dm[aria-current="true"]::after {
+  opacity: 1;
 }
 .channel__icon span {
   font-weight: 700;
 }
 .channel__label {
   justify-self: start;
+}
+
+.channel--dm .channel__label {
+  position: relative;
+  z-index: 1;
 }
 .channel__badge {
   justify-self: end;

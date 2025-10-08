@@ -200,15 +200,20 @@ const renderChannel = (channel) => {
     const frame = channel.frame || `conic-gradient(from 90deg, ${accent}, transparent)`;
     return `
       <li>
-        <button class="channel channel--dm" type="button" data-channel-id="${channel.id}" ${
-          channel.active ? 'aria-current="true"' : ''
-        } data-status="${channel.status || 'offline'}" style="--dm-accent:${accent};">
+        <button
+          class="channel channel--dm"
+          type="button"
+          data-channel-id="${channel.id}"
+          ${channel.active ? 'aria-current="true"' : ''}
+          data-status="${channel.status || 'offline'}"
+          style="--dm-accent:${accent};"
+        >
+          <span class="channel-dm__accent" aria-hidden="true"></span>
           <span class="channel-dm__media">
             <span class="avatar-wrap" style="--avi-width:36px; --avi-height:36px; --frame:${frame}; --frame-bleed:18%;">
               <img class="avatar-image" src="${channel.avatar}" alt="${channel.label}">
             </span>
             <span class="channel-dm__presence" aria-hidden="true"></span>
-            <span class="channel-dm__accent" aria-hidden="true"></span>
           </span>
           <span class="channel__label">${channel.label}</span>
         </button>
