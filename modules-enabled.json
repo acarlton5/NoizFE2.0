@@ -1,74 +1,30 @@
 {
-  "navigation": {
-    "name": "navigation",
-    "icon": "bars",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "app-header": {
+    "name": "app-header",
     "services": false
   },
-  "header": {
-    "name": "header",
-    "icon": "home",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
-    "services": true
-  },
-  "noiz-hub": {
-    "name": "noiz-hub",
-    "icon": "messages",
-    "status": "enabled",
-    "navigation": true,
-    "header": false,
+  "server-rail": {
+    "name": "server-rail",
     "services": false
   },
-  "noiz-channel-sidebar": {
-    "name": "noiz-channel-sidebar",
-    "icon": "hash",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "channel-sidebar": {
+    "name": "channel-sidebar",
     "services": false
   },
-  "noiz-chat": {
-    "name": "noiz-chat",
-    "icon": "comments",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "channel-header": {
+    "name": "channel-header",
     "services": false
   },
-  "noiz-members": {
-    "name": "noiz-members",
-    "icon": "users",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "chat-pane": {
+    "name": "chat-pane",
     "services": false
   },
-  "svgs": {
-    "name": "svgs",
-    "icon": "images",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "chat-composer": {
+    "name": "chat-composer",
     "services": false
   },
-  "mini-profile": {
-    "name": "mini-profile",
-    "icon": "user",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
-    "services": false
-  },
-  "profile-overlay": {
-    "name": "profile-overlay",
-    "icon": "profile",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
+  "members-rail": {
+    "name": "members-rail",
     "services": false
   }
 }

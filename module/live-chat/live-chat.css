@@ -1,0 +1,14 @@
+.noiz-live-chat{ display:flex; flex-direction:column; height:100%; background:#12151a; }
+.noiz-live-chat .lc-hdr{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:.5rem .5rem; border-bottom:1px solid rgba(255,255,255,.06);
+  color:#e8ecf2; background:#151921;
+}
+.noiz-live-chat .title{ font-weight:700; }
+.noiz-live-chat .actions{ display:flex; gap:.25rem; }
+.noiz-live-chat .lc-btn{ width:26px;height:22px;border-radius:6px;border:0;background:transparent;color:#cfd6df; }
+.noiz-live-chat .lc-btn:hover{ background:rgba(255,255,255,.07); }
+
+.noiz-live-chat .lc-host{ flex:1 1 auto; min-height:0; display:flex; flex-direction:column; }
+.noiz-live-chat module[data-module="chat-pane"]{ flex:1 1 auto; }
+.noiz-live-chat module[data-module="chat-composer"]{ flex:0 0 auto; border-top:1px solid rgba(255,255,255,.06); }

@@ -1,0 +1,54 @@
+/* Thin, minimal top bar like your screenshot */
+:root { --header-height: 32px; } /* keeps your layout calc in sync */
+
+.noiz-app-header-min {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  height: var(--header-height);
+  background: #0f0f10;                 /* very dark */
+  border-bottom: 1px solid rgba(255,255,255,.08);
+  color: #e7eaef;
+  -webkit-user-select: none; user-select: none;
+}
+
+.noiz-app-header-min .container-fluid {
+  height: 100%;
+}
+
+.noiz-app-header-min .hdr-side {
+  min-width: 92px;                      /* balance space for the centered title */
+  justify-content: flex-end;
+}
+
+.noiz-app-header-min .hdr-center {
+  line-height: 1;
+  height: 100%;
+  pointer-events: none;                 /* makes center feel static */
+}
+
+.noiz-app-header-min .hdr-icon {
+  width: 16px; height: 16px; border-radius: 3px; display: block;
+}
+
+.noiz-app-header-min .hdr-title {
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: .2px;
+  opacity: .95;
+  white-space: nowrap;
+}
+
+.noiz-app-header-min .hdr-btn {
+  pointer-events: auto;
+  display: inline-grid;
+  place-items: center;
+  width: 26px; height: 22px;
+  border-radius: 6px;
+  border: 0;
+  background: transparent;
+  color: #cfd6df;
+  padding: 0;
+}
+.noiz-app-header-min .hdr-btn:hover { background: rgba(255,255,255,.07); }
+.noiz-app-header-min .hdr-success { color: #36d26b; } /* green download icon */

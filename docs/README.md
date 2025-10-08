@@ -1,39 +1,106 @@
-# NOIZ
+## Project Overview & Dev Workflow
 
-A modular, Bootstrap 5–powered starter for building responsive social/streaming UIs. Each feature is a small module that mounts into a `<module data-module="...">` tag.
+### NOIZ Web App
 
-## Project Structure
+A **Bootstrap 5 modular streaming UI**.
+Every on-screen region is a pluggable module; the shell just mounts them.
+
+---
+
+### 1. Project Layout
+
 ```
-.
-├── index.html      # Page skeleton with <module> mount points
-├── app.js          # Module loader, service loader, and event bus
-├── app.css         # Global styles + module imports
-├── modules-enabled.json # Lists modules to mount and services to preload
-├── module/         # One folder per module
-│   └── <name>/
-│       ├── <name>.js           # UI logic; generates markup dynamically (no separate HTML)
-│       └── <name>.service.js   # Optional service API loaded at startup
-├── data/           # JSON fixtures that drive the UI
-├── images/         # Static assets
-└── package.json    # npm scripts
+index.html              # Bootstrap grid w/ <module> mount points
+app.js                  # Scans DOM, loads modules & CSS, registers services, hub & routes
+app.css                 # Global resets + @imports for each module’s CSS
+modules-enabled.json    # Modules & services to preload at startup
+module/
+  app-header/
+  server-rail/
+  channel-sidebar/
+  chat-pane/
+  chat-composer/
+  members-rail/
+  live/
+  live-chat/
+  …
+data/                   # JSON fixtures
+images/                 # Static assets
+package.json
 ```
 
-## Module Services
-- During startup, `app.js` reads `modules-enabled.json` and eagerly imports `<module>/<name>.service.js` when present.
-- Each service registers its API with the global `hub`, letting other modules call it before the corresponding UI is mounted.
+---
 
-## Getting Started
-1. Run `npm start` to launch a local static server via [`live-server`](https://www.npmjs.com/package/live-server) on `http://127.0.0.1:5173/` without opening a browser.
-2. Open `http://127.0.0.1:5173/` in your browser to view `index.html`.
+### 2. Startup Flow
 
-## Development Guidelines
-- Build layouts with Bootstrap's grid (`container[-fluid]`, `row`, `col-*`).
-- Prefer responsive utilities; avoid fixed pixel widths or heights.
-- Test layouts on small screens using browser DevTools' device mode.
-- See [AGENTS.md](AGENTS.md) for complete contributing rules.
+1. `index.html` defines all **static mount points**.
+2. `app.js` on load:
 
-## Scripts
-- `npm start` – serve the project locally with `live-server` on port 5173.
-- `npm test` – placeholder tests; run before committing.
+   * reads `modules-enabled.json`
+   * pre-loads each module’s `.service.js`
+   * scans page for `<module>` tags
+   * loads the corresponding `module/<name>/<name>.js`
+   * injects the module’s CSS if present
+3. Each module’s `init()` runs with `{ root, props, hub }`.
 
-Happy hacking!
+---
+
+### 3. Adding a Module
+
+```bash
+mkdir module/hello
+touch module/hello/hello.js module/hello/hello.css
+```
+
+**hello.js**
+
+```js
+export default async function init({ root, props, hub }) {
+  root.innerHTML = `<div class="noiz-hello">Hello ${props.name||'World'}!</div>`;
+}
+```
+
+In `index.html`
+
+```html
+<module data-module="hello" data-props='{"name":"NOIZ"}'></module>
+```
+
+---
+
+### 4. Live-View Pattern
+
+* `live` module → video player & meta row in **center column**
+* `live-chat` module → right column with chat-pane & composer
+* `ui:openLive` event replaces current center/right modules with live ones
+* `ui:immersive:on` collapses left rails & widens live-chat
+* Leaving live (channel click / route change) → `ui:closeLive` restores original DOM
+
+---
+
+### 5. Coding Standards
+
+* Use **BS5 utilities & grid**; avoid fixed px values.
+* Scope all CSS under a `.noiz-<module>` wrapper.
+* Avoid cross-module DOM queries except for defined mount points.
+* Communicate via `hub.emit/on`; no direct imports of sibling modules.
+* Keep everything **mobile-first** and test at major breakpoints.
+
+---
+
+### 6. Dev Commands
+
+* `npm start` – launches [live-server](https://www.npmjs.com/package/live-server) on **[http://127.0.0.1:5173/](http://127.0.0.1:5173/)**
+* `npm test` – placeholder check to ensure CI passes
+* Preview with DevTools **Device Mode** for responsiveness.
+
+---
+
+### 7. Contributing Checklist
+
+* [ ] Follows **AGENTS.md** authoring rules
+* [ ] Responsive verified
+* [ ] No global CSS leakage
+* [ ] Works after unload/re-load
+* [ ] Emits/handles hub events appropriately
+* [ ] No console errors or scroll glitches
