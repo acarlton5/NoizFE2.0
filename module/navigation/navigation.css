@@ -17,6 +17,11 @@ module[data-module="navigation"] {
   align-items: center;
   padding: 12px 0;
   overflow: visible;
+  --indicator-gap: 12px;
+  --indicator-width: 6px;
+  --indicator-hover-h: 26px;
+  --indicator-active-h: 38px;
+  --indicator-dot-size: 10px;
 }
 
 .guild-rail__scroll {
@@ -81,30 +86,49 @@ module[data-module="navigation"] {
 .guild-rail__indicator {
   position: absolute;
   top: 50%;
-  left: calc(100% - 4px);
-  width: 14px;
-  height: 16px;
-  background: var(--accent);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+  width: var(--indicator-width);
+  height: var(--indicator-dot-size);
+  background: var(--accent, #5865f2);
   opacity: 0;
   transform: translateY(-50%);
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.32);
-  border-top-left-radius: 999px;
-  border-bottom-left-radius: 999px;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
-  transition: opacity 0.2s ease, height 0.2s ease, left 0.2s ease;
+  border-radius: 999px;
+  transition: opacity 0.18s ease, height 0.18s ease, width 0.18s ease,
+    left 0.18s ease, border-radius 0.18s ease;
+  z-index: 0;
+  pointer-events: none;
 }
 
 .guild-rail__button--profile:hover .guild-rail__indicator,
 .guild-rail__button--profile:focus .guild-rail__indicator,
 .guild-rail__button--profile:focus-visible .guild-rail__indicator {
   opacity: 1;
-  height: 20px;
+  height: var(--indicator-hover-h);
 }
 
 .guild-rail__button--profile.is-active .guild-rail__indicator {
   opacity: 1;
-  height: 28px;
+  height: var(--indicator-active-h);
+}
+
+.guild-rail__button--has-alert .guild-rail__indicator {
+  opacity: 1;
+  width: var(--indicator-dot-size);
+  height: var(--indicator-dot-size);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-dot-size)));
+}
+
+.guild-rail__button--has-alert:hover .guild-rail__indicator,
+.guild-rail__button--has-alert:focus .guild-rail__indicator,
+.guild-rail__button--has-alert:focus-visible .guild-rail__indicator {
+  width: var(--indicator-width);
+  height: var(--indicator-hover-h);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
+}
+
+.guild-rail__button--has-alert.is-active .guild-rail__indicator {
+  height: var(--indicator-active-h);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
 }
 
 .guild-rail__ring {
@@ -114,6 +138,7 @@ module[data-module="navigation"] {
   display: grid;
   place-items: center;
   position: relative;
+  z-index: 1;
 }
 
 .guild-rail__button--profile .avatar-wrap {
