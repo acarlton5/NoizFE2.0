@@ -59,8 +59,7 @@ module[data-module="user-rail"] .user-rail-item.active .avatar-wrap {
   --frame-opacity: 1;
 }
 
-module[data-module="user-rail"] .user-rail-item::before {
-  content: "";
+module[data-module="user-rail"] .user-rail-indicator {
   position: absolute;
   left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
   top: 50%;
@@ -70,36 +69,35 @@ module[data-module="user-rail"] .user-rail-item::before {
   border-radius: 0 10px 10px 0;
   transform: translateY(-50%);
   opacity: 0;
-  transition: height 0.16s ease, opacity 0.16s ease;
+  transition: height 0.16s ease, opacity 0.16s ease, width 0.16s ease, left 0.16s ease, border-radius 0.16s ease;
 }
 
-module[data-module="user-rail"] .user-rail-item:hover::before {
+module[data-module="user-rail"] .user-rail-item:hover .user-rail-indicator {
   height: var(--indicator-hover-h);
   opacity: 1;
 }
 
-module[data-module="user-rail"] .user-rail-item.active::before {
+module[data-module="user-rail"] .user-rail-item.active .user-rail-indicator {
   height: var(--indicator-active-h);
   opacity: 1;
 }
 
-module[data-module="user-rail"] .user-rail-item.has-notification::before {
+module[data-module="user-rail"] .user-rail-item.has-notification .user-rail-indicator {
   width: var(--dot-size);
   height: var(--dot-size);
   left: calc(-1 * (var(--indicator-gap) + var(--dot-size)));
   border-radius: 50%;
   opacity: 1;
-  transition: width 0.16s ease, height 0.16s ease, left 0.16s ease, border-radius 0.16s ease, opacity 0.16s ease;
 }
 
-module[data-module="user-rail"] .user-rail-item.has-notification:hover::before,
-module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+module[data-module="user-rail"] .user-rail-item.has-notification:hover .user-rail-indicator,
+module[data-module="user-rail"] .user-rail-item.has-notification.active .user-rail-indicator {
   width: var(--indicator-width);
   height: var(--indicator-hover-h);
   left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
   border-radius: 0 10px 10px 0;
 }
 
-module[data-module="user-rail"] .user-rail-item.has-notification.active::before {
+module[data-module="user-rail"] .user-rail-item.has-notification.active .user-rail-indicator {
   height: var(--indicator-active-h);
 }
