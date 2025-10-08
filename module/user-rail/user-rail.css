@@ -13,12 +13,12 @@ module[data-module="user-rail"] {
   --avi-height: 40px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  --indicator-gap: 10px;
-  --indicator-width: 6px;
-  --indicator-hover-h: 28px;
-  --indicator-active-h: calc(var(--avi-height) + 12px);
-  --indicator-unread-width: 6px;
-  --indicator-unread-height: 16px;
+  --indicator-gap: 8px;
+  --indicator-width: 4px;
+  --indicator-hover-h: 20px;
+  --indicator-active-h: calc(var(--avi-height) - 4px);
+  --indicator-unread-width: 4px;
+  --indicator-unread-height: 12px;
 }
 
 module[data-module="user-rail"] .user-rail {
@@ -81,7 +81,7 @@ module[data-module="user-rail"] .user-rail-item.has-notification .user-rail-indi
   width: var(--indicator-unread-width);
   height: var(--indicator-unread-height);
   left: calc(-1 * (var(--indicator-gap) + var(--indicator-unread-width)));
-  border-radius: 0 var(--indicator-unread-height) var(--indicator-unread-height) 0;
+  border-radius: 0 calc(var(--indicator-unread-height) / 2) calc(var(--indicator-unread-height) / 2) 0;
   opacity: 1;
 }
 
