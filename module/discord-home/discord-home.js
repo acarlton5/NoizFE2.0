@@ -9,38 +9,34 @@ export default async function init({ root }) {
   const accent = currentUser?.accent || DEFAULT_ACCENT;
 
   root.classList.add('discord-home');
-  root.innerHTML = `
-    <div class="discord-home__layout">
-      <module data-module="discord-channel-sidebar" data-css="true"></module>
-      <module data-module="discord-chat" data-css="true"></module>
-      <module data-module="discord-members" data-css="true"></module>
-    </div>
-  `;
+  root.innerHTML = '';
 
-  const sidebarNode = root.querySelector('module[data-module="discord-channel-sidebar"]');
-  const chatNode = root.querySelector('module[data-module="discord-chat"]');
-  const membersNode = root.querySelector('module[data-module="discord-members"]');
+  const layout = document.createElement('div');
+  layout.className = 'discord-home__layout';
 
-  if (sidebarNode) {
-    sidebarNode.setAttribute(
-      'data-props',
-      JSON.stringify({
-        accent,
-        boostGoal: BOOST_GOAL,
-        channelGroups: CHANNEL_GROUPS,
-        icons: ICONS,
-        user: currentUser
-      })
-    );
-  }
+  const createModule = (name, props) => {
+    const node = document.createElement('module');
+    node.setAttribute('data-module', name);
+    node.setAttribute('data-css', 'true');
+    if (props && Object.keys(props).length) {
+      node.setAttribute('data-props', JSON.stringify(props));
+    }
+    return node;
+  };
 
-  if (chatNode) {
-    chatNode.setAttribute('data-props', JSON.stringify({ messages: MESSAGES }));
-  }
+  root.appendChild(layout);
 
-  if (membersNode) {
-    membersNode.setAttribute('data-props', JSON.stringify({ groups: MEMBER_GROUPS }));
-  }
+  layout.append(
+    createModule('discord-channel-sidebar', {
+      accent,
+      boostGoal: BOOST_GOAL,
+      channelGroups: CHANNEL_GROUPS,
+      icons: ICONS,
+      user: currentUser
+    }),
+    createModule('discord-chat', { messages: MESSAGES }),
+    createModule('discord-members', { groups: MEMBER_GROUPS })
+  );
 
   return {
     getSections() {
