@@ -1,62 +1,74 @@
+import { getUserByToken } from '../users.js';
+
+const BOOST_GOAL = {
+  current: 9,
+  total: 28
+};
+
 const CHANNEL_GROUPS = [
   {
-    name: 'Text Channels',
+    name: 'Welcome',
     items: [
-      { id: 'welcome', label: 'welcome', icon: '#', unread: 3 },
-      { id: 'announcements', label: 'announcements', icon: '#', badge: 'new' },
-      { id: 'general', label: 'general', icon: '#', active: true },
-      { id: 'resources', label: 'resources', icon: '#', muted: true }
+      { id: 'welcome', icon: '📫', iconType: 'emoji', separator: '│', label: 'welcome' },
+      { id: 'rules', icon: '📜', iconType: 'emoji', separator: '│', label: 'rules' },
+      { id: 'introductions', icon: '👋', iconType: 'emoji', separator: '│', label: 'introductions' },
+      { id: 'new-joiners', icon: '✨', iconType: 'emoji', separator: '│', label: 'new-joiners' }
     ]
   },
   {
-    name: 'Direct Messages',
+    name: 'Important',
     items: [
-      {
-        id: 'dm-nova',
-        type: 'dm',
-        label: 'Nova',
-        status: 'online',
-        accent: '#ff5dad',
-        frame: 'conic-gradient(from 140deg, rgba(255, 93, 173, 0.9), rgba(255, 213, 79, 0.9), rgba(109, 200, 255, 0.9), rgba(255, 93, 173, 0.9))',
-        avatar: 'images/avatars/avatar-3.jpg'
-      },
-      {
-        id: 'dm-dex',
-        type: 'dm',
-        label: 'Dex',
-        status: 'idle',
-        accent: '#ff9f4a',
-        frame: 'conic-gradient(from 90deg, rgba(255, 159, 74, 0.9), rgba(247, 113, 185, 0.9), rgba(123, 182, 255, 0.9), rgba(255, 159, 74, 0.9))',
-        avatar: 'images/avatars/avatar-4.jpg'
-      },
-      {
-        id: 'dm-kai',
-        type: 'dm',
-        label: 'Kai',
-        status: 'dnd',
-        accent: '#8a7dff',
-        frame: 'conic-gradient(from 180deg, rgba(96, 87, 255, 0.95), rgba(151, 222, 255, 0.9), rgba(242, 131, 255, 0.9), rgba(96, 87, 255, 0.95))',
-        avatar: 'images/avatars/avatar-7.jpg'
-      },
-      {
-        id: 'dm-iris',
-        type: 'dm',
-        label: 'Iris',
-        status: 'offline',
-        accent: '#5cc3ff',
-        frame: 'conic-gradient(from 120deg, rgba(92, 195, 255, 0.9), rgba(132, 255, 187, 0.9), rgba(255, 190, 244, 0.9), rgba(92, 195, 255, 0.9))',
-        avatar: 'images/avatars/avatar-5.jpg'
-      }
+      { id: 'announcements', icon: '📌', iconType: 'emoji', separator: '│', label: 'announcements' },
+      { id: 'creator-events', icon: '🎉', iconType: 'emoji', separator: '│', label: 'creator-events' },
+      { id: 'prediction-card-game', icon: '🃏', iconType: 'emoji', separator: '│', label: 'prediction-card-game' }
     ]
   },
   {
-    name: 'Voice Channels',
+    name: 'Community',
     items: [
-      { id: 'stage', label: 'Stage Live', icon: '🔊' },
-      { id: 'lobby', label: 'Lobby', icon: '🔊' }
+      {
+        id: 'general',
+        iconSvg: 'chatBubble',
+        iconType: 'hash',
+        prefix: '#',
+        label: 'general',
+        active: true,
+        accent: '#6d6afc',
+        metaIcon: 'threads'
+      },
+      { id: 'general-creators', icon: '🎨', iconType: 'emoji', separator: '│', label: 'general-creators' },
+      { id: 'creator-studio', icon: '🎬', iconType: 'emoji', separator: '│', label: 'creator-events' },
+      { id: 'the-good-stuff', icon: '🤝', iconType: 'emoji', separator: '│', label: 'the-good-stuff' },
+      { id: 'clips', icon: '📼', iconType: 'emoji', separator: '│', label: 'clips' },
+      { id: 'going-live', icon: '📡', iconType: 'emoji', separator: '│', label: 'going-live' },
+      { id: 'memes', icon: '😂', iconType: 'emoji', separator: '│', label: 'memes' },
+      { id: 'twitch-extension-beta', icon: '🧪', iconType: 'emoji', separator: '│', label: 'twitch-extension-beta' },
+      { id: 'discord-community-talk', icon: '💬', iconType: 'emoji', separator: '│', label: 'discord-community-talk' }
+    ]
+  },
+  {
+    name: 'Support',
+    items: [
+      { id: 'feedback', icon: '📝', iconType: 'emoji', separator: '│', label: 'feedback' },
+      { id: 'bug-reports', icon: '🪲', iconType: 'emoji', separator: '│', label: 'bug-reports' }
     ]
   }
 ];
+
+const ICONS = {
+  chevronDown:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m6.29 9.29 5.3 5.3a.999.999 0 0 0 1.41 0l5.3-5.3A1 1 0 0 0 17.59 8H6.41a1 1 0 0 0-.12 1.29Z" /></svg>',
+  boost:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a1 1 0 0 1 .9.55l2 4A1 1 0 0 1 14 8h-4L6.73 3.7A1 1 0 0 1 7.5 2H12Zm-6.29 6.7a1 1 0 0 1 1.09.17L10 13h4l3.2 3.53a1 1 0 0 1-.74 1.67H6a1 1 0 0 1-.9-1.45l2.61-5.22-1.64-1.64a1 1 0 0 1 .36-1.66Z" /></svg>',
+  hashCircle:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.75 7.5 9.5 9h5l.25-1.5h1.5L15.75 9h2v1.5h-2.25l-.5 3H18v1.5h-2.5l-.25 1.5h-1.5l.25-1.5h-5l-.25 1.5h-1.5l.25-1.5h-2V13.5h2.25l.5-3H6v-1.5h2.5l.25-1.5Zm4 4.5h-5l-.5 3h5Z" /><path d="M12 2a10 10 0 1 1-7.07 2.93A10 10 0 0 1 12 2Zm0 1.5a8.5 8.5 0 1 0 8.5 8.5A8.51 8.51 0 0 0 12 3.5Z" /></svg>',
+  arrowRight:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 11h9.59l-4.3-4.29L12 5l7 7-7 7-1.71-1.71L14.59 13H5z" /></svg>',
+  threads:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 3h12a3 3 0 0 1 3 3v5.76a8.24 8.24 0 0 1-8.24 8.24H7.66l-3.32 3.32A.75.75 0 0 1 3 22.25v-3.25A8 8 0 0 1 2 12V6a3 3 0 0 1 3-3Zm0 1.5A1.5 1.5 0 0 0 4.5 6v6a6.5 6.5 0 0 0 1.75 4.44.75.75 0 0 1 .2.5v1.64l2.28-2.28a.75.75 0 0 1 .53-.22h4.5A6.74 6.74 0 0 0 19.5 11V6A1.5 1.5 0 0 0 18 4.5Z" /></svg>',
+  chatBubble:
+    '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4.5c4.69 0 8.5 3.13 8.5 7s-3.81 7-8.5 7a10 10 0 0 1-2.93-.43l-3.72 2.21a.75.75 0 0 1-1.13-.65v-3.34a6.5 6.5 0 0 1-3.22-5.51c0-3.87 3.81-7 8.5-7Zm0 1.5c-3.87 0-7 2.47-7 5.5a5 5 0 0 0 2.72 4.25.75.75 0 0 1 .39.66v2l2.66-1.57a.75.75 0 0 1 .6-.07A8.6 8.6 0 0 0 12 17c3.87 0 7-2.47 7-5.5S15.87 6 12 6Z" /></svg>'
+};
 
 const MESSAGES = [
   {
@@ -198,13 +210,14 @@ const renderChannel = (channel) => {
   if (channel.type === 'dm') {
     const accent = channel.accent || '#5865f2';
     const frame = channel.frame || `conic-gradient(from 90deg, ${accent}, transparent)`;
+    const activeAttr = channel.active ? 'aria-current="true"' : '';
     return `
       <li>
         <button
           class="channel channel--dm"
           type="button"
           data-channel-id="${channel.id}"
-          ${channel.active ? 'aria-current="true"' : ''}
+          ${activeAttr}
           data-status="${channel.status || 'offline'}"
           style="--dm-accent:${accent};"
         >
@@ -221,20 +234,28 @@ const renderChannel = (channel) => {
     `;
   }
 
+  const classes = ['channel'];
+  const activeAttr = channel.active ? 'aria-current="true"' : '';
+  const glyphClasses = ['channel__glyph'];
+  if (channel.iconType) {
+    glyphClasses.push(`channel__glyph--${channel.iconType}`);
+  }
+
+  const channelStyle = channel.accent ? ` style="--channel-accent:${channel.accent};"` : '';
+  const metaIcon = channel.metaIcon ? `<span class="channel__meta" aria-hidden="true">${ICONS[channel.metaIcon] || ''}</span>` : '';
+
+  const glyphMarkup = channel.iconSvg ? ICONS[channel.iconSvg] || channel.iconSvg : channel.icon || '#';
+
   return `
     <li>
-      <button class="channel" type="button" data-channel-id="${channel.id}" ${
-        channel.active ? 'aria-current="true"' : ''
-      }>
-        <span class="channel__icon">${channel.icon === '#' ? '<span>#</span>' : channel.icon}</span>
-        <span class="channel__label">${channel.label}</span>
-        ${channel.badge ? `<span class="channel__badge">${channel.badge}</span>` : ''}
-        ${channel.unread ? `<span class="channel__unread">${channel.unread}</span>` : ''}
-        ${
-          channel.muted
-            ? '<svg class="channel__muted" viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3-4 4H8v6h4l4 4zM5 4l14 14-1.5 1.5L3.5 5.5z" /></svg>'
-            : ''
-        }
+      <button class="${classes.join(' ')}" type="button" data-channel-id="${channel.id}" ${activeAttr}${channelStyle}>
+        <span class="${glyphClasses.join(' ')}">${glyphMarkup}</span>
+        ${channel.separator ? `<span class="channel__separator">${channel.separator}</span>` : ''}
+        <span class="channel__label">
+          ${channel.prefix ? `<span class="channel__label-prefix">${channel.prefix}</span>` : ''}
+          <span class="channel__label-text">${channel.label}</span>
+        </span>
+        ${metaIcon}
       </button>
     </li>
   `;
@@ -244,7 +265,7 @@ const renderChannelGroup = (group) => `
   <section class="channel-group">
     <header class="channel-group__header">
       <button type="button" class="channel-group__toggle" aria-label="Collapse ${group.name}">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l8 7-8 7z" /></svg>
+        ${ICONS.chevronDown}
       </button>
       <span>${group.name}</span>
     </header>
@@ -252,6 +273,61 @@ const renderChannelGroup = (group) => `
       ${group.items.map((channel) => renderChannel(channel)).join('')}
     </ul>
   </section>
+`;
+
+const renderChannelHero = (user) => {
+  const accent = user?.accent || '#5865f2';
+  const bannerStyle = user?.banner ? ` style="--hero-banner:url('${user.banner}');"` : '';
+  const frameStyle = user?.frame ? `--frame:url('${user.frame}');` : '--frame:none;';
+  const avatar = user?.avatar || 'images/avatars/avatar-2.jpg';
+  const name = user?.name || 'Noice Member';
+  const subtitle = user?.bio || 'Channeling the community energy.';
+
+  return `
+    <div class="channel-hero" style="--hero-accent:${accent};">
+      <div class="channel-hero__banner"${bannerStyle}></div>
+      <div class="channel-hero__overlay"></div>
+      <div class="channel-hero__content">
+        <button class="channel-hero__server" type="button">
+          <span class="channel-hero__server-name">Noice</span>
+          ${ICONS.chevronDown}
+        </button>
+        <div class="channel-hero__profile">
+          <span class="avatar-wrap channel-hero__avatar" style="--avi-width:72px; --avi-height:72px; --frame-bleed:24%; --frame-opacity:1; ${frameStyle}">
+            <img class="avatar-image" src="${avatar}" alt="${name}">
+          </span>
+          <div class="channel-hero__meta">
+            <p class="channel-hero__label">${name}</p>
+            <p class="channel-hero__subtitle">${subtitle}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+};
+
+const renderBoostGoal = (accent) => {
+  const percent = Math.min(100, Math.round((BOOST_GOAL.current / BOOST_GOAL.total) * 100));
+  return `
+    <div class="channel-boost" style="--boost-accent:${accent}; --boost-progress:${percent}%;">
+      <button class="channel-boost__cta" type="button">
+        <span class="channel-boost__icon">${ICONS.boost}</span>
+        <span class="channel-boost__text">Boost Goal</span>
+      </button>
+      <div class="channel-boost__progress">
+        <span class="channel-boost__count">${BOOST_GOAL.current}/${BOOST_GOAL.total} Boosts</span>
+        <div class="channel-boost__bar"><span></span></div>
+      </div>
+    </div>
+  `;
+};
+
+const renderChannelsDirectory = () => `
+  <button class="channel-directory" type="button">
+    <span class="channel-directory__icon">${ICONS.hashCircle}</span>
+    <span class="channel-directory__label">Channels & Roles</span>
+    <span class="channel-directory__chevron">${ICONS.arrowRight}</span>
+  </button>
 `;
 
 const renderMemberGroup = (group) => `
@@ -279,15 +355,22 @@ const renderMemberGroup = (group) => `
 `;
 
 export default async function init({ root, utils }) {
+  const loggedToken = await fetch('/data/logged-in.json').then((r) => r.json()).catch(() => null);
+  const currentUser = loggedToken ? await getUserByToken(loggedToken).catch(() => null) : null;
+  const accent = currentUser?.accent || '#5865f2';
+
   root.innerHTML = `
     <div class="discord-shell">
       <aside class="discord-shell__column discord-shell__column--channels">
-        <div class="channel-header">
-          <div class="channel-header__title">Boost this server</div>
-          <button class="channel-header__cta" type="button">Get Nitro</button>
-        </div>
-        <div class="channel-scroll">
-          ${CHANNEL_GROUPS.map(renderChannelGroup).join('')}
+        <div class="channel-sidebar">
+          ${renderChannelHero(currentUser)}
+          <div class="channel-sidebar__body">
+            ${renderBoostGoal(accent)}
+            ${renderChannelsDirectory()}
+            <div class="channel-scroll">
+              ${CHANNEL_GROUPS.map(renderChannelGroup).join('')}
+            </div>
+          </div>
         </div>
       </aside>
       <section class="discord-shell__column discord-shell__column--chat">
