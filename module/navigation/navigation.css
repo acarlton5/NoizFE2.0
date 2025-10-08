@@ -82,7 +82,7 @@ module[data-module="navigation"] {
 .guild-rail__indicator {
   position: absolute;
   top: 50%;
-  left: -6px;
+  right: -6px;
   width: 6px;
   height: 14px;
   border-radius: 999px;
