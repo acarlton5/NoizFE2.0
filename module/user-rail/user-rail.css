@@ -47,16 +47,18 @@ module[data-module="user-rail"] .user-rail-item {
 }
 
 module[data-module="user-rail"] .user-rail-item .avatar-wrap {
-  --frame-opacity: 0;
+  --frame-bleed: 18%;
+  --frame-opacity: 1;
+  transition: transform 0.16s ease;
 }
 
 module[data-module="user-rail"] .user-rail-item .avatar-wrap::after {
-  transition: opacity 0.16s ease;
+  transition: opacity 0.16s ease, transform 0.16s ease;
 }
 
 module[data-module="user-rail"] .user-rail-item:hover .avatar-wrap,
 module[data-module="user-rail"] .user-rail-item.active .avatar-wrap {
-  --frame-opacity: 1;
+  transform: translateY(-2px);
 }
 
 module[data-module="user-rail"] .user-rail-item::before {
