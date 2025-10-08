@@ -350,6 +350,9 @@ async function handleRoute() {
     const mod = match[1];
     const token = match[2];
 
+    
+  }
+
 }
 window.addEventListener("popstate", () => { handleRoute(); });
 window.addEventListener("hashchange", () => { handleRoute(); });
