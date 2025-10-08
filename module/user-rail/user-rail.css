@@ -13,11 +13,12 @@ module[data-module="user-rail"] {
   --avi-height: 40px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  --indicator-gap: 8px;
-  --indicator-width: 4px;
-  --indicator-hover-h: 24px;
-  --indicator-active-h: 32px;
-  --dot-size: 8px;
+  --indicator-gap: 10px;
+  --indicator-width: 6px;
+  --indicator-hover-h: 28px;
+  --indicator-active-h: calc(var(--avi-height) + 12px);
+  --indicator-unread-width: 6px;
+  --indicator-unread-height: 16px;
 }
 
 module[data-module="user-rail"] .user-rail {
@@ -47,16 +48,8 @@ module[data-module="user-rail"] .user-rail-item {
 }
 
 module[data-module="user-rail"] .user-rail-item .avatar-wrap {
-  --frame-opacity: 0;
-}
-
-module[data-module="user-rail"] .user-rail-item .avatar-wrap::after {
-  transition: opacity 0.16s ease;
-}
-
-module[data-module="user-rail"] .user-rail-item:hover .avatar-wrap,
-module[data-module="user-rail"] .user-rail-item.active .avatar-wrap {
   --frame-opacity: 1;
+  --frame-bleed: 22%;
 }
 
 module[data-module="user-rail"] .user-rail-indicator {
@@ -64,9 +57,9 @@ module[data-module="user-rail"] .user-rail-indicator {
   left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
   top: 50%;
   width: var(--indicator-width);
-  height: 0;
+  height: var(--indicator-hover-h);
   background: var(--accent, #ff72b6);
-  border-radius: 0 10px 10px 0;
+  border-radius: var(--indicator-hover-h);
   transform: translateY(-50%);
   opacity: 0;
   transition: height 0.16s ease, opacity 0.16s ease, width 0.16s ease, left 0.16s ease, border-radius 0.16s ease;
@@ -75,18 +68,20 @@ module[data-module="user-rail"] .user-rail-indicator {
 module[data-module="user-rail"] .user-rail-item:hover .user-rail-indicator {
   height: var(--indicator-hover-h);
   opacity: 1;
+  border-radius: var(--indicator-hover-h);
 }
 
 module[data-module="user-rail"] .user-rail-item.active .user-rail-indicator {
   height: var(--indicator-active-h);
   opacity: 1;
+  border-radius: var(--indicator-active-h);
 }
 
 module[data-module="user-rail"] .user-rail-item.has-notification .user-rail-indicator {
-  width: var(--dot-size);
-  height: var(--dot-size);
-  left: calc(-1 * (var(--indicator-gap) + var(--dot-size)));
-  border-radius: 50%;
+  width: var(--indicator-unread-width);
+  height: var(--indicator-unread-height);
+  left: calc(-1 * (var(--indicator-gap) + var(--indicator-unread-width)));
+  border-radius: 0 var(--indicator-unread-height) var(--indicator-unread-height) 0;
   opacity: 1;
 }
 
@@ -95,9 +90,10 @@ module[data-module="user-rail"] .user-rail-item.has-notification.active .user-ra
   width: var(--indicator-width);
   height: var(--indicator-hover-h);
   left: calc(-1 * (var(--indicator-gap) + var(--indicator-width)));
-  border-radius: 0 10px 10px 0;
+  border-radius: var(--indicator-hover-h);
 }
 
 module[data-module="user-rail"] .user-rail-item.has-notification.active .user-rail-indicator {
   height: var(--indicator-active-h);
+  border-radius: var(--indicator-active-h);
 }
