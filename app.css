@@ -15557,6 +15557,10 @@ figure > img {
 
 /*# sourceMappingURL=styles.css.map */
 
+:root {
+  --noiz-header-height: 56px;
+}
+
 body {
   background: #313338;
   color: #f2f3f5;
@@ -15565,8 +15569,8 @@ body {
 
 .app-stage {
   margin-left: 72px;
-  padding-top: 56px;
-  min-height: calc(100vh - 56px);
+  padding-top: var(--noiz-header-height, 56px);
+  min-height: calc(100vh - var(--noiz-header-height, 56px));
   background: #313338;
 }
 

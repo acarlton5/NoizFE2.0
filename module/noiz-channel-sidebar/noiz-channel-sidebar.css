@@ -3,13 +3,15 @@ module[data-module="noiz-channel-sidebar"] {
   background: #2b2d31;
   border-right: 1px solid #1f2124;
   color: inherit;
+  overflow: visible;
+  --sidebar-header-offset: var(--noiz-header-height, 56px);
 }
 
 module[data-module="noiz-channel-sidebar"]::before {
   content: '';
   position: absolute;
-  top: 0;
-  bottom: 0;
+  top: calc(-1 * var(--sidebar-header-offset));
+  height: calc(100% + var(--sidebar-header-offset));
   left: 0;
   width: 4px;
   background: var(--channel-accent, var(--active-guild-accent, #5865f2));
