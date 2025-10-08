@@ -16,7 +16,7 @@ module[data-module="navigation"] {
   flex-direction: column;
   align-items: center;
   padding: 12px 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .guild-rail__scroll {
@@ -82,14 +82,15 @@ module[data-module="navigation"] {
 .guild-rail__indicator {
   position: absolute;
   top: 50%;
-  right: -6px;
-  width: 6px;
+  right: -8px;
+  width: 16px;
   height: 14px;
   border-radius: 999px;
   background: var(--accent);
   opacity: 0;
   transform: translateY(-50%);
-  transition: opacity 0.2s ease, height 0.2s ease;
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.35);
+  transition: opacity 0.2s ease, height 0.2s ease, right 0.2s ease;
 }
 
 .guild-rail__button--profile:hover .guild-rail__indicator,

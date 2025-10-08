@@ -19,8 +19,27 @@ module[data-module="discord-home"] {
 }
 
 .discord-shell__column--channels {
+  position: relative;
   background: #2b2d31;
   border-right: 1px solid #1f2124;
+}
+
+.discord-shell__column--channels::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 8px;
+  background: var(--active-guild-accent, #5865f2);
+  box-shadow: 0 0 18px rgba(0, 0, 0, 0.4), 0 0 24px var(--active-guild-accent, #5865f2);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.discord-shell__column--channels > * {
+  position: relative;
+  z-index: 2;
 }
 
 .channel-sidebar {
@@ -362,7 +381,7 @@ module[data-module="discord-home"] {
   width: 4px;
   height: 60%;
   border-radius: 999px;
-  background: var(--channel-accent, #5865f2);
+  background: var(--channel-accent, var(--active-guild-accent, #5865f2));
   opacity: 0;
   transition: opacity 0.2s ease;
 }

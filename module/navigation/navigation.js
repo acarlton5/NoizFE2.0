@@ -135,16 +135,36 @@ export default async function init({ hub, root, utils }) {
   `;
 
   const buttons = root.querySelectorAll('.guild-rail__button[data-module]');
+  const getAccentFromButton = (button) => {
+    if (!button) return '';
+    const inlineAccent = button.style.getPropertyValue('--accent');
+    if (inlineAccent && inlineAccent.trim()) {
+      return inlineAccent.trim();
+    }
+    const computed = window.getComputedStyle(button).getPropertyValue('--accent');
+    return computed.trim();
+  };
+
+  const applyActiveAccent = (accent) => {
+    const nextAccent = accent && accent.trim() ? accent.trim() : '#5865f2';
+    document.documentElement.style.setProperty('--active-guild-accent', nextAccent);
+  };
+
   const updateActive = (moduleName) => {
     if (!moduleName) return;
     currentModule = moduleName;
+    let activeAccent = '';
     buttons.forEach((btn) => {
       if (btn.getAttribute('data-module') === moduleName) {
         btn.classList.add('is-active');
+        if (!activeAccent) {
+          activeAccent = getAccentFromButton(btn);
+        }
       } else {
         btn.classList.remove('is-active');
       }
     });
+    applyActiveAccent(activeAccent);
   };
 
   utils.delegate(root, 'click', '.guild-rail__button[data-module]', (event, button) => {
