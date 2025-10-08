@@ -13,12 +13,12 @@ module[data-module="user-rail"] {
   --avi-height: 40px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-  --indicator-gap: 8px;
-  --indicator-width: 4px;
-  --indicator-hover-h: 20px;
-  --indicator-active-h: calc(var(--avi-height) - 4px);
-  --indicator-unread-width: 4px;
-  --indicator-unread-height: 12px;
+  --indicator-gap: 3px;
+  --indicator-width: 2px;
+  --indicator-hover-h: 14px;
+  --indicator-active-h: calc(var(--avi-height) - 10px);
+  --indicator-unread-width: 6px;
+  --indicator-unread-height: 8px;
 }
 
 module[data-module="user-rail"] .user-rail {
