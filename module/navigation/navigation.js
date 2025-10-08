@@ -57,16 +57,18 @@ const createGuildButton = ({ id, name, initials, color, module, description, use
   const label = description || name;
   const accent = (user && user.accent) || color || '#5865F2';
   const status = user ? getPresenceState(user) : '';
+  const hasNotification = Boolean(user && user.hasNotification);
   const accentStyle = accent ? ` style="--accent:${accent}"` : '';
   const statusAttr = status ? ` data-status="${status}"` : '';
-  const frameVar = user && user.frame ? `--frame:url('${user.frame}')` : '--frame:none';
+  const frameVar = user && user.frame ? `--frame:url(${user.frame})` : '--frame:none';
+  const notificationClass = hasNotification ? ' guild-rail__button--has-alert' : '';
   const avatarMarkup = user && user.avatar
     ? `<span class="avatar-wrap guild-rail__avatar" style="--avi-width:40px; --avi-height:40px; --frame-bleed:18%; --frame-opacity:1; ${frameVar};"><img class="avatar-image" src="${user.avatar}" alt="${user.name || name}"></span>`
     : `<span class="guild-rail__badge" style="background:${accent};">${initials || (name ? name.slice(0, 2) : '?')}</span>`;
 
   return `
     <button
-      class="guild-rail__button guild-rail__button--profile"
+      class="guild-rail__button guild-rail__button--profile${notificationClass}"
       type="button"
       data-guild-id="${id}"
       ${module ? `data-module="${module}"` : ''}
@@ -120,11 +122,11 @@ export default async function init({ hub, root, utils }) {
           </svg>
         </button>
         ${currentUser ? `
-        <button class="guild-rail__button guild-rail__button--profile guild-rail__button--dm" type="button" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}" style="--accent:${currentUser.accent || '#5865F2'}"${currentStatus ? ` data-status="${currentStatus}"` : ''}>
+        <button class="guild-rail__button guild-rail__button--profile guild-rail__button--dm${currentUser.hasNotification ? ' guild-rail__button--has-alert' : ''}" type="button" data-profile-name="${currentUser.name}" data-profile-token="${currentUser.token}" data-profile-avatar="${currentUser.avatar}" data-profile-banner="${currentUser.banner}" data-profile-accent="${currentUser.accent}" data-profile-frame="${currentUser.frame}" data-profile-bio="${currentUser.bio || ''}" data-profile-since="${currentUser.memberSince || ''}" data-profile-connections="${(currentUser.connections || []).join(',')}" data-profile-badges="${(currentUser.badges || []).join(',')}" data-profile-streaming="${currentUser.streaming ? 'true' : 'false'}" style="--accent:${currentUser.accent || '#5865F2'}"${currentStatus ? ` data-status="${currentStatus}"` : ''}>
           <span class="guild-rail__indicator" aria-hidden="true"></span>
           <span class="guild-rail__ring">
             ${currentUser.avatar
-              ? `<span class="avatar-wrap guild-rail__avatar" style="--avi-width:40px; --avi-height:40px; --frame-bleed:18%; --frame-opacity:1; ${currentUser.frame ? `--frame:url('${currentUser.frame}')` : '--frame:none'};"><img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}"></span>`
+              ? `<span class="avatar-wrap guild-rail__avatar" style="--avi-width:40px; --avi-height:40px; --frame-bleed:18%; --frame-opacity:1; ${currentUser.frame ? `--frame:url(${currentUser.frame})` : '--frame:none'};"><img class="avatar-image" src="${currentUser.avatar}" alt="${currentUser.name}"></span>`
               : `<span class="guild-rail__badge" style="background:${currentUser.accent || '#5865F2'};">${(currentUser.name || '?').slice(0, 2)}</span>`}
           </span>
           ${currentStatus ? '<span class="guild-rail__presence" aria-hidden="true"></span>' : ''}
