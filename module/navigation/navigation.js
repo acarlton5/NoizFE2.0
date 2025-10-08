@@ -57,6 +57,7 @@ export default async function init({ hub, root, utils }) {
   const loggedToken = await fetch('/data/logged-in.json').then((r) => r.json()).catch(() => null);
   const currentUser = loggedToken ? await getUserByToken(loggedToken) : null;
 
+  // Render the guild rail (Discord-style server switcher)
   root.innerHTML = `
     <nav class="guild-rail" aria-label="Servers">
       <div class="guild-rail__scroll">
