@@ -11,7 +11,7 @@ module[data-module="noiz-channel-sidebar"]::before {
   content: '';
   position: absolute;
   top: calc(-1 * var(--sidebar-header-offset));
-  height: calc(100% + var(--sidebar-header-offset));
+  bottom: 0;
   left: 0;
   width: 4px;
   background: var(--channel-accent, var(--active-guild-accent, #5865f2));
