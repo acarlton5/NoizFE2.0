@@ -368,9 +368,13 @@ async function handleRoute() {
       } else {
         LoadMainModule('doc');
       }
+    } else if (mod === 'index.html') {
+      LoadMainModule('noiz-hub');
     } else {
       LoadMainModule(mod);
     }
+  } else {
+    LoadMainModule('noiz-hub');
   }
 }
 window.addEventListener("popstate", () => { handleRoute(); });

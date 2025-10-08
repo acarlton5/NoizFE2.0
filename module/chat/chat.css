@@ -60,7 +60,7 @@ module[data-module="chat"] .msg-avatar {
   --avi-width: 24px;
   --avi-height: 24px;
   --frame-opacity: 0;
-  --frame: url('https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/astronaut_helmet.png');
+  --frame: conic-gradient(from 90deg, rgba(109, 106, 252, 0.9), rgba(255, 255, 255, 0.3), rgba(26, 28, 36, 0.8));
   flex-shrink: 0;
 }
 

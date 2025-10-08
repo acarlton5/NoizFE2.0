@@ -15,9 +15,33 @@
     "header": false,
     "services": true
   },
-  "user-rail": {
-    "name": "user-rail",
-    "icon": "user-group",
+  "noiz-hub": {
+    "name": "noiz-hub",
+    "icon": "messages",
+    "status": "enabled",
+    "navigation": true,
+    "header": false,
+    "services": false
+  },
+  "noiz-channel-sidebar": {
+    "name": "noiz-channel-sidebar",
+    "icon": "hash",
+    "status": "enabled",
+    "navigation": false,
+    "header": false,
+    "services": false
+  },
+  "noiz-chat": {
+    "name": "noiz-chat",
+    "icon": "comments",
+    "status": "enabled",
+    "navigation": false,
+    "header": false,
+    "services": false
+  },
+  "noiz-members": {
+    "name": "noiz-members",
+    "icon": "users",
     "status": "enabled",
     "navigation": false,
     "header": false,
@@ -31,57 +55,17 @@
     "header": false,
     "services": false
   },
-  "newsfeed": {
-    "name": "newsfeed",
-    "icon": "newsfeed",
+  "mini-profile": {
+    "name": "mini-profile",
+    "icon": "user",
     "status": "enabled",
-    "navigation": true,
+    "navigation": false,
     "header": false,
     "services": false
   },
-  "messages": {
-    "name": "messages",
-    "icon": "messages",
-    "status": "enabled",
-    "navigation": true,
-    "header": true,
-    "services": false
-  },
-  "profile": {
-    "name": "profile",
+  "profile-overlay": {
+    "name": "profile-overlay",
     "icon": "profile",
-    "status": "enabled",
-    "navigation": true,
-    "header": false,
-    "services": false
-  },
-  "overview": {
-    "name": "overview",
-    "icon": "overview",
-    "status": "enabled",
-    "navigation": true,
-    "header": false,
-    "services": false
-  },
-  "notifications": {
-    "name": "notifications",
-    "icon": "notification",
-    "status": "enabled",
-    "navigation": false,
-    "header": true,
-    "services": true
-  },
-  "chat": {
-    "name": "chat",
-    "icon": "messages",
-    "status": "enabled",
-    "navigation": false,
-    "header": false,
-    "services": false
-  },
-  "doc": {
-    "name": "doc",
-    "icon": "document",
     "status": "enabled",
     "navigation": false,
     "header": false,

@@ -1,0 +1,44 @@
+module[data-module="noiz-hub"] {
+  display: block;
+  height: calc(100vh - var(--noiz-header-height, 56px));
+  color: #f2f3f5;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.noiz-hub__layout {
+  display: grid;
+  grid-template-columns: 260px 1fr 260px;
+  height: 100%;
+  background: #313338;
+}
+
+.noiz-hub__layout > module[data-module] {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+@media (max-width: 1100px) {
+  .noiz-hub__layout {
+    grid-template-columns: 260px 1fr;
+  }
+
+  .noiz-hub__layout > module[data-module="noiz-members"] {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  module[data-module="noiz-hub"] {
+    height: auto;
+    min-height: calc(100vh - var(--noiz-header-height, 56px));
+  }
+
+  .noiz-hub__layout {
+    grid-template-columns: 1fr;
+  }
+
+  .noiz-hub__layout > module[data-module="noiz-channel-sidebar"] {
+    order: -1;
+  }
+}

@@ -3,8 +3,8 @@
   "token": "sarah-diamond",
   "name": "Sarah Diamond",
   "avatar": "https://odindesignthemes.com/vikinger/img/avatar/04.jpg",
-  "frame": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/decorations/aespa_fanlight.png",
-  "banner": "https://cdn.jsdelivr.net/gh/itspi3141/discord-fake-avatar-decorations@main/public/nameplates/blue_mana.png",
+  "frame": "data:image/svg+xml;utf8,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 100 100'%3E%3Cdefs%3E%3CradialGradient id%3D'g' cx%3D'50%' cy%3D'50%' r%3D'65%'%3E%3Cstop offset%3D'0%' stop-color%3D'#d0a7ff' stop-opacity%3D'0.9'%2F%3E%3Cstop offset%3D'65%' stop-color%3D'#b06dff' stop-opacity%3D'1'%2F%3E%3Cstop offset%3D'100%' stop-color%3D'#563c7c' stop-opacity%3D'1'%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Ccircle cx%3D'50' cy%3D'50' r%3D'46' fill%3D'none' stroke%3D'url%28#g%29' stroke-width%3D'8' stroke-linecap%3D'round'%2F%3E%3C%2Fsvg%3E",
+  "banner": "data:image/svg+xml;utf8,%3Csvg xmlns%3D'http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg' viewBox%3D'0 0 600 240'%3E%3Cdefs%3E%3ClinearGradient id%3D'bg' x1%3D'0%' y1%3D'0%' x2%3D'100%' y2%3D'100%'%3E%3Cstop offset%3D'0%' stop-color%3D'#c492ff'%2F%3E%3Cstop offset%3D'100%' stop-color%3D'#442e65'%2F%3E%3C%2FlinearGradient%3E%3CradialGradient id%3D'flare' cx%3D'20%' cy%3D'20%' r%3D'80%'%3E%3Cstop offset%3D'0%' stop-color%3D'#c492ff' stop-opacity%3D'0.9'%2F%3E%3Cstop offset%3D'100%' stop-color%3D'#442e65' stop-opacity%3D'0'%2F%3E%3C%2FradialGradient%3E%3C%2Fdefs%3E%3Crect width%3D'600' height%3D'240' fill%3D'url%28#bg%29'%2F%3E%3Ccircle cx%3D'80' cy%3D'60' r%3D'180' fill%3D'url%28#flare%29'%2F%3E%3Ccircle cx%3D'520' cy%3D'200' r%3D'140' fill%3D'url%28#flare%29' opacity%3D'0.6'%2F%3E%3C%2Fsvg%3E",
   "hasNotification": false,
   "accent": "#b06dff",
   "bio": "Cosplayer weaving NOIZ magic on stream.",
@@ -18,12 +18,16 @@
     {
       "id": "99999999-9999-9999-9999-999999999999",
       "name": "Photography",
-      "permissions": ["viewer"]
+      "permissions": [
+        "viewer"
+      ]
     },
     {
       "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa",
       "name": "Travel Vlogs",
-      "permissions": ["sub"]
+      "permissions": [
+        "sub"
+      ]
     }
   ],
   "badges": [
@@ -33,19 +37,37 @@
     "images/badges/vip.png",
     "images/badges/clipper.png"
   ],
-  "following": ["john-viking", "marina-valentine"],
-  "followers": ["john-viking", "neko-bebop"],
-  "subscribedTo": ["marina-valentine"],
-  "subscribers": ["john-viking"],
+  "following": [
+    "john-viking",
+    "marina-valentine"
+  ],
+  "followers": [
+    "john-viking",
+    "neko-bebop"
+  ],
+  "subscribedTo": [
+    "marina-valentine"
+  ],
+  "subscribers": [
+    "john-viking"
+  ],
   "lang": "en",
   "status": {
     "streaming": null,
-    "online": { "watching": "cosplay how-tos" },
+    "online": {
+      "watching": "cosplay how-tos"
+    },
     "away": null,
     "dnd": null
   },
   "hosting": null,
-  "set-badges": ["admin", "artist", "mod", "vip", "clipper"],
+  "set-badges": [
+    "admin",
+    "artist",
+    "mod",
+    "vip",
+    "clipper"
+  ],
   "earned-badges": [
     {
       "id": "admin",
@@ -90,6 +112,12 @@
   ],
   "BadgeID": "cosplayer",
   "VODs": true,
-  "extensions": { "enabled": [], "disabled": [] },
-  "plugins": { "enabled": [], "disabled": [] }
+  "extensions": {
+    "enabled": [],
+    "disabled": []
+  },
+  "plugins": {
+    "enabled": [],
+    "disabled": []
+  }
 }
