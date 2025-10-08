@@ -349,33 +349,7 @@ async function handleRoute() {
   if (match) {
     const mod = match[1];
     const token = match[2];
-    if (mod === 'profile') {
-      if (token) {
-        const user = await getUserByToken(decodeURIComponent(token));
-        LoadMainModule('profile', user ? { user } : {});
-      } else {
-        try {
-          const loggedToken = await fetch('/data/logged-in.json').then(r => r.json());
-          const user = loggedToken ? await getUserByToken(loggedToken) : null;
-          LoadMainModule('profile', user ? { user } : {});
-        } catch {
-          LoadMainModule('profile');
-        }
-      }
-    } else if (mod === 'doc') {
-      if (token) {
-        LoadMainModule('doc', { slug: decodeURIComponent(token) });
-      } else {
-        LoadMainModule('doc');
-      }
-    } else if (mod === 'index.html') {
-      LoadMainModule('noiz-hub');
-    } else {
-      LoadMainModule(mod);
-    }
-  } else {
-    LoadMainModule('noiz-hub');
-  }
+
 }
 window.addEventListener("popstate", () => { handleRoute(); });
 window.addEventListener("hashchange", () => { handleRoute(); });
