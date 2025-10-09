@@ -110,7 +110,7 @@
   -webkit-mask-composite: xor;
           mask-composite: exclude;
   padding: 3px;
-  opacity: 0.35;
+  opacity: 0;
   filter: drop-shadow(0 0 6px rgba(249,7,252,0.35));
   transition: opacity 0.25s ease, filter 0.25s ease;
   pointer-events: none;
@@ -118,7 +118,7 @@
 
 .noiz-server-rail .rail-btn:hover .ring,
 .noiz-server-rail .rail-btn.is-active .ring {
-  opacity: 0.95;
+  opacity: 0.9;
   filter: drop-shadow(0 0 14px rgba(249,7,252,0.55));
 }
 
@@ -127,41 +127,47 @@
  ******************************************************/
 .noiz-server-rail .rail-btn .indicator {
   position: absolute;
-  left: -10px;
+  left: -14px;
   top: 50%;
-  width: 4px;
-  height: 0;
+  width: 8px;
+  height: 12px;
   background: var(--accent, #f907fc);
   border-radius: 999px;
   opacity: 0;
-  transform: translateY(-50%);
+  transform: translate(-20%, -50%);
   transition: height 0.22s ease, width 0.22s ease, opacity 0.22s ease, border-radius 0.22s ease, transform 0.22s ease;
   box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
 .noiz-server-rail .rail-btn:hover .indicator {
-  height: 26px;
-  opacity: 0.8;
+  opacity: 0.85;
+  height: 28px;
+  width: 6px;
 }
 
 .noiz-server-rail .rail-btn.is-active .indicator {
-  left: -12px;
-  width: 6px;
-  height: 42px;
   opacity: 1;
-  box-shadow: 0 0 18px rgba(0, 0, 0, 0.35);
-  box-shadow: 0 0 18px color-mix(in srgb, var(--accent, #f907fc) 60%, transparent 40%);
+  width: 8px;
+  height: 40px;
+  transform: translate(-20%, -50%);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent, #f907fc) 55%, transparent 45%);
 }
 
 .noiz-server-rail .rail-btn.has-unread:not(.is-active):not(:hover) .indicator {
-  left: -8px;
-  width: 14px;
-  height: 20px;
   opacity: 1;
-  border-radius: 0 12px 12px 0;
-  transform: translateY(-50%);
-  box-shadow: 0 0 16px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 16px color-mix(in srgb, var(--accent, #f907fc) 45%, transparent 55%);
+  width: 14px;
+  height: 18px;
+  border-radius: 0 14px 14px 0;
+  transform: translate(-10%, -50%);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent, #f907fc) 45%, transparent 55%);
+}
+
+.noiz-server-rail .rail-btn.has-unread:not(.is-active):not(:hover) .indicator::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0 14px 14px 0;
+  background: inherit;
 }
 
 /******************************************************
@@ -207,7 +213,10 @@
 }
 
 .noiz-server-rail .rail-bottom {
-  margin-top: 18px;
+  margin-top: 12px;
+  padding: 16px 0 12px;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(7, 7, 12, 0), rgba(7, 7, 12, 0.9));
 }
 
 .noiz-server-rail .rail-btn.rail-me {

@@ -19,7 +19,9 @@ export default {
           <div class="rail-scroll flex-grow-1 d-flex flex-column align-items-center">
             ${data.servers.filter(s => s.id !== 'home').map(s => renderServerBubble(s, activeId)).join('')}
           </div>
+        </div>
 
+        <div class="rail-bottom d-flex flex-column align-items-center w-100">
           <div class="rail-divider"></div>
 
           <button class="rail-btn rail-empty" data-action="add" title="Create / Discover">
@@ -30,9 +32,7 @@ export default {
             <span class="ring"></span>
             <span class="dot"></span>
           </button>
-        </div>
 
-        <div class="rail-bottom">
           ${renderMeBubble(data.me)}
         </div>
       </aside>
