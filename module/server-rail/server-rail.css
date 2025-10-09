@@ -3,7 +3,8 @@
  ******************************************************/
 .noiz-server-rail {
   position: relative;
-  width: 86px;
+  width: 100%;
+  max-width: 86px;
   background: #13141a;
   display: flex;
   flex-direction: column;
@@ -12,6 +13,7 @@
   overflow: hidden;
   border-right: 1px solid rgba(255,255,255,0.04);
   box-shadow: inset -1px 0 0 rgba(255,255,255,0.02);
+  box-sizing: border-box;
 }
 
 .noiz-server-rail::after {
