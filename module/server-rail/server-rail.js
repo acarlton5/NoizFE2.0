@@ -10,7 +10,7 @@ export default {
         <div class="rail-stack d-flex flex-column align-items-center flex-grow-1 w-100">
           <button class="rail-btn rail-home ${activeId === 'home' ? 'is-active' : ''} ${data.homeFrame ? 'has-frame' : ''}" data-action="home" data-id="home" title="NOIZ" style="--accent:${data.homeAccent}">
             <span class="indicator"></span>
-            <span class="ring"${data.homeFrame ? ` style="--frame:url(${data.homeFrame})"` : ''}></span>
+            <span class="ring" style="--frame:${data.homeFrame ? `url(${data.homeFrame})` : 'none'};"></span>
             <span class="pfp-wrap">
               <img class="pfp" src="${data.homeImage}" alt="NOIZ">
             </span>
@@ -99,7 +99,7 @@ function renderServerBubble(server, activeId) {
   if (server.frame) classes.push('has-frame');
   const status = server.status ? `<span class="status status-${server.status}"></span>` : '';
   const unread = server.unread ? `<span class="badge">${server.unread}</span>` : '';
-  const ringStyle = server.frame ? ` style="--frame:url(${server.frame})"` : '';
+  const ringStyle = ` style="--frame:${server.frame ? `url(${server.frame})` : 'none'};"`;
   return `
     <button class="${classes.join(' ')}" data-action="open" data-id="${server.id}" title="${server.name}" style="--accent:${server.accent}">
       <span class="indicator"></span>
@@ -117,7 +117,7 @@ function renderMeBubble(me) {
   if (!me) return '';
   const meClasses = ['rail-btn', 'rail-me'];
   if (me.frame) meClasses.push('has-frame');
-  const ringStyle = me.frame ? ` style="--frame:url(${me.frame})"` : '';
+  const ringStyle = ` style="--frame:${me.frame ? `url(${me.frame})` : 'none'};"`;
   return `
     <button class="${meClasses.join(' ')}" data-action="me" data-id="${me.id || ''}" title="${me.name}" style="--accent:${me.accent}">
       <span class="ring"${ringStyle}></span>

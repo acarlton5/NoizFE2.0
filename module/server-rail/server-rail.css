@@ -116,7 +116,7 @@
   transition: opacity 0.18s ease, transform 0.18s ease;
   pointer-events: none;
   box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-  background: var(--frame, transparent);
+  background: var(--frame);
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
