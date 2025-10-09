@@ -9,9 +9,9 @@ export default {
       <aside class="noiz-server-rail d-flex flex-column align-items-center">
         <div class="rail-stack d-flex flex-column align-items-center flex-grow-1 w-100">
           <button class="rail-btn rail-home ${activeId === 'home' ? 'is-active' : ''}" data-action="home" data-id="home" title="NOIZ" style="--accent:${data.homeAccent}">
+            <span class="indicator"></span>
             <span class="ring"></span>
             <img class="pfp" src="${data.homeImage}" alt="NOIZ">
-            ${activeId === 'home' ? '<span class="active-bar"></span>' : ''}
           </button>
 
           <div class="rail-divider"></div>
@@ -61,10 +61,8 @@ export default {
 
       if (action === 'open' || action === 'home') {
         // visual active state
-        root.querySelectorAll('.rail-btn.is-active .active-bar').forEach(n => n.remove());
         root.querySelectorAll('.rail-btn.is-active').forEach(n => n.classList.remove('is-active'));
         btn.classList.add('is-active');
-        btn.insertAdjacentHTML('beforeend', '<span class="active-bar"></span>');
         if (action === 'open') {
           hub.emit('server-rail:open', { id: btn.dataset.id });
         } else {
@@ -83,10 +81,8 @@ export default {
       setActive(id) {
         const btn = document.querySelector(`.noiz-server-rail .rail-btn[data-id="${CSS.escape(id)}"]`);
         if (!btn) return;
-        document.querySelectorAll('.noiz-server-rail .rail-btn.is-active .active-bar').forEach(n => n.remove());
         document.querySelectorAll('.noiz-server-rail .rail-btn.is-active').forEach(n => n.classList.remove('is-active'));
         btn.classList.add('is-active');
-        btn.insertAdjacentHTML('beforeend', '<span class="active-bar"></span>');
       }
     };
   }
@@ -96,16 +92,17 @@ function renderServerBubble(server, activeId) {
   if (!server) return '';
   const isActive = server.id === activeId;
   const classes = ['rail-btn', 'rail-server', `rail-${server.source || 'following'}`];
+  if (server.unread) classes.push('has-unread');
   if (isActive) classes.push('is-active');
   const status = server.status ? `<span class="status status-${server.status}"></span>` : '';
   const unread = server.unread ? `<span class="badge">${server.unread}</span>` : '';
   return `
     <button class="${classes.join(' ')}" data-action="open" data-id="${server.id}" title="${server.name}" style="--accent:${server.accent}">
+      <span class="indicator"></span>
       <span class="ring"></span>
       <img class="pfp" src="${server.img}" alt="${server.name}">
       ${status}
       ${unread}
-      ${isActive ? '<span class="active-bar"></span>' : ''}
     </button>
   `;
 }
