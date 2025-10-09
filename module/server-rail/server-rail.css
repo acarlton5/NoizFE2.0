@@ -67,7 +67,6 @@
   justify-content: center;
   align-items: center;
   overflow: visible;
-  contain: paint;
   background: #191b22;
   --accent: #5865f2;
   transition: background 0.2s ease, box-shadow 0.2s ease;
@@ -84,6 +83,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: visible;
 }
 
 .noiz-server-rail .rail-btn .pfp {
@@ -107,10 +107,10 @@
 
 .noiz-server-rail .rail-btn .frame {
   position: absolute;
-  inset: -6px;
-  width: calc(100% + 12px);
-  height: calc(100% + 12px);
-  object-fit: contain;
+  inset: -12px;
+  width: calc(100% + 24px);
+  height: calc(100% + 24px);
+  object-fit: cover;
   pointer-events: none;
   opacity: 0;
   transform: scale(0.96);
