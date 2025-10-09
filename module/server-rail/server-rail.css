@@ -3,14 +3,34 @@
  ******************************************************/
 .noiz-server-rail {
   position: relative;
-  width: 72px;                     /* fixed rail width */
-  background-color: #1E1F23;       /* same as app bg */
+  width: 100%;
+  max-width: 86px;
+  background: #13141a;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: 8px;
-  overflow-x: hidden;              /* 👈 disable sideways scroll */
-  border-right: 1px solid rgba(255,255,255,0.05);
+  padding: 18px 0 12px;
+  overflow: visible;
+  border-right: 1px solid rgba(255,255,255,0.04);
+  box-shadow: inset -1px 0 0 rgba(255,255,255,0.02);
+  box-sizing: border-box;
+}
+
+.noiz-server-rail::after {
+  content: '';
+  position: absolute;
+  top: 12px;
+  right: 6px;
+  bottom: 12px;
+  width: 4px;
+  border-radius: 999px;
+  background: linear-gradient(180deg, rgba(249,7,252,0.9), rgba(5,214,217,0.9));
+  opacity: 0.75;
+  pointer-events: none;
+}
+
+.noiz-server-rail .rail-stack {
+  gap: 14px;
 }
 
 .noiz-server-rail .rail-scroll {
@@ -18,10 +38,9 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-top: 8px;
-  padding-bottom: 8px;
-  overflow-y: auto;                /* only vertical scroll */
+  gap: 14px;
+  padding: 4px 0 8px;
+  overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
   scrollbar-color: rgba(255,255,255,0.15) transparent;
@@ -35,24 +54,32 @@
   border-radius: 3px;
 }
 
+.noiz-server-rail .rail-divider {
+  width: 40px;
+  height: 1px;
+  background: linear-gradient(90deg, rgba(249,7,252,0), rgba(249,7,252,0.35), rgba(5,214,217,0));
+}
+
 /******************************************************
  * RAIL BUTTONS
  ******************************************************/
 .noiz-server-rail .rail-btn {
   position: relative;
-  width: 48px;
-  height: 48px;
+  width: 60px;
+  height: 60px;
   border-radius: 50%;
-  background: #2A2B30;
   border: none;
   padding: 0;
   cursor: pointer;
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;                /* 👈 clips glow & badge bleed */
+  overflow: visible;
   contain: paint;
-  transition: all 0.15s ease-in-out;
+  background: #0f1117;
+  --accent: #f907fc;
+  box-shadow: 0 12px 24px rgba(3, 4, 7, 0.55);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
 .noiz-server-rail .rail-btn img {
@@ -61,11 +88,14 @@
   object-fit: cover;
   border-radius: 50%;
   pointer-events: none;
+  position: relative;
+  z-index: 2;
 }
 
-.noiz-server-rail .rail-btn:hover {
-  background: #35363B;
-  transform: translateY(-1px);
+.noiz-server-rail .rail-btn:hover,
+.noiz-server-rail .rail-btn.is-active {
+  transform: translateY(-2px);
+  box-shadow: 0 16px 32px rgba(5, 214, 217, 0.25);
 }
 
 /******************************************************
@@ -73,36 +103,71 @@
  ******************************************************/
 .noiz-server-rail .rail-btn .ring {
   position: absolute;
-  inset: 0;
+  inset: -3px;
   border-radius: 50%;
-  border: 2px solid #05d6d9;
-  filter: blur(5px) saturate(1.15);
+  background: conic-gradient(from 180deg, var(--accent, #f907fc), rgba(5,214,217,0.9), var(--accent, #f907fc));
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+          mask-composite: exclude;
+  padding: 3px;
   opacity: 0;
-  transition: opacity 0.2s ease-in-out;
+  filter: drop-shadow(0 0 6px rgba(249,7,252,0.35));
+  transition: opacity 0.25s ease, filter 0.25s ease;
   pointer-events: none;
 }
 
-.noiz-server-rail .rail-btn.active .ring {
-  opacity: 1;
+.noiz-server-rail .rail-btn:hover .ring,
+.noiz-server-rail .rail-btn.is-active .ring {
+  opacity: 0.9;
+  filter: drop-shadow(0 0 14px rgba(249,7,252,0.55));
 }
 
 /******************************************************
- * ACTIVE BAR
+ * STATE INDICATORS (UNREAD / HOVER / ACTIVE)
  ******************************************************/
-.noiz-server-rail .rail-btn .active-bar {
+.noiz-server-rail .rail-btn .indicator {
   position: absolute;
-  right: 0;                        /* 👈 keep inside button */
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: linear-gradient(to bottom, #05D6D9, #F907FC);
-  border-radius: 2px;
+  left: -14px;
+  top: 50%;
+  width: 8px;
+  height: 12px;
+  background: var(--accent, #f907fc);
+  border-radius: 999px;
   opacity: 0;
-  transition: opacity 0.25s ease-in-out;
+  transform: translate(-20%, -50%);
+  transition: height 0.22s ease, width 0.22s ease, opacity 0.22s ease, border-radius 0.22s ease, transform 0.22s ease;
+  box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
-.noiz-server-rail .rail-btn.active .active-bar {
+.noiz-server-rail .rail-btn:hover .indicator {
+  opacity: 0.85;
+  height: 28px;
+  width: 6px;
+}
+
+.noiz-server-rail .rail-btn.is-active .indicator {
   opacity: 1;
+  width: 8px;
+  height: 40px;
+  transform: translate(-20%, -50%);
+  box-shadow: 0 0 16px color-mix(in srgb, var(--accent, #f907fc) 55%, transparent 45%);
+}
+
+.noiz-server-rail .rail-btn.has-unread:not(.is-active):not(:hover) .indicator {
+  opacity: 1;
+  width: 14px;
+  height: 18px;
+  border-radius: 0 14px 14px 0;
+  transform: translate(-10%, -50%);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--accent, #f907fc) 45%, transparent 55%);
+}
+
+.noiz-server-rail .rail-btn.has-unread:not(.is-active):not(:hover) .indicator::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0 14px 14px 0;
+  background: inherit;
 }
 
 /******************************************************
@@ -110,26 +175,89 @@
  ******************************************************/
 .noiz-server-rail .rail-btn .badge {
   position: absolute;
-  top: 2px;                        /* 👈 moved inside to stop H-scroll */
-  right: 2px;
-  background: #ff4d6d;
+  top: 4px;
+  right: 8px;
+  min-width: 18px;
+  padding: 2px 6px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #ff7eb6, #ff4d6d);
   color: #fff;
-  font-size: 10px;
+  font-size: 11px;
   font-weight: 600;
-  padding: 2px 5px;
-  border-radius: 10px;
   line-height: 1;
-  z-index: 2;
+  z-index: 3;
+  box-shadow: 0 4px 10px rgba(255,77,109,0.45);
 }
 
 /******************************************************
- * DIVIDER LINE
+ * PRESENCE PIPS
  ******************************************************/
-.noiz-server-rail .divider {
-  width: 32px;
-  height: 1px;
-  margin: 4px 0;
-  background: rgba(255,255,255,0.08);
+.noiz-server-rail .status {
+  position: absolute;
+  right: 6px;
+  bottom: 6px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 2px solid #0f1117;
+  z-index: 3;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+}
+
+.noiz-server-rail .status-online { background: #3ba55d; }
+.noiz-server-rail .status-away { background: #faa61a; }
+.noiz-server-rail .status-dnd { background: #ed4245; }
+.noiz-server-rail .status-offline { background: #4f5461; }
+.noiz-server-rail .status-streaming {
+  background: linear-gradient(135deg, #5865f2, #43b581);
+}
+
+.noiz-server-rail .rail-bottom {
+  margin-top: 12px;
+  padding: 16px 0 12px;
+  gap: 12px;
+  background: linear-gradient(180deg, rgba(7, 7, 12, 0), rgba(7, 7, 12, 0.9));
+}
+
+.noiz-server-rail .rail-btn.rail-me {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background: #111219;
+}
+
+.noiz-server-rail .rail-btn.rail-empty {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  --accent: rgba(8,253,216,0.85);
+  background: rgba(8, 253, 216, 0.12);
+  color: #0af0d7;
+  font-size: 28px;
+  font-weight: 400;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.noiz-server-rail .rail-btn.rail-empty .ring {
+  background: radial-gradient(circle, rgba(8,253,216,0.9) 0%, rgba(8,253,216,0.2) 65%, rgba(8,253,216,0) 100%);
+  -webkit-mask: none;
+          mask: none;
+  padding: 0;
+  opacity: 0.6;
+}
+
+.noiz-server-rail .rail-btn.rail-empty .dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, rgba(8,253,216,0.85), rgba(5,214,217,0.65));
+  box-shadow: 0 6px 14px rgba(8,253,216,0.35);
+}
+
+.noiz-server-rail .rail-btn.rail-empty:hover {
+  box-shadow: 0 16px 32px rgba(8,253,216,0.25);
 }
 
 /******************************************************
@@ -138,29 +266,6 @@
 /* Any BS5 tooltip or custom one floats above UI */
 .tooltip,
 .noiz-tooltip {
-  z-index: 3000;                    /* above rails, modals */
+  z-index: 3000;
   pointer-events: none;
-}
-
-/******************************************************
- * ADD BUTTON AT BOTTOM
- ******************************************************/
-.noiz-server-rail .add-btn {
-  margin: 8px 0;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  background: #2A2B30;
-  color: #8e9297;
-  font-size: 22px;
-  border: 2px dashed rgba(255,255,255,0.15);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-}
-.noiz-server-rail .add-btn:hover {
-  background: #35363B;
-  color: #fff;
 }
