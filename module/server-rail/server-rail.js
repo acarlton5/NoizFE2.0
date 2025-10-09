@@ -8,10 +8,12 @@ export default {
     root.innerHTML = `
       <aside class="noiz-server-rail d-flex flex-column align-items-center">
         <div class="rail-stack d-flex flex-column align-items-center flex-grow-1 w-100">
-          <button class="rail-btn rail-home ${activeId === 'home' ? 'is-active' : ''}" data-action="home" data-id="home" title="NOIZ" style="--accent:${data.homeAccent}">
+          <button class="rail-btn rail-home ${activeId === 'home' ? 'is-active' : ''} ${data.homeFrame ? 'has-frame' : ''}" data-action="home" data-id="home" title="NOIZ" style="--accent:${data.homeAccent}">
             <span class="indicator"></span>
-            <span class="ring"></span>
-            <img class="pfp" src="${data.homeImage}" alt="NOIZ">
+            <span class="ring" style="--frame:${data.homeFrame ? `url(${data.homeFrame})` : 'none'};"></span>
+            <span class="pfp-wrap">
+              <img class="pfp" src="${data.homeImage}" alt="NOIZ">
+            </span>
           </button>
 
           <div class="rail-divider"></div>
@@ -94,13 +96,17 @@ function renderServerBubble(server, activeId) {
   const classes = ['rail-btn', 'rail-server', `rail-${server.source || 'following'}`];
   if (server.unread) classes.push('has-unread');
   if (isActive) classes.push('is-active');
+  if (server.frame) classes.push('has-frame');
   const status = server.status ? `<span class="status status-${server.status}"></span>` : '';
   const unread = server.unread ? `<span class="badge">${server.unread}</span>` : '';
+  const ringStyle = ` style="--frame:${server.frame ? `url(${server.frame})` : 'none'};"`;
   return `
     <button class="${classes.join(' ')}" data-action="open" data-id="${server.id}" title="${server.name}" style="--accent:${server.accent}">
       <span class="indicator"></span>
-      <span class="ring"></span>
-      <img class="pfp" src="${server.img}" alt="${server.name}">
+      <span class="ring"${ringStyle}></span>
+      <span class="pfp-wrap">
+        <img class="pfp" src="${server.img}" alt="${server.name}">
+      </span>
       ${status}
       ${unread}
     </button>
@@ -109,10 +115,15 @@ function renderServerBubble(server, activeId) {
 
 function renderMeBubble(me) {
   if (!me) return '';
+  const meClasses = ['rail-btn', 'rail-me'];
+  if (me.frame) meClasses.push('has-frame');
+  const ringStyle = ` style="--frame:${me.frame ? `url(${me.frame})` : 'none'};"`;
   return `
-    <button class="rail-btn rail-me" data-action="me" data-id="${me.id || ''}" title="${me.name}" style="--accent:${me.accent}">
-      <span class="ring"></span>
-      <img class="pfp" src="${me.img}" alt="${me.name}">
+    <button class="${meClasses.join(' ')}" data-action="me" data-id="${me.id || ''}" title="${me.name}" style="--accent:${me.accent}">
+      <span class="ring"${ringStyle}></span>
+      <span class="pfp-wrap">
+        <img class="pfp" src="${me.img}" alt="${me.name}">
+      </span>
       <span class="status status-${me.status}"></span>
     </button>
   `;
@@ -121,6 +132,7 @@ function renderMeBubble(me) {
 async function resolveData(props) {
   const homeImage = props.home?.img ?? '/images/logo.png';
   const homeAccent = props.home?.accent ?? '#f907fc';
+  const homeFrame = props.home?.frame ?? null;
 
   if (Array.isArray(props.servers) && props.servers.length) {
     const servers = props.servers.map((server) => normalizeServer(server)).filter(Boolean);
@@ -128,7 +140,8 @@ async function resolveData(props) {
     return {
       homeImage,
       homeAccent,
-      servers: [{ id: 'home', name: 'NOIZ', img: homeImage, accent: homeAccent }, ...servers],
+      homeFrame,
+      servers: [{ id: 'home', name: 'NOIZ', img: homeImage, accent: homeAccent, frame: homeFrame }, ...servers],
       me
     };
   }
@@ -171,7 +184,8 @@ async function resolveData(props) {
   return {
     homeImage,
     homeAccent,
-    servers: [{ id: 'home', name: 'NOIZ', img: homeImage, accent: homeAccent }, ...servers],
+    homeFrame,
+    servers: [{ id: 'home', name: 'NOIZ', img: homeImage, accent: homeAccent, frame: homeFrame }, ...servers],
     me
   };
 }
@@ -214,7 +228,8 @@ function normalizeServer(server, source) {
     accent,
     status: server.status || null,
     unread: server.unread ?? null,
-    source: source || server.source || null
+    source: source || server.source || null,
+    frame: server.frame || null
   };
 }
 
@@ -225,7 +240,8 @@ function normalizeMe(me) {
       name: 'You',
       img: '/images/me.png',
       accent: '#72ffb6',
-      status: 'online'
+      status: 'online',
+      frame: null
     };
   }
   return {
@@ -233,7 +249,8 @@ function normalizeMe(me) {
     name: me.name ?? 'You',
     img: me.img ?? me.avatar ?? '/images/me.png',
     accent: me.accent ?? '#72ffb6',
-    status: me.status ?? 'online'
+    status: me.status ?? 'online',
+    frame: me.frame ?? null
   };
 }
 
