@@ -1,95 +1,243 @@
-/* ===========================
-   NOIZ – global tokens
-   =========================== */
+/* ================================================================
+   NOIZ Scaffold CSS (v2)
+   - Variable-driven grid
+   - Dark theme
+   - Rail contents fully hidden when collapsed
+   ================================================================ */
 
+/* ---------- Theme ---------- */
 :root {
-  --noiz-surface: #0f1115;
-  --noiz-surface-2: #111317;
-  --noiz-surface-3: #181b20;
-  --noiz-foreground: #e8ecf2;
-  --noiz-border: rgba(255,255,255,.06);
-  --header-height: 56px;   /* adjust if your header is taller */
+  --bg-0: #0f1114;
+  --bg-1: #14171b;
+  --bg-2: #1b2026;
+  --text-0: #e9edf1;
+  --text-1: #b9c2cc;
+  --muted: #88919b;
+  --brand: #8a7dff;
+
+  /* Layout widths (adapt via body classes) */
+  --rail-w: 72px;
+  --chan-w: 264px;
+  --right-w: 300px;
+
+  --radius: 12px;
+  --gap: 16px;
 }
 
-/* Base */
+* { box-sizing: border-box; }
 html, body { height: 100%; }
-body { background: var(--noiz-surface); color: var(--noiz-foreground); }
-
-/* Header mount keeps space sticky calculations sane */
-module[data-module="app-header"] { display:block }
-
-/* --- Page layout scaffold --- */
-.noiz-app,
-.noiz-app > .row {
-  height: calc(100vh - var(--header-height));
-}
-
-/* Left global rail (server rail) */
-.rail-left {
-  width: 4rem;
-  background: var(--noiz-surface-2);
-  border-right: 1px solid var(--noiz-border);
-  overflow-y: auto;
-}
-
-/* Left channel sidebar */
-.sidebar-left {
-  background: var(--noiz-surface-3);
-  border-right: 1px solid var(--noiz-border);
-  overflow-y: auto;
-}
-
-/* Right sidebar (members / live chat) */
-.sidebar-right {
-  background: var(--noiz-surface-3);
-  border-left: 1px solid var(--noiz-border);
-  overflow-y: auto;
-}
-
-/* Center column should flex so chat/video can fill */
-.main-center {
-  display: flex;
-  flex-direction: column;
-  min-height: 100%;
-}
-
-/* The scrolling content area inside center */
-.main-center > module[data-module="chat-pane"],
-.main-center > module[data-module="video-pane"] {
-  flex: 1 1 auto;
-  overflow-y: auto;
-}
-
-/* Mobile stacking */
-@media (max-width: 767.98px) {
-  .rail-left { display: none; }
-  .sidebar-right { display: none !important; }
-  .sidebar-left { order: 1; }
-  .main-center { order: 2; }
-}
-
-/* Small helpers */
-.border-faint { border-color: var(--noiz-border) !important; }
-/* Reset default page margins so rails hit the edges */
-html, body { height: 100%; }
-body { margin: 0; }                    /* <-- remove the 8px default */
-
-/* Remove horizontal padding from the outer container */
-.noiz-app.container-fluid { padding-left: 0; padding-right: 0; }
-
-/* Ensure the rails stretch full height under the header */
-.noiz-app,
-.noiz-app > .row {
-  height: calc(100vh - var(--header-height, 56px));
-}
-
-/* Rails/sidebars flush and scroll independently */
-.rail-left,
-.sidebar-left,
-.sidebar-right {
-  overflow-y: auto;
-  /* optional: make sure they truly touch edges */
+body {
   margin: 0;
-  border-right: 1px solid var(--noiz-border);
+  color: var(--text-0);
+  background: var(--bg-0);
+  font: 14px/1.4 system-ui, -apple-system, Segoe UI, Roboto, Inter, Arial, sans-serif;
 }
-.sidebar-right { border-right: 0; border-left: 1px solid var(--noiz-border); }
+
+/* ---------- Header ---------- */
+.app-header {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 12px;
+  background: var(--bg-1);
+  border-bottom: 1px solid #0a0c0f;
+}
+.app-header .brand {
+  font-weight: 700;
+  color: var(--text-0);
+}
+.app-header .demo-actions {
+  display: flex;
+  gap: 6px;
+  margin-left: auto;
+}
+.app-header .demo-actions button {
+  background: #222832;
+  border: 1px solid #2b3240;
+  color: var(--text-1);
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.app-header .demo-actions button:hover {
+  border-color: var(--brand);
+  color: var(--text-0);
+}
+
+/* ---------- Grid ---------- */
+.layout {
+  height: calc(100vh - 44px);
+  display: grid;
+  grid-template-columns: var(--rail-w) var(--chan-w) 1fr var(--right-w);
+  gap: 0;
+  transition: grid-template-columns .22s ease;
+}
+
+/* ---------- Rail ---------- */
+.rail {
+  background: #0b0e12;
+  border-right: 1px solid #0a0c0f;
+  display: flex;
+  justify-content: center;
+  padding-block: 10px;
+  position: relative;
+  /* make sure nothing spills when collapsed */
+  overflow: hidden;
+}
+.rail-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  grid-auto-rows: 54px;
+  align-content: start;
+  justify-items: center;
+  width: 100%;
+  transition: opacity .18s ease, transform .18s ease;
+}
+.rail-list .pill {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #d6d9de;
+  color: #333;
+  display: grid;
+  place-items: center;
+  text-decoration: none;
+  position: relative;
+  border: 2px solid #0b0e12;
+  outline: 2px solid transparent;
+  transition: outline-color .18s ease, transform .12s ease;
+}
+.rail-list .pill:hover {
+  outline-color: #3a3f4a;
+  transform: translateX(1px);
+}
+.rail-list .pill.unread::after,
+.rail-list .pill.live::after {
+  content: "";
+  position: absolute;
+  right: -7px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 22px;
+  border-radius: 4px;
+  background: #ff4aa2;
+}
+.rail-list .pill.live::before {
+  content: "";
+  position: absolute;
+  top: -3px; right: -3px;
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: #00d27f;
+  box-shadow: 0 0 0 2px #0b0e12;
+}
+.rail-list .spacer { height: 100%; }
+.rail-list .pill.me { background: #e7f6ee; }
+
+/* When the rail is collapsed, hide its contents fully */
+body.left-collapsed .rail,
+body.immerse .rail {
+  padding-block: 0;
+}
+body.left-collapsed .rail-list,
+body.immerse .rail-list {
+  opacity: 0;
+  transform: translateX(-12px);
+  pointer-events: none;
+}
+
+/* ---------- Channel Sidebar ---------- */
+.chan {
+  background: var(--bg-1);
+  border-right: 1px solid #0a0c0f;
+  padding: 12px;
+  overflow: hidden auto;
+}
+.block { margin-bottom: 18px; }
+.block-title {
+  color: var(--muted);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  margin-bottom: 8px;
+}
+.link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+}
+.link-row a {
+  color: var(--text-1);
+  text-decoration: none;
+}
+.link-row a:hover { color: var(--text-0); }
+
+/* ---------- Main ---------- */
+.main {
+  background: linear-gradient(180deg, #12161b 0%, #0f1114 100%);
+  overflow: hidden auto;
+  padding: 16px;
+}
+.card {
+  background: var(--bg-2);
+  border: 1px solid #202734;
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.card h1, .card h2, .card h3 { margin: 0 0 8px; }
+.cols { display: grid; gap: 12px; }
+.cols-2 { grid-template-columns: repeat(2, minmax(0,1fr)); }
+.card button {
+  background: #232a36;
+  color: var(--text-1);
+  border: 1px solid #2b3240;
+  padding: 6px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+.card button:hover { border-color: var(--brand); color: var(--text-0); }
+
+/* ---------- Right Sidebar ---------- */
+.right {
+  background: #12171e;
+  border-left: 1px solid #0a0c0f;
+  padding: 12px;
+  overflow: hidden auto;
+}
+.list {
+  margin: 8px 0 0;
+  padding-left: 18px;
+  color: var(--text-1);
+}
+
+/* ---------- Adaptive states (body classes) ---------- */
+body.left-collapsed {            /* rail hidden; gift width to channels */
+  --rail-w: 0px;
+  --chan-w: calc(264px + 72px);
+}
+body.chan-hidden {               /* channels hidden; main expands */
+  --chan-w: 0px;
+}
+body.right-hidden {              /* hide right entirely */
+  --right-w: 0px;
+}
+body.right-wide {                /* widen right for chat/quests */
+  --right-w: 420px;
+}
+/* Quick live/immerse preset */
+body.immerse {
+  --rail-w: 0px;
+  --chan-w: 0px;
+  --right-w: 420px;
+}
+
+/* ---------- Small screens ---------- */
+@media (max-width: 920px) {
+  :root { --chan-w: 220px; --right-w: 260px; }
+  .cols-2 { grid-template-columns: 1fr; }
+}

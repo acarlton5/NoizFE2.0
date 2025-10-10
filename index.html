@@ -1,79 +1,136 @@
 <!doctype html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1, viewport-fit=cover"
-  />
-  <title>NOIZ</title>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>NOIZ Scaffold</title>
 
-  <!-- Bootstrap 5 (CSS) -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-    rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-    crossorigin="anonymous"
-  />
+    <!-- Global App CSS (keep this path exactly as the filename on disk) -->
+    <link rel="stylesheet" href="app.css" />
 
-  <!-- Global app styles (tokens + layout only) -->
-  <link href="./app.css" rel="stylesheet" />
-</head>
-<body class="bg-dark text-light">
+    <!-- Optional: favicon just to avoid 404 noise -->
+    <link rel="icon" href="data:;base64,=" />
+  </head>
+  <body>
+    <!-- ============================================================
+         APP HEADER (kept minimal; split to module later)
+         ============================================================ -->
+    <header class="app-header">
+      <div class="brand">⚡ NOIZ</div>
 
-  <!-- App Header -->
-  <module data-module="app-header"></module>
+      <!-- Demo toggles (replace with real module actions later) -->
+      <nav class="demo-actions">
+        <button data-action="reset" title="Reset layout (0)">Reset</button>
+        <button data-action="left-collapsed" title="Collapse Rail (1)">Rail ⟶</button>
+        <button data-action="chan-hidden" title="Hide Channel Sidebar (2)">Hide Channels</button>
+        <button data-action="right-hidden" title="Hide Right (3)">Hide Right</button>
+        <button data-action="right-wide" title="Widen Right (4)">Right Wide</button>
+        <button data-action="immerse" title="Live / Immerse (9)">Immerse</button>
+      </nav>
+    </header>
 
-  <!-- Page Body -->
-  <div class="container-fluid noiz-app">
-    <div class="row g-0 flex-nowrap h-100">
+    <!-- ============================================================
+         LAYOUT GRID
+         Columns: [ Rail | Channel Sidebar | Main | Right Sidebar ]
+         ============================================================ -->
+    <main class="layout">
+      <!-- =======================
+           COL 1: SERVER RAIL
+           ======================= -->
+      <!-- Start: server-rail (HTML) -->
+      <aside class="rail">
+        <ul class="rail-list">
+          <li><a href="#" class="pill" aria-label="Home">N</a></li>
+          <li><a href="#" class="pill live" aria-label="Andsim">A</a></li>
+          <li><a href="#" class="pill unread" aria-label="Bebop">B</a></li>
+          <li><a href="#" class="pill" aria-label="Grissom">G</a></li>
+          <li class="spacer"></li>
+          <li><a href="#" class="pill me" aria-label="Me">ME</a></li>
+        </ul>
+      </aside>
+      <!-- End: server-rail (HTML) -->
 
-      <!-- Left server rail -->
-      <div class="col-auto rail-left d-none d-md-block">
-        <module data-module="server-rail"></module>
-      </div>
-
-      <!-- Main area -->
-      <div class="col main-col">
-        <div class="row g-0 flex-nowrap h-100">
-
-          <!-- Channel sidebar -->
-          <div class="col-12 col-lg-3 col-xl-2 sidebar-left order-2 order-lg-1">
-            <module data-module="channel-sidebar"></module>
+      <!-- =======================
+           COL 2: CHANNEL SIDEBAR
+           ======================= -->
+      <!-- Start: channel-sidebar (HTML) -->
+      <aside class="chan">
+        <section class="block">
+          <div class="block-title">Channels</div>
+          <div class="link-row">
+            <a href="#"># general</a>
+            <a href="#"># showcase</a>
+            <a href="#"># dev-chat</a>
           </div>
+        </section>
 
-          <!-- Center column (chat/video) -->
-          <div class="col-12 col-lg-9 col-xl-8 order-1 order-lg-2 main-center">
-            <!--<module data-module="channel-header"></module>
-            <module data-module="chat-pane"></module>
-            <module data-module="chat-composer"></module>-->
-            <module data-module="live"
-        data-props='{"title":"Coding NOIZ — Live UI Build","creator":"acarlton5","category":"Software & Tech"}'>
-</module>
-
+        <section class="block">
+          <div class="block-title">Support</div>
+          <div class="link-row">
+            <a href="#"># feedback</a>
+            <a href="#"># bug-report</a>
           </div>
+        </section>
+      </aside>
+      <!-- End: channel-sidebar (HTML) -->
 
-          <!-- Right sidebar (members / live chat) -->
-          <div class="d-none d-xl-block col-xl-2 sidebar-right order-3">
-            <!--<module data-module="members-rail"></module>-->
-            <module data-module="live-chat"></module>
+      <!-- =======================
+           COL 3: MAIN CONTENT
+           ======================= -->
+      <!-- Start: main (HTML) -->
+      <section class="main">
+        <article class="card">
+          <h1>#general</h1>
+          <p>Welcome to NOIZ prototype UI</p>
+          <div class="cols cols-2">
+            <div>
+              <h3>Streaming Mode</h3>
+              <p>Hide left rail and use wide right chat.</p>
+              <button data-action="immerse">Try it</button>
+            </div>
+            <div>
+              <h3>Quest Mode</h3>
+              <p>Hide right sidebar and use full width.</p>
+              <button data-action="right-hidden">Try it</button>
+            </div>
+            <div>
+              <h3>Members Mode</h3>
+              <p>Narrow right sidebar for roster.</p>
+              <button data-action="reset">Reset</button>
+            </div>
+            <div>
+              <h3>Right Wide</h3>
+              <p>Use wider right for sidebar chat.</p>
+              <button data-action="right-wide">Widen Right</button>
+            </div>
           </div>
+        </article>
 
-        </div>
-      </div>
+        <article class="card">
+          <h2>NOIZ</h2>
+          <p>This is where modules will dynamically load content.</p>
+        </article>
+      </section>
+      <!-- End: main (HTML) -->
 
-    </div>
-  </div>
+      <!-- =======================
+           COL 4: RIGHT SIDEBAR
+           ======================= -->
+      <!-- Start: right-sidebar (HTML) -->
+      <aside class="right">
+        <section class="block">
+          <div class="block-title">Members</div>
+          <ul class="list">
+            <li>Andsim</li>
+            <li>Dale</li>
+            <li>Riko</li>
+          </ul>
+        </section>
+      </aside>
+      <!-- End: right-sidebar (HTML) -->
+    </main>
 
-  <!-- Bootstrap (JS for dropdowns/tooltips only; optional) -->
-  <script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"
-    defer
-  ></script>
-
-  <!-- App loader -->
-  <script type="module" src="./app.js"></script>
-</body>
+    <!-- Global App JS (must be module for imports later) -->
+    <script type="module" src="app.js"></script>
+  </body>
 </html>

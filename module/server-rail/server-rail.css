@@ -1,296 +1,65 @@
-/******************************************************
- * SERVER-RAIL CORE LAYOUT
- ******************************************************/
-.noiz-server-rail {
-  position: relative;
-  width: 100%;
-  max-width: 80px;
-  background: #13141a;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 16px 0 12px;
-  overflow: visible;
-  border-right: 1px solid rgba(255,255,255,0.04);
-  box-shadow: inset -1px 0 0 rgba(255,255,255,0.02);
-  box-sizing: border-box;
-  height: 100%;
-}
-
-.noiz-server-rail .rail-stack {
-  gap: 12px;
-  flex: 1 1 auto;
-  width: 100%;
-}
-
-.noiz-server-rail .rail-scroll {
-  flex: 1 1 auto;
+/* Very small visual to confirm the rail renders */
+.srv-rail {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 12px;
-  padding: 4px 0 8px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,0.15) transparent;
+  padding: 12px 0;
 }
 
-.noiz-server-rail .rail-scroll::-webkit-scrollbar {
-  width: 6px;
-}
-.noiz-server-rail .rail-scroll::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,0.15);
-  border-radius: 3px;
-}
+.srv-spacer { flex: 1 1 auto; }
 
-.noiz-server-rail .rail-divider {
-  width: 40px;
-  height: 1px;
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 1px;
-}
-
-/******************************************************
- * RAIL BUTTONS
- ******************************************************/
-.noiz-server-rail .rail-btn {
-  position: relative;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: visible;
-  background: #191b22;
-  --accent: #5865f2;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.03);
-}
-
-.noiz-server-rail .rail-btn .pfp-wrap {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  border-radius: 50%;
-  padding: 5px;
-  box-sizing: border-box;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: visible;
-}
-
-.noiz-server-rail .rail-btn .pfp {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 50%;
-  pointer-events: none;
-  position: relative;
-  z-index: 2;
-  box-shadow: 0 0 0 2px #0f1117;
-}
-
-.noiz-server-rail .rail-btn:hover,
-.noiz-server-rail .rail-btn.is-active {
-  background: #21232c;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.06);
-}
-
-/******************************************************
- * GLOW RING
- ******************************************************/
-.noiz-server-rail .rail-btn .ring {
-  position: absolute;
-  inset: -3px;
-  border-radius: 50%;
-  border: 2px solid var(--accent, #5865f2);
-  opacity: 0;
-  transform: scale(0.94);
-  transition: opacity 0.18s ease, transform 0.18s ease;
-  pointer-events: none;
-  box-shadow: 0 0 12px rgba(0, 0, 0, 0.4);
-  background: var(--frame);
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.noiz-server-rail .rail-btn:hover .ring,
-.noiz-server-rail .rail-btn.is-active .ring,
-.noiz-server-rail .rail-btn.has-unread .ring {
-  opacity: 1;
-  transform: scale(1);
-}
-
-.noiz-server-rail .rail-btn:not(.has-frame) .pfp-wrap {
-  padding: 2px;
-}
-
-.noiz-server-rail .rail-btn:not(.has-frame) .pfp {
-  box-shadow: 0 0 0 2px #13141a;
-}
-
-.noiz-server-rail .rail-btn.has-frame .pfp-wrap {
-  padding: 2px;
-}
-
-.noiz-server-rail .rail-btn.has-frame .pfp {
-  box-shadow: 0 0 0 2px #13141a;
-}
-
-.noiz-server-rail .rail-btn.has-frame .ring {
-  inset: -16px;
-  border: none;
-  box-shadow: none;
-  opacity: 1;
-  transform: scale(1);
-}
-
-.noiz-server-rail .rail-btn.has-frame:hover .ring,
-.noiz-server-rail .rail-btn.has-frame.is-active .ring,
-.noiz-server-rail .rail-btn.has-frame.has-unread .ring {
-  opacity: 1;
-  transform: scale(1.02);
-}
-
-/******************************************************
- * STATE INDICATORS (UNREAD / HOVER / ACTIVE)
- ******************************************************/
-.noiz-server-rail .rail-btn .indicator {
-  position: absolute;
-  right: -14px;
-  top: 50%;
-  width: 4px;
-  height: 12px;
-  background: var(--accent, #5865f2);
-  border-radius: 999px 0 0 999px;
-  opacity: 0;
-  transform: translate(40%, -50%);
-  transition: height 0.2s ease, width 0.2s ease, opacity 0.2s ease, border-radius 0.2s ease, transform 0.2s ease;
-}
-
-.noiz-server-rail .rail-btn:hover .indicator {
-  opacity: 1;
-  height: 24px;
-  transform: translate(35%, -50%);
-}
-
-.noiz-server-rail .rail-btn.is-active .indicator {
-  opacity: 1;
-  height: 36px;
-  width: 6px;
-  transform: translate(30%, -50%);
-}
-
-.noiz-server-rail .rail-btn.has-unread:not(.is-active):not(:hover) .indicator {
-  opacity: 1;
-  height: 14px;
-  width: 12px;
-  border-radius: 999px 0 0 999px;
-  transform: translate(52%, -50%);
-}
-
-/******************************************************
- * BADGE (UNREAD / NOTIF)
- ******************************************************/
-.noiz-server-rail .rail-btn .badge {
-  position: absolute;
-  top: 2px;
-  right: 4px;
-  min-width: 18px;
-  padding: 2px 6px;
-  border-radius: 12px;
-  background: linear-gradient(135deg, #ff7eb6, #ff4d6d);
-  color: #fff;
-  font-size: 11px;
-  font-weight: 600;
-  line-height: 1;
-  z-index: 3;
-  box-shadow: 0 4px 10px rgba(255,77,109,0.45);
-}
-
-/******************************************************
- * PRESENCE PIPS
- ******************************************************/
-.noiz-server-rail .status {
-  position: absolute;
-  right: 4px;
-  bottom: 4px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  border: 2px solid #0f1117;
-  z-index: 4;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
-
-.noiz-server-rail .status-online { background: #3ba55d; }
-.noiz-server-rail .status-away { background: #faa61a; }
-.noiz-server-rail .status-dnd { background: #ed4245; }
-.noiz-server-rail .status-offline { background: #4f5461; }
-.noiz-server-rail .status-streaming {
-  background: linear-gradient(135deg, #5865f2, #43b581);
-}
-
-.noiz-server-rail .rail-bottom {
-  margin-top: auto;
-  padding: 16px 0 12px;
-  gap: 10px;
-  background: linear-gradient(180deg, rgba(7, 7, 12, 0), rgba(7, 7, 12, 0.85));
-  width: 100%;
-}
-
-.noiz-server-rail .rail-btn.rail-me {
-  width: 56px;
-  height: 56px;
-  border-radius: 50%;
-  background: #111219;
-}
-
-.noiz-server-rail .rail-btn.rail-empty {
+.srv-pill {
   width: 48px;
   height: 48px;
-  border-radius: 18px;
-  --accent: rgba(88, 101, 242, 0.9);
-  background: #1f222a;
-  color: #b9c0d0;
-  font-size: 22px;
-  font-weight: 500;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05);
+  border-radius: 50%;
+  border: 0;
+  background: #d8dbe3;
+  color: #555;
+  font-weight: 700;
+  display: grid;
+  place-items: center;
+  position: relative;
+  cursor: pointer;
+  outline: none;
 }
 
-.noiz-server-rail .rail-btn.rail-empty .ring {
-  display: none;
+.srv-pill:hover {
+  outline: 2px solid rgba(120,140,255,.6);
+  outline-offset: 2px;
 }
 
-.noiz-server-rail .rail-btn.rail-empty .dot {
+/* Unread badge */
+.srv-pill[data-unread]::after {
+  content: attr(data-unread);
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  background: #ff4d82;
+  color: white;
+  font-size: 11px;
+  line-height: 18px;
   width: 18px;
   height: 18px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  box-shadow: 0 0 0 2px #111318;
+}
+
+/* Live dot */
+.srv-pill[data-live="true"]::before {
+  content: "";
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 12px;
+  height: 12px;
+  background: #27d17f;
+  border: 2px solid #111318;
   border-radius: 50%;
-  background: rgba(255,255,255,0.06);
-  box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
 }
 
-.noiz-server-rail .rail-btn.rail-empty:hover {
-  background: #262930;
-}
-
-/******************************************************
- * TOOLTIP COMPATIBILITY
- ******************************************************/
-/* Any BS5 tooltip or custom one floats above UI */
-.tooltip,
-.noiz-tooltip {
-  z-index: 3000;
-  pointer-events: none;
-}
+/* Status color (just to show something) */
+.srv-pill[data-status="dnd"] { background: #f1c1c1; }
+.srv-pill.me { background: #e7f5e9; }

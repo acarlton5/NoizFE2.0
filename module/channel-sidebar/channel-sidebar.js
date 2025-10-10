@@ -1,134 +1,117 @@
-export default {
-  async init({ root, props = {}, hub }) {
-    const data = props.data ?? demoData();
+// NOIZ channel-sidebar with LIVE button
+// default export async function init({ root, props }) returns { api, dispose }
 
-    root.innerHTML = `
-      <aside class="noiz-channel-sidebar">
-        <!-- Server mini header -->
-        <div class="srv-header d-flex align-items-center gap-2 px-2 py-2">
-          <div class="srv-logo"></div>
-          <div class="srv-name flex-grow-1 text-truncate">Noice</div>
-          <button class="btn btn-sm btn-icon" title="Server Menu" aria-label="Server Menu">▾</button>
-        </div>
+export default async function init({ root, props = {} }) {
+  const initial = {
+    online: props.online ?? true,
+    title: props.title ?? "Live UI Build",
+    channel: props.channel ?? "general",
+    viewers: props.viewers ?? 1234
+  };
 
-        <!-- Boost goal pill -->
-        <div class="px-2">
-          <div class="boost d-flex align-items-center gap-2">
-            <span class="pill"></span><span class="label">Boost Goal</span>
-            <span class="ms-auto count">${data.boostsDone}/${data.boostsGoal} Boosts</span>
-          </div>
-        </div>
+  root.innerHTML = render(initial);
 
-        <!-- Channels & Roles -->
-        <button class="section-cta w-100 text-start" data-action="roles">
-          <span class="ico">🔍</span>
-          <span>Channels & Roles</span>
-        </button>
+  const liveBtn = root.querySelector("[data-action='go-live']");
+  const titleEl = root.querySelector("[data-bind='title']");
+  const pill = root.querySelector("[data-bind='pill']");
+  const viewersEl = root.querySelector("[data-bind='viewers']");
 
-        <div class="hr"></div>
+  // Click → tell the app to switch to live view
+  liveBtn.addEventListener("click", () => {
+    const detail = { channel: initial.channel, title: titleEl.textContent.trim() };
+    // Your app.js can listen to this:
+    window.dispatchEvent(new CustomEvent("channel:go-live", { detail }));
+    props.onLiveClick && props.onLiveClick(detail);
+  });
 
-        <!-- Sections -->
-        <div class="sections">
-          ${data.sections.map(sec => renderSection(sec)).join('')}
-        </div>
-      </aside>
-    `;
-
-    // collapse/expand
-    root.addEventListener('click', (e) => {
-      const t = e.target.closest('[data-toggle="section"]');
-      if (!t) return;
-      const id = t.dataset.id;
-      const section = root.querySelector(`.section[data-id="${id}"]`);
-      section?.classList.toggle('is-collapsed');
+  // simple demo channel list (replace with real data)
+  root.querySelectorAll(".chan").forEach(el => {
+    el.addEventListener("click", () => {
+      root.querySelectorAll(".chan.is-active").forEach(a => a.classList.remove("is-active"));
+      el.classList.add("is-active");
     });
+  });
 
-    // channel click
-    root.addEventListener('click', (e) => {
-      const ch = e.target.closest('.chan');
-      if (!ch) return;
-      // set active
-      root.querySelectorAll('.chan.is-active').forEach(n => n.classList.remove('is-active'));
-      ch.classList.add('is-active');
-      // clear unread dot
-      ch.querySelector('.unread')?.remove();
-      // emit + (optionally) route
-      hub.emit('channel-sidebar:open', { id: ch.dataset.id });
-      // hub.navigate(`/channel?id=${encodeURIComponent(ch.dataset.id)}`);
-    });
+  const api = {
+    /** Update the live bar dynamically */
+    updateLive({ title, online, viewers } = {}) {
+      if (typeof title === "string")  titleEl.textContent = title;
+      if (typeof online === "boolean") {
+        pill.style.display = online ? "" : "none";
+        liveBtn.classList.toggle("is-offline", !online);
+      }
+      if (Number.isFinite(viewers)) {
+        viewersEl.textContent = Intl.NumberFormat().format(viewers);
+      }
+    }
+  };
 
-    // roles click
-    root.querySelector('[data-action="roles"]')?.addEventListener('click', () => {
-      hub.emit('channel-sidebar:roles');
-    });
+  function dispose() {
+    // Nothing persistent; if you attach observers, clean them here.
   }
-};
 
-/* ------------ helpers ------------ */
+  return { api, dispose };
+}
 
-function renderSection(sec) {
+/* --- view --- */
+function render(state) {
+  const vStr = Intl.NumberFormat().format(state.viewers ?? 0);
   return `
-    <div class="section ${sec.collapsed ? 'is-collapsed' : ''}" data-id="${sec.id}">
-      <button class="section-hdr" data-toggle="section" data-id="${sec.id}">
-        <span class="chev">▾</span>
-        <span class="title text-uppercase">${sec.title}</span>
-      </button>
-      <div class="section-body">
-        ${sec.channels.map(c => renderChan(c)).join('')}
-      </div>
+  <aside class="channel-sidebar" aria-label="Channel Navigation">
+
+    <!-- LIVE header -->
+    <button class="live-card" type="button" data-action="go-live" aria-label="Open live view">
+      <span class="live-dot" aria-hidden="true"></span>
+
+      <span class="live-meta">
+        <span class="live-row">
+          <span class="pill" data-bind="pill">LIVE</span>
+          <span class="hash">#${escape(state.channel)}</span>
+        </span>
+        <span class="title" data-bind="title">${escape(state.title)}</span>
+      </span>
+
+      <span class="viewer-chip" title="Concurrent viewers">
+        <span aria-hidden="true">👁</span>
+        <span data-bind="viewers">${vStr}</span>
+      </span>
+    </button>
+
+    <div class="divider"></div>
+
+    <!-- Sections (examples) -->
+    <div class="section">
+      <h6>Welcome</h6>
+      ${row("#", "welcome")}
+      ${row("📜", "rules")}
+      ${row("✨", "introductions")}
+      ${row("🆕", "new-joiners")}
+    </div>
+
+    <div class="section">
+      <h6>Community</h6>
+      ${row("💬", "general", true)}
+      ${row("🎨", "creator-events")}
+      ${row("⭐", "the-good-stuff")}
+      ${row("🎬", "clips")}
+    </div>
+
+    <div class="section">
+      <h6>Support</h6>
+      ${row("🛠️", "feedback")}
+      ${row("🐞", "bug-reports")}
+    </div>
+
+  </aside>`;
+}
+
+function row(icon, name, active=false) {
+  return `
+    <div class="chan ${active ? "is-active": ""}" role="button" tabindex="0" aria-label="${escape(name)}">
+      <span class="hash">${escape(icon)}</span>
+      <span>${escape(name)}</span>
+      <span></span>
     </div>`;
 }
 
-function renderChan(c) {
-  const icon = c.icon ?? '#';
-  const badge = c.badge ? `<span class="badge">${c.badge}</span>` : '';
-  const unread = c.unread ? `<span class="unread"></span>` : '';
-  const lock = c.locked ? `<span class="lock">🔒</span>` : '';
-  return `
-    <button class="chan ${c.active ? 'is-active' : ''}" data-id="${c.id}" title="${c.name}">
-      <span class="hash">#</span>
-      <span class="label text-truncate">${icon} ${c.name}</span>
-      ${badge}${lock}${unread}
-    </button>`;
-}
-
-function demoData() {
-  return {
-    boostsDone: 9, boostsGoal: 28,
-    sections: [
-      {
-        id:'welcome', title:'Welcome', collapsed:false,
-        channels:[
-          {id:'welcome', name:'welcome'},
-          {id:'rules', name:'rules', icon:'☑️'},
-          {id:'introductions', name:'introductions', icon:'👋'},
-          {id:'new-joiners', name:'new-joiners', icon:'🆕'}
-        ]
-      },
-      {
-        id:'important', title:'Important', collapsed:false,
-        channels:[
-          {id:'announcements', name:'announcements', icon:'📢'},
-          {id:'prediction-card-game', name:'prediction-card-game', icon:'🧠'}
-        ]
-      },
-      {
-        id:'community', title:'Community', collapsed:false,
-        channels:[
-          {id:'general', name:'general', icon:'💬', active:true},
-          {id:'general-creators', name:'general-creators', icon:'💬'},
-          {id:'creator-events', name:'creator-events', icon:'📅'},
-          {id:'the-good-stuff', name:'the-good-stuff', icon:'❤️'},
-          {id:'clips', name:'clips', icon:'🎬', badge:2, unread:true}
-        ]
-      },
-      {
-        id:'support', title:'Support', collapsed:false,
-        channels:[
-          {id:'feedback', name:'feedback', icon:'🧪'},
-          {id:'bug-reports', name:'bug-reports', icon:'🪲'}
-        ]
-      }
-    ]
-  };
-}
+function escape(s="") { return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m])); }
