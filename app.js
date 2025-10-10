@@ -110,6 +110,15 @@ const NOIZ = (function () {
   }
 
   /* ---------------------- layout controller ---------------------- */
+  const logLayout = (action, payload) => {
+    const styles = ["color:#F907FC;font-weight:bold", "color:#8E44AD;font-weight:bold"];
+    if (payload === undefined) {
+      console.log("%c[NOIZ]%c[layout]", ...styles, action);
+    } else {
+      console.log("%c[NOIZ]%c[layout]", ...styles, action, payload);
+    }
+  };
+
   const LAYOUT = {
     set(partial = {}) {
       const body = document.body;
@@ -120,6 +129,7 @@ const NOIZ = (function () {
         classes.clear(); classes.add("immerse");
         log("🎬 Layout preset: IMMERSIVE");
       } else {
+        classes.delete("immerse");
         if ("left" in partial) on("left-collapsed", partial.left === "collapsed");
         if ("chan" in partial) on("chan-hidden", partial.chan === "hidden");
         if ("right" in partial) {
@@ -137,25 +147,55 @@ const NOIZ = (function () {
   };
 
   // Base API
-  register("layout:set", async (payload) => (LAYOUT.set(payload), { ok: true }));
+  register("layout:set", async (payload) => {
+    logLayout("layout:set", payload);
+    return { ok: true, state: LAYOUT.set(payload) };
+  });
 
   // ---------- Shorthand helper APIs (monkey-proof) ----------
   // Left rail
-  register("layout:left:collapse", async () => ({ ok:true, state: LAYOUT.set({ left:"collapsed" }) }));
-  register("layout:left:expand",   async () => ({ ok:true, state: LAYOUT.set({ left:undefined }) }));
+  register("layout:left:collapse", async () => {
+    logLayout("layout:left:collapse");
+    return { ok:true, state: LAYOUT.set({ left:"collapsed" }) };
+  });
+  register("layout:left:expand",   async () => {
+    logLayout("layout:left:expand");
+    return { ok:true, state: LAYOUT.set({ left:undefined }) };
+  });
 
   // Channel sidebar
-  register("layout:chan:hide",     async () => ({ ok:true, state: LAYOUT.set({ chan:"hidden" }) }));
-  register("layout:chan:show",     async () => ({ ok:true, state: LAYOUT.set({ chan:undefined }) }));
+  register("layout:chan:hide",     async () => {
+    logLayout("layout:chan:hide");
+    return { ok:true, state: LAYOUT.set({ chan:"hidden" }) };
+  });
+  register("layout:chan:show",     async () => {
+    logLayout("layout:chan:show");
+    return { ok:true, state: LAYOUT.set({ chan:undefined }) };
+  });
 
   // Right sidebar
-  register("layout:right:hide",    async () => ({ ok:true, state: LAYOUT.set({ right:"hidden" }) }));
-  register("layout:right:show",    async () => ({ ok:true, state: LAYOUT.set({ right:undefined }) }));
-  register("layout:right:wide",    async () => ({ ok:true, state: LAYOUT.set({ right:"wide" }) }));
+  register("layout:right:hide",    async () => {
+    logLayout("layout:right:hide");
+    return { ok:true, state: LAYOUT.set({ right:"hidden" }) };
+  });
+  register("layout:right:show",    async () => {
+    logLayout("layout:right:show");
+    return { ok:true, state: LAYOUT.set({ right:undefined }) };
+  });
+  register("layout:right:wide",    async () => {
+    logLayout("layout:right:wide");
+    return { ok:true, state: LAYOUT.set({ right:"wide" }) };
+  });
 
   // Preset: Immerse (live)
-  register("layout:immerse:on",    async () => ({ ok:true, state: LAYOUT.set({ preset:"immerse" }) }));
-  register("layout:immerse:off",   async () => ({ ok:true, state: LAYOUT.set({ left:undefined, chan:undefined, right:undefined }) }));
+  register("layout:immerse:on",    async () => {
+    logLayout("layout:immerse:on");
+    return { ok:true, state: LAYOUT.set({ preset:"immerse" }) };
+  });
+  register("layout:immerse:off",   async () => {
+    logLayout("layout:immerse:off");
+    return { ok:true, state: LAYOUT.set({ left:undefined, chan:undefined, right:undefined }) };
+  });
 
   /* ---------------------- module loader -------------------------- */
   const mounts = [];
