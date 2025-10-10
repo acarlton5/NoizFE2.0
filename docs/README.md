@@ -1,106 +1,172 @@
-## Project Overview & Dev Workflow
+# NOIZ Frontend
 
-### NOIZ Web App
-
-A **Bootstrap 5 modular streaming UI**.
-Every on-screen region is a pluggable module; the shell just mounts them.
+NOIZ uses a **4-column adaptive scaffold** and **unified single-file module architecture**. Each module controls its own UI, API, and Routes while communicating with others through a central hub. No external dependencies beyond **Bootstrap 5** are required for layout and responsiveness.
 
 ---
 
-### 1. Project Layout
+## 🔧 Architecture Overview
+
+Each module contains:
+
+* **UI** – Renders inside its assigned `<module>` mount point.
+* **API** – Exposes functions callable by other modules through the hub.
+* **Routes** – Handles deep linking and navigation (`#/c/:channel`, etc.).
+
+### File Layout
 
 ```
-index.html              # Bootstrap grid w/ <module> mount points
-app.js                  # Scans DOM, loads modules & CSS, registers services, hub & routes
-app.css                 # Global resets + @imports for each module’s CSS
-modules-enabled.json    # Modules & services to preload at startup
-module/
-  app-header/
-  server-rail/
-  channel-sidebar/
-  chat-pane/
-  chat-composer/
-  members-rail/
-  live/
-  live-chat/
-  …
-data/                   # JSON fixtures
-images/                 # Static assets
-package.json
+/module/<name>/
+  <name>.js     # UI + API + Routes
+  <name>.css    # Scoped CSS only
+```
+
+### Runtime Files
+
+```
+index.html      # Mount points defined here
+app.js          # Scans, loads, and mounts modules dynamically
+app.css         # Global scaffold and layout (no module-specific styles)
+modules-enabled.json # Optional preload list
 ```
 
 ---
 
-### 2. Startup Flow
+## 🧩 The Core Systems
 
-1. `index.html` defines all **static mount points**.
-2. `app.js` on load:
+### `app.js`
 
-   * reads `modules-enabled.json`
-   * pre-loads each module’s `.service.js`
-   * scans page for `<module>` tags
-   * loads the corresponding `module/<name>/<name>.js`
-   * injects the module’s CSS if present
-3. Each module’s `init()` runs with `{ root, props, hub }`.
+The central runtime handles:
 
----
+* Loading and unloading module JS and CSS dynamically.
+* Passing runtime context to each module (`hub`, `router`, `layout`).
+* Handling cross-module communication and cleanup.
 
-### 3. Adding a Module
+### `hub`
 
-```bash
-mkdir module/hello
-touch module/hello/hello.js module/hello/hello.css
-```
-
-**hello.js**
+The **event and API bus** for module communication:
 
 ```js
-export default async function init({ root, props, hub }) {
-  root.innerHTML = `<div class="noiz-hello">Hello ${props.name||'World'}!</div>`;
+hub.register("quest@1.start", async (data) => {...});
+await hub.request("quest@1.start", { id: 42 });
+hub.publish("layout:changed", { right: 'wide' });
+```
+
+### `router`
+
+Manages hash-based navigation and route bindings:
+
+```js
+router.register({ path: '#/profile/:user', onEnter: loadProfile });
+router.navigate('#/profile/noizdev');
+```
+
+### `layout`
+
+The **layout controller** governs the adaptive 4-column grid used throughout NOIZ.
+The grid columns are:
+
+```
+rail | channel | main | right
+```
+
+Each column can expand, collapse, or hide entirely depending on the app state or active module.
+
+The layout system is driven by CSS body classes managed by `app.js`, and no module should modify them directly. Instead, all state changes must be made via **hub layout requests**.
+
+#### Example usage:
+
+```js
+// Collapse the server rail (leftmost column)
+await hub.request('layout:left:collapse');
+
+// Expand the right column for wide content, e.g., chat or quest tracking
+await hub.request('layout:right:wide');
+
+// Enable immersive layout — hides rail + channel, focuses on main + wide right (used for live streams)
+await hub.request('layout:immerse:on');
+
+// Revert immersive mode
+await hub.request('layout:immerse:off');
+```
+
+#### Notes:
+
+* Layout commands can be combined for complex transitions.
+* The system automatically adjusts column widths to maintain fluid spacing.
+* Modules can listen for layout changes using `hub.subscribe('layout:changed', cb)`.
+* The goal is **dynamic modular adaptability**: if one part hides, others fluidly expand.
+
+---
+
+## 🧠 Module Principles
+
+| Rule               | Description                                                |
+| ------------------ | ---------------------------------------------------------- |
+| **Isolation**      | Each module owns only its own DOM root.                    |
+| **Communication**  | Use hub requests/events for all cross-module interactions. |
+| **Scoped CSS**     | Only style within your `.noiz-<module>` namespace.         |
+| **Cleanup**        | Return `dispose()` and unregister functions.               |
+| **Versioned APIs** | Example: `questbar@1.setProgress`.                         |
+
+---
+
+## 🏗️ Scaffolding System
+
+Adaptive 4-column layout controlled via CSS variables:
+
+```
+rail | channel | main | right
+```
+
+* Collapsible and resizable columns.
+* Dynamic presets (like `immerse` for live streaming).
+* Body classes define current layout state (handled by layout controller).
+
+Example states:
+
+```js
+await hub.request('layout:set', { left: 'collapsed', right: 'wide' });
+await hub.request('layout:immerse:on');
+```
+
+---
+
+## 🚀 Quick Start (Hello NOIZ)
+
+```js
+// /module/example/example.js
+export default async function init({ root, hub }) {
+  root.innerHTML = `<button class="btn btn-primary">Ping!</button>`;
+  root.querySelector('button').onclick = async () => {
+    const res = await hub.request('example@1.ping', { msg: 'Hello NOIZ' });
+    alert(res.echo);
+  };
+
+  const unregister = [hub.register('example@1.ping', async ({ msg }) => ({ echo: msg }))];
+  return { unregister, dispose() { console.log('example disposed'); } };
 }
 ```
 
-In `index.html`
+---
 
-```html
-<module data-module="hello" data-props='{"name":"NOIZ"}'></module>
-```
+## 🧩 Key Directories
+
+| Path       | Description                              |
+| ---------- | ---------------------------------------- |
+| `/module/` | All app modules live here.               |
+| `/docs/`   | Developer and contributor documentation. |
+| `/assets/` | Shared images, fonts, and icons.         |
+| `/`        | Root files (index.html, app.js, etc.).   |
 
 ---
 
-### 4. Live-View Pattern
+## 🧭 Next Steps
 
-* `live` module → video player & meta row in **center column**
-* `live-chat` module → right column with chat-pane & composer
-* `ui:openLive` event replaces current center/right modules with live ones
-* `ui:immersive:on` collapses left rails & widens live-chat
-* Leaving live (channel click / route change) → `ui:closeLive` restores original DOM
-
----
-
-### 5. Coding Standards
-
-* Use **BS5 utilities & grid**; avoid fixed px values.
-* Scope all CSS under a `.noiz-<module>` wrapper.
-* Avoid cross-module DOM queries except for defined mount points.
-* Communicate via `hub.emit/on`; no direct imports of sibling modules.
-* Keep everything **mobile-first** and test at major breakpoints.
+1. Read `AGENTS.md` for details on lifecycle and system internals.
+2. See `ModuleGuide.md` for creating your first module.
+3. Check `Scaffolding.md` for understanding layout behavior.
+4. Reference `EventsReference.md` for all hub and layout events.
 
 ---
 
-### 6. Dev Commands
-
-* `npm start` – launches [live-server](https://www.npmjs.com/package/live-server) on **[http://127.0.0.1:5173/](http://127.0.0.1:5173/)**
-* `npm test` – placeholder check to ensure CI passes
-* Preview with DevTools **Device Mode** for responsiveness.
-
----
-
-### 7. Contributing Checklist
-
-* [ ] Follows **AGENTS.md** authoring rules
-* [ ] Responsive verified
-* [ ] No global CSS leakage
-* [ ] Works after unload/re-load
-* [ ] Emits/handles hub events appropriately
-* [ ] No console errors or scroll glitches
+> 💡 **Tip:** The goal is modular simplicity. If you need to talk to another module — ask the hub, not the DOM.
