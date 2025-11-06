@@ -1,198 +1,163 @@
-# Contributing to NOIZ
+# Contribute to NOIZ
 
-Welcome to the **NOIZ Modular Frontend Runtime** project! 🌀
-This document explains how to set up your local environment, create and test modules, and submit contributions correctly.
-
----
-
-## 🧱 Overview
-
-NOIZ uses a **modular runtime architecture** built on **Bootstrap 5**, powered by a unified `app.js` loader and a shared event/API hub.
-Each module lives in its own folder and manages its own UI, API, and routing — isolated yet able to communicate through the hub.
-
-### Folder Structure
-
-```
-/module/<name>/<name>.js
-/module/<name>/<name>.css
-/docs/
-```
-
-> ⚠️ No more `services.js` files — all logic, routes, and APIs are unified into the main module JS file.
+> **Version:** 1.0
+> **Maintainers:** NOIZ Interface Systems Team & Systems Team
+> **Scope:** How to propose changes, add modules, and land PRs that meet NOIZ standards.
 
 ---
 
-## 🧰 Local Setup
+## 1) Philosophy
 
-### Requirements
-
-* **Node.js 20+**
-* **NPM** or **PNPM**
-* A local server such as `live-server` or `vite`.
-
-### Steps
-
-```bash
-npm install
-npm run dev
-```
-
-This runs a local server and watches for file changes.
+* **Scaffold First** — modules live *inside* the canonical layout.
+* **RITES by Default** — subscribe/emit events via the Hub; no ad-hoc buses.
+* **Accessible & Performant** — usable by keyboard, fast on mid-range devices.
+* **Predictable Bootstrap** — Bootstrap 5.3 utilities, vanilla JS. No extra frameworks.
 
 ---
 
-## 🧩 Creating a Module
+## 2) What You Can Contribute
 
-Every module must export a **default async function** with the following signature:
-
-```js
-export default async function init({ root, hub, router, layout }) {
-  // mount UI
-  root.innerHTML = `<section class="noiz-example">Hello</section>`;
-
-  // register an API capability
-  const unregister = [];
-  unregister.push(hub.register('example@1.echo', async (data) => data));
-
-  return {
-    unregister,
-    async dispose() {
-      // teardown logic
-    }
-  };
-}
-```
-
-### Rules
-
-* **Return** `{ unregister, dispose }`.
-* **Scope CSS** under `.noiz-<name>` to avoid global leaks.
-* Never modify global DOM elements outside your `root`.
+* New **modules** (feature panels, tools, overlays).
+* Improvements to **Scaffold** (standards, tokens, docs).
+* **RITES** event additions (with schema + use-cases).
+* **Docs** (guides, examples, FAQs).
+* Developer tooling (lint rules, CI checks, Dev Bar helpers).
 
 ---
 
-## 🛰️ Communication Between Modules
+## 3) Workflow
 
-Modules communicate via the **Hub** API:
+1. **Create an Issue**
 
-```js
-hub.request('quest@1.start', { questId });
-hub.publish('ui:notification', { message: 'Quest started!' });
-```
+   * Use the template matching your change type (bug, module, docs).
+   * Include screenshots or short clips if UI-related.
 
-### Guidelines
+2. **Branch**
 
-* Always **namespace** your APIs: `module@version.method`.
-* Never directly manipulate another module’s DOM.
-* Use `hub.unregisterAll(name)` in `dispose()` for cleanup.
+   * `feat/<short-name>` for features, `fix/<short-name>` for fixes, `docs/<short-name>` for docs.
 
----
+3. **Develop**
 
-## 🧭 Layout Control
+   * Follow [ModuleGuide.md](./ModuleGuide.md) and [Scaffolding.md](./Scaffolding.md).
+   * Test locally with `scaffoldDemo.html` and Dev Bar presets.
 
-Use hub requests to manipulate layout states dynamically.
+4. **Lint / Test**
 
-```js
-await hub.request('layout:left:collapse');
-await hub.request('layout:right:wide');
-await hub.request('layout:immerse:on');
-```
+   * Ensure `npm run lint` (if configured) passes.
+   * Manually verify accessibility and 992px breakpoint behavior.
 
-### Common States
+5. **Pull Request**
 
-| Column  | Options          | Description                               |
-| ------- | ---------------- | ----------------------------------------- |
-| Left    | `collapsed`      | Collapses the rail.                       |
-| Channel | `hidden`         | Hides the channel sidebar.                |
-| Right   | `wide`, `hidden` | Expands or hides right column.            |
-| Preset  | `immerse`        | Hides left + channel for streaming focus. |
+   * PR title: `feat: …`, `fix: …`, `docs: …`, `chore: …`.
+   * Fill the PR checklist (below).
+   * Link the issue (`Closes #123`).
+
+6. **Review & Iterate**
+
+   * Address comments with additional commits (`fixup!` allowed).
+   * Squash on merge unless history is instructive.
 
 ---
 
-## 🧪 Testing & Debugging
+## 4) Coding Standards
 
-* Use `console.groupCollapsed('[ModuleName]')` for lifecycle logs.
-* Avoid noisy unscoped logs.
-* Log all lifecycle steps: mount, render, register, route, dispose.
+* **Frameworks:** Bootstrap 5.3 utilities; vanilla JS/ES modules.
+* **Styling:** Use scaffold tokens (`--c-text`, `--c-main`, etc.). Avoid global overrides.
+* **Events:** Use **RITES** (`ctx.on`, `ctx.emit`); payloads match [EventsReference.md](./EventsReference.md).
+* **Files:**
 
-Example:
-
-```js
-console.groupCollapsed('[Quest] Mounting');
-console.log('Registering routes...');
-console.groupEnd();
-```
-
----
-
-## 🧹 Cleanup Discipline
-
-* Clear all intervals, observers, and listeners in `dispose()`.
-* Use `hub.unregisterAll(name)` for full cleanup.
-* Never leave stale listeners or state.
+  ```
+  /modules/<id>/
+    module.json
+    main.js
+    style.css
+  ```
+* **Naming:** Kebab-case for module ids and file names.
+* **Accessibility:** ARIA labels for controls; keyboard focus visible.
+* **Performance:** ≤300ms initial mount; defer heavy work.
 
 ---
 
-## 🧩 Linting & Code Style
+## 5) Non-Negotiables (Hard Rules)
 
-* 2-space indentation.
-* Semicolons required.
-* CamelCase for variables.
-* `PascalCase` for modules.
-* Follow **Conventional Commits**:
+* ❌ **Do not hide or remount the Rail.**
 
-  * `feat:` new feature
-  * `fix:` bug fix
-  * `refactor:` internal improvement
-  * `docs:` documentation update
+  * The Rail is part of NOIZ identity/navigation.
+  * Modules attempting to hide or alter it will be rejected.
 
----
+* ❌ **Do not modify App-Bar geometry or force page-level CSS** (e.g., overriding `.row`, `.col-*`).
 
-## 🧱 Pull Requests
+* ❌ **No external UI frameworks** (Tailwind/React/etc.) without prior approval.
 
-Each PR must:
-
-* Pass `npm run lint`.
-* Contain **scoped CSS** and self-contained module files.
-* Update relevant documentation under `/docs`.
-* Avoid touching core files (`app.js`, `index.html`, `app.css`) unless absolutely required.
-
-### PR Title Format
-
-```
-feat(module): add quest progress bar
-fix(router): correct param parsing
-```
+* ❌ **No unvetted RITES events.** New events require a schema proposal (see §7).
 
 ---
 
-## 🔒 Security & Isolation Rules
+## 6) PR Checklist (include in your PR body)
 
-* No direct network calls outside platform endpoints.
-* No `eval()` or inline `<script>` tags.
-* Avoid global `window` assignments.
-* Use **hub**, **router**, or **layout** for all communication.
-
----
-
-## 📘 Documentation Contributions
-
-All new features or modules must include matching docs in `/docs`.
-
-Each doc should:
-
-* Use Markdown (`.md`).
-* Be tagged with its role (`Guide`, `Policy`, `Reference`).
-* Include usage examples.
+* [ ] Targets valid scaffold region(s) (`main`, `sidebar`, `main-header`, `nav-pane`).
+* [ ] Uses Bootstrap 5.3 utilities; no external frameworks.
+* [ ] Integrates with **RITES** (only approved events).
+* [ ] Does **not** alter Rail/App-Bar.
+* [ ] Accessible: semantic roles, labels, focus.
+* [ ] Responsive across the 992px breakpoint.
+* [ ] Passes **Dev Bar** presets: `default`, `immerse`, `chat-focus`, `compact`.
+* [ ] Meets performance target (≤300ms bootstrap).
+* [ ] Includes screenshots (desktop + mobile).
+* [ ] Updated docs if behavior/contract changed.
 
 ---
 
-## 🏁 Summary
+## 7) Proposing New RITES Events
 
-* Modules are **self-contained** and **scoped**.
-* Cross-module interactions happen only through **hub APIs**.
-* Layout is controlled centrally by **hub → layout** requests.
-* Logging is structured, not spammy.
-* Documentation is mandatory for new capabilities.
+1. Open an issue: **“RITES Proposal: `<category.name>`”**
+2. Provide:
 
-> 🧩 Remember: A module should mount clean, run clean, and dispose clean — no leftovers, no globals.
+   * **Use case** and expected consumers (modules/agents).
+   * **Payload schema** (fields, types, optional/required).
+   * **Security context** (who may emit/receive).
+   * **Versioning** impact (semver; breaking vs additive).
+3. Link to a test module or demo reproducing the flow.
+4. Await Systems Team sign-off.
+
+---
+
+## 8) Module Certification
+
+Before merge to mainline builds, modules must pass:
+
+* **Scaffold Compliance** (zones + geometry intact).
+* **RITES Compliance** (approved events only).
+* **Accessibility Audit** (labels/contrast/focus).
+* **Dev Bar Scenarios** (no layout shift across presets).
+* **Performance** (bootstrap + interaction smoothness).
+
+> Failing any gate = changes requested. Persistent violations may be closed.
+
+---
+
+## 9) Commit Messages
+
+* `feat: add stream goal tracker`
+* `fix: sidebar overflow on <992px`
+* `docs: clarify RITES goal.* payloads`
+* `chore: lint rules for aria-* attributes`
+
+Use “imperative mood”; present tense.
+
+---
+
+## 10) Security & Reporting
+
+* Report vulnerabilities privately to `security@noiz.gg`.
+* Use the “security” issue template only if instructed.
+* Never post exploit details publicly before a fix is released.
+
+---
+
+## 11) Contacts
+
+* **Interface Systems Team:** `ui@noiz.gg`
+* **Systems Team:** `systems@noiz.gg`
+
+> “Right-in-Time, not Real-Time — because context matters.”
