@@ -1,91 +1,95 @@
-# NOIZ Developer Documentation Index
+# NOIZ Developer Portal
 
-Welcome to the **NOIZ Runtime Documentation Suite**.
-This index links to all major contributor and developer guides that define how modules, layout, and runtime events work.
-
----
-
-## 📘 Core Documents
-
-| Document                                 | Purpose                                                                   |
-| ---------------------------------------- | ------------------------------------------------------------------------- |
-| [README.md](README.md)                   | Overview of the NOIZ modular architecture and project purpose.            |
-| [CONTRIBUTE.md](CONTRIBUTE.md)           | Contribution rules, environment setup, PR and linting standards.          |
-| [AGENTS.md](AGENTS.md)                   | Internal agent (module) structure, lifecycle, and communication policy.   |
-| [ModuleGuide.md](ModuleGuide.md)         | In-depth reference for writing modules — UI, API, routing, and cleanup.   |
-| [Scaffolding.md](Scaffolding.md)         | Explanation of the 4-column layout, layout presets, and hub interactions. |
-| [EventsReference.md](EventsReference.md) | Complete event and hub API list for communication between modules.        |
+> **Welcome to the NOIZ Interface Stack (NIS)**
+> *Scaffold · Hub · RITES · Modules*
 
 ---
 
-## 🧩 Module Architecture Summary
+## ⚡ What Is NOIZ?
 
-NOIZ operates on a modular runtime:
+**NOIZ** is a modular, creator-first live platform built to merge community, interactivity, and performance.
+The system is powered by a unified development architecture known as the **NOIZ Interface Stack (NIS)** — composed of:
 
-* Each `<module data-module="name">` tag dynamically loads a module JS and CSS file.
-* Modules expose optional API and routing capabilities through the **Hub**.
-* Layout and lifecycle are automatically handled by `app.js`.
+| Core Layer   | Purpose                                                                            |
+| ------------ | ---------------------------------------------------------------------------------- |
+| **Scaffold** | The visual foundation — defines layout zones for modules.                          |
+| **Hub**      | The logical bridge — routes data and state between modules and backend agents.     |
+| **RITES**    | The *Right-in-Time Event System* — delivers contextual events exactly when needed. |
+| **Modules**  | Plug-in feature components that expand NOIZ functionality.                         |
 
-| Layer      | Role                                                             |
-| ---------- | ---------------------------------------------------------------- |
-| **Hub**    | Core event and API bus for inter-module communication.           |
-| **Router** | Hash-based navigation system.                                    |
-| **Layout** | Controls column visibility, width, and preset states.            |
-| **App.js** | Bootstraps modules, manages unloads, and logs state transitions. |
+Together, these define how creators, viewers, and developers experience NOIZ in real time.
 
 ---
 
-## 🧭 Quick Reference Commands
+## 🧭 Architecture Snapshot
 
-### Layout Manipulation
-
-```js
-await hub.request('layout:left:collapse');
-await hub.request('layout:right:wide');
-await hub.request('layout:immerse:on');
+```
+[ Interface Layer ] → Scaffold → Modules
+[ Data Layer ] → Hub → RITES
 ```
 
-### Hub API Communication
-
-```js
-hub.register('quest@1.start', async (payload) => {...});
-hub.request('quest@1.start', { id: 1 });
-```
-
-### Module Lifecycle
-
-```js
-return {
-  unregister,
-  async dispose() {
-    hub.unregisterAll('example');
-  }
-};
-```
+* **Scaffold** handles structure and responsiveness.
+* **Hub** coordinates logic and permissions.
+* **RITES** synchronizes contextual events (Right-in-Time).
+* **Modules** build the features users interact with.
 
 ---
 
-## 🧱 Developer Workflow
+## 🚀 Get Started
 
-1. Run a local server (e.g., `vite` or `live-server`).
-2. Modify or add modules in `/modules/<name>/`.
-3. Test layout transitions using hub layout APIs.
-4. Verify cleanup, routing, and event registration.
-5. Submit PR following `CONTRIBUTE.md`.
+1. **Run the Scaffold Demo**
+   Open `scaffoldDemo.html` to explore the layout and Dev Bar tools.
+
+2. **Create a Module**
+   Drop a new folder into `/modules/` and register your script:
+
+   ```js
+   NOIZ.module.register("hello-world", (ctx) => {
+     const el = document.createElement("div");
+     el.className = "p-3 text-light";
+     el.textContent = "Hello from NOIZ!";
+     ctx.mount(el);
+   });
+   ```
+
+3. **Connect to RITES**
+   Listen and emit contextual events:
+
+   ```js
+   ctx.on("chat.message", (msg) => console.log(msg.text));
+   ctx.emit("asset.used", { itemId: "frame_neon" });
+   ```
 
 ---
 
-## 🧭 Suggested Reading Order
+## 🧩 Core Documents
 
-1. **README.md** — High-level understanding.
-2. **Scaffolding.md** — Learn the layout system.
-3. **ModuleGuide.md** — Build and integrate a module.
-4. **AGENTS.md** — Understand lifecycle and API consistency.
-5. **EventsReference.md** — Explore available events.
-6. **CONTRIBUTE.md** — Review PR standards.
+| File                                       | Description                 |
+| ------------------------------------------ | --------------------------- |
+| [README.md](./README.md)                   | Full developer introduction |
+| [Scaffolding.md](./Scaffolding.md)         | Canonical layout and zones  |
+| [ModuleGuide.md](./ModuleGuide.md)         | Build and register modules  |
+| [EventsReference.md](./EventsReference.md) | RITES event catalogue       |
+| [scaffoldDemo.html](./scaffoldDemo.html)   | Interactive testing sandbox |
 
 ---
 
-> 🌀 The NOIZ framework is designed for **modularity**, **clarity**, and **safety**.
-> Every module is replaceable, composable, and never interferes with another.
-> Build clean. Log clean. Dispose clean.
+## 🧠 Key Principles
+
+* **Right-in-Time, not Real-Time** — deliver only what matters, when it matters.
+* **Scaffold First** — every module lives inside the defined layout zones.
+* **Never Hide the Rail** — it anchors NOIZ identity and navigation.
+* **Accessible by Default** — follow ARIA and Bootstrap standards.
+* **Modular Forever** — all features should be detachable, composable, and theme-safe.
+
+---
+
+## 🛠 Maintainers
+
+**Interface Systems Team** — `ui@noiz.gg`
+**Systems Team** — `systems@noiz.gg`
+
+---
+
+> “Build with context. Stream with purpose. Power it all with RITES.”
+> — *NOIZ Interface Systems Team*
