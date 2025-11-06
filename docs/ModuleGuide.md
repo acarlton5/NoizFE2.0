@@ -9,15 +9,13 @@
 
 ## Overview
 
-The NOIZ platform uses a modular architecture where every feature — from chat and quests to creator dashboards — is implemented as a **module** that plugs into the live **Scaffold** and interacts through the **Hub** and **Real-Time Event System (v1)**.
+The NOIZ platform is built from **modules** that mount into the **Scaffold**, coordinate state via the **Hub**, and react to the **RITES** (**R**ight-**I**n-**T**ime **E**vent **S**ystem).
 
-Each module is self-contained, responsive, and compliant with NOIZ’s UI and event conventions.
+Each module is self-contained, responsive, accessible, and certified against NOIZ standards.
 
 ---
 
 ## Module Structure
-
-A NOIZ module follows a predictable file and metadata structure:
 
 ```
 /modules/
@@ -30,52 +28,51 @@ A NOIZ module follows a predictable file and metadata structure:
 
 ### `module.json`
 
-Defines metadata, dependencies, and mount points.
-
 ```json
 {
   "name": "example-module",
   "displayName": "Example Module",
   "version": "1.0.0",
   "description": "Demonstrates a scaffold-integrated module.",
-  "author": "Interface Systems Team",
   "entry": "main.js",
   "style": "style.css",
-  "mount": {
-    "target": "main",
-    "position": "after"
-  },
-  "events": ["user.login", "stream.started", "chat.message"]
+  "mount": { "target": "main", "position": "after" },
+  "events": ["user.login", "stream.started", "chat.message"],
+  "requires": { "rites": ">=1.0.0 <2.0.0" }
 }
 ```
 
 ### `main.js`
 
-Handles initialization, registration, and event subscription.
-
 ```js
 NOIZ.module.register("example-module", (ctx) => {
   const el = document.createElement("div");
   el.className = "example-box p-3";
+  el.setAttribute("role", "region");
+  el.setAttribute("aria-label", "Example Module");
   el.textContent = "Hello from Example Module!";
-  ctx.mount(el);
+  ctx.mount(el); // Mounts into module.json.mount.target (default: main)
 
-  ctx.on("user.login", (data) => {
-    console.log("User logged in:", data.username);
-  });
+  // RITES subscriptions
+  ctx.on("user.login", (u) => console.log("Welcome", u.username));
+  ctx.on("chat.message", (m) => console.log(`[Chat] ${m.user}: ${m.text}`));
+
+  // Emit RITES events
+  el.addEventListener("click", () => ctx.emit("toast.show", { message: "Hi from module" }));
+
+  ctx.onReady(() => {/* post-mount work */});
+  ctx.onUnmount(() => {/* cleanup */});
 });
 ```
 
 ### `style.css`
 
-Applies scoped visuals, respecting NOIZ’s color system.
-
 ```css
-.example-box {
+.example-box{
   background: var(--c-main);
-  border: 1px solid #00000033;
-  border-radius: 6px;
   color: var(--c-text);
+  border: 1px solid #00000033;
+  border-radius: .5rem;
 }
 ```
 
@@ -83,142 +80,106 @@ Applies scoped visuals, respecting NOIZ’s color system.
 
 ## Mounting to the Scaffold
 
-Modules are **mounted dynamically** into the existing layout using `data-module` targets defined in the [Scaffolding Standard](./Scaffolding.md).
+Use **data-module targets** defined in [Scaffolding.md](./Scaffolding.md):
 
-| Target        | Description                        | Usage                            |
-| ------------- | ---------------------------------- | -------------------------------- |
-| `main`        | Primary content body               | Most standard modules            |
-| `sidebar`     | Chat, stats, or secondary UI       | Modules that complement main     |
-| `main-header` | Contextual toolbar or navigation   | Stream title / controls          |
-| `nav-pane`    | Server/creator-specific navigation | Optional                         |
-| `rail`        | Reserved (cannot be modified)      | ❌ **Do not attach modules here** |
+| Target        | Description               | Typical Use              |
+| ------------- | ------------------------- | ------------------------ |
+| `main`        | Primary content region    | Core feature UIs         |
+| `sidebar`     | Secondary column          | Chat, stats, tools       |
+| `main-header` | Toolbar/header above main | Titles, quick actions    |
+| `nav-pane`    | Context navigation        | Channel/sections nav     |
+| `rail`        | **Reserved**              | ❌ Do not mount or modify |
 
-> Modules must *never* alter scaffold geometry or reposition core layout containers.
-
----
-
-## Event System Integration
-
-Modules communicate through the **NOIZ Real-Time Event System (v1)**, which delivers state changes from both users and system agents.
-
-Each module can **listen to**, **emit**, and **transform** events.
-
-### Listening for Events
-
-```js
-ctx.on("chat.message", (payload) => {
-  console.log(`[Chat] ${payload.user}: ${payload.text}`);
-});
-```
-
-### Emitting Events
-
-```js
-ctx.emit("user.asset.used", { assetId: "123", type: "sticker" });
-```
-
-### Common Event Categories
-
-| Category    | Examples                            |
-| ----------- | ----------------------------------- |
-| `user.*`    | login, logout, questCompleted       |
-| `chat.*`    | message, deleted, cleared           |
-| `stream.*`  | started, ended, titleUpdated        |
-| `support.*` | subscription, gifted, goalCompleted |
-
-> Refer to [EventsReference.md](./EventsReference.md) for full schema details.
+> Modules must **not** reposition, hide, or resize scaffold containers.
 
 ---
 
-## Lifecycle Methods
+## RITES Integration
 
-Modules use lifecycle hooks to safely initialize and unmount.
+**RITES** delivers context-aware events only when relevant.
+
+### Listen
 
 ```js
-NOIZ.module.register("example", (ctx) => {
-  ctx.onReady(() => console.log("Module ready"));
-  ctx.onUnmount(() => console.log("Module destroyed"));
+ctx.on("stream.started", (info) => { /* update UI */ });
+```
+
+### Emit
+
+```js
+ctx.emit("asset.used", { itemId: "sticker_fox01" });
+```
+
+### Wildcards
+
+```js
+ctx.on("stream.*", handleStreamEvents);
+```
+
+See the full catalog in [EventsReference.md](./EventsReference.md).
+
+---
+
+## Lifecycle Hooks
+
+```js
+NOIZ.module.register("id", (ctx) => {
+  ctx.onReady(() => {/* DOM is mounted */});
+  ctx.onUnmount(() => {/* remove timers, listeners */});
 });
 ```
 
 ---
 
-## Dev Bar Testing Presets
+## Dev Bar Presets (scaffoldDemo.html)
 
-The [Scaffolding Demo](./scaffoldDemo.html) includes a built-in **Dev Bar** that allows quick testing of immersion and layout states.
+The demo includes a floating Dev Bar:
 
-| Preset       | Rail | Nav | Sidebar | Use Case        |
-| ------------ | ---- | --- | ------- | --------------- |
-| `default`    | ✅    | ✅   | ✅       | Standard mode   |
-| `immerse`    | ✅    | ❌   | ✅       | Streaming focus |
-| `chat-focus` | ✅    | ✅   | ✅       | Viewer chat UX  |
-| `compact`    | ❌    | ❌   | ✅       | Debugging mode  |
+| Preset       | Rail | Nav | Sidebar    | Use Case      |
+| ------------ | ---- | --- | ---------- | ------------- |
+| `default`    | ✅    | ✅   | ✅          | Baseline      |
+| `immerse`    | ✅    | ❌   | ✅ (wider)  | Stream focus  |
+| `chat-focus` | ✅    | ✅   | ✅ (wider)  | Chat emphasis |
+| `compact`    | ❌    | ❌   | ✅ (narrow) | Debug/minimal |
 
-You can toggle these states to test how your module behaves in each environment.
-
-> ⚠️ **Policy:** Hiding the Rail is not permitted.
-> Any module that attempts to override or disable the Rail will be rejected during review.
+> **Policy:** Hiding the **Rail** is not permitted by modules. The compact preset exists for internal debugging only.
 
 ---
 
-## Accessibility & Compliance
+## Accessibility & UX
 
-* Use semantic HTML elements (no div-only interfaces).
-* Provide ARIA labels for any custom controls.
-* Avoid forcing colors; rely on `var(--c-text)`, `var(--c-main)`, etc.
-* All modules must support dark mode by default.
-* Respect the platform’s `prefers-reduced-motion` setting.
-
----
-
-## Certification & Review
-
-Before a module can be included in an official NOIZ release, it must pass validation against these checks:
-
-| Requirement           | Description                                    |
-| --------------------- | ---------------------------------------------- |
-| ✅ Scaffold Compliance | Uses proper `data-module` targets              |
-| ✅ Event Compliance    | Emits and listens only to approved event types |
-| ✅ Layout Stability    | Does not alter scaffold geometry               |
-| ✅ Accessibility       | Meets ARIA & color contrast requirements       |
-| ✅ Responsiveness      | Works at <992px and ≥992px breakpoints         |
-| ✅ Performance         | Loads within 300ms on initial render           |
-
-> Modules failing these requirements will not be certified for deployment.
+* Semantic HTML; label interactive controls.
+* Provide ARIA where needed; respect `prefers-reduced-motion`.
+* Use platform tokens: `--c-text`, `--c-main`, etc.
+* Keyboard-friendly: visible focus, logical tab order.
+* Avoid layout thrash (batch DOM writes; use `requestAnimationFrame` if needed).
 
 ---
 
-## Example: Minimal Module
+## Performance Targets
 
-```js
-NOIZ.module.register("toast-tester", (ctx) => {
-  const btn = document.createElement("button");
-  btn.className = "btn btn-light";
-  btn.textContent = "Show Toast";
-  btn.onclick = () => ctx.emit("toast.show", { message: "Hello NOIZ!" });
-  ctx.mount(btn);
-});
-```
-
-This example:
-
-* Mounts to the `main` section.
-* Emits an event to the notification system (`toast.show`).
-* Uses platform theming and Bootstrap utilities.
+* Bootstrap in ≤ **300ms** on mid-range hardware.
+* Defer network work; lazy-render heavy subtrees.
+* Avoid global reflows; prefer `overflow-auto` inside module panels.
 
 ---
 
-## File References
+## Certification Checklist
 
-| File                                         | Purpose                            |
-| -------------------------------------------- | ---------------------------------- |
-| [`Scaffolding.md`](./Scaffolding.md)         | Layout and structure documentation |
-| [`EventsReference.md`](./EventsReference.md) | Complete list of real-time events  |
-| [`scaffoldDemo.html`](./scaffoldDemo.html)   | Interactive layout testing sandbox |
+* [ ] Uses valid scaffold target(s); no geometry changes.
+* [ ] RITES: only approved events; correct payloads.
+* [ ] Rail untouched; App-Bar untouched.
+* [ ] Accessible (labels, roles, focus).
+* [ ] Responsive at **992px** breakpoint.
+* [ ] Passes Dev Bar presets with no layout shift.
+* [ ] Performance within target.
 
 ---
 
-## Developer Contact
+## References
 
-For module integration assistance or review requests, contact:
-**Interface Systems Team** — https://discord.gg/wpmuzCMQ
+* [Scaffolding.md](./Scaffolding.md)
+* [EventsReference.md](./EventsReference.md)
+* [scaffoldDemo.html](./scaffoldDemo.html)
+
+**Contact:** Interface Systems Team — `ui@noiz.gg`
