@@ -1,172 +1,201 @@
-# NOIZ Frontend
+# NOIZ Developer Documentation
 
-NOIZ uses a **4-column adaptive scaffold** and **unified single-file module architecture**. Each module controls its own UI, API, and Routes while communicating with others through a central hub. No external dependencies beyond **Bootstrap 5** are required for layout and responsiveness.
-
----
-
-## 🔧 Architecture Overview
-
-Each module contains:
-
-* **UI** – Renders inside its assigned `<module>` mount point.
-* **API** – Exposes functions callable by other modules through the hub.
-* **Routes** – Handles deep linking and navigation (`#/c/:channel`, etc.).
-
-### File Layout
-
-```
-/module/<name>/
-  <name>.js     # UI + API + Routes
-  <name>.css    # Scoped CSS only
-```
-
-### Runtime Files
-
-```
-index.html      # Mount points defined here
-app.js          # Scans, loads, and mounts modules dynamically
-app.css         # Global scaffold and layout (no module-specific styles)
-modules-enabled.json # Optional preload list
-```
+> **Version:** 1.0
+> **Maintained by:** NOIZ Interface Systems Team
+> **Core Systems:** Scaffold · Hub · RITES · Modules
 
 ---
 
-## 🧩 The Core Systems
+## ⚡ Overview
 
-### `app.js`
+**NOIZ** is a next-generation live streaming and creator platform built around modular systems, real-time interactions, and adaptive layouts.
 
-The central runtime handles:
+Every layer — from UI to event flow — is defined by four unified systems:
 
-* Loading and unloading module JS and CSS dynamically.
-* Passing runtime context to each module (`hub`, `router`, `layout`).
-* Handling cross-module communication and cleanup.
+| Core Layer   | Description                                                                                                |
+| ------------ | ---------------------------------------------------------------------------------------------------------- |
+| **Scaffold** | The visual and structural foundation of NOIZ. Establishes responsive layout zones and module mount points. |
+| **Hub**      | The logical bridge between modules and agents. Routes data, syncs state, and enforces security context.    |
+| **RITES**    | The **Right-in-Time Event System** delivering contextual, latency-sensitive events across the platform.    |
+| **Modules**  | Self-contained feature blocks that extend the platform. Built using Bootstrap 5 and the NOIZ dev API.      |
 
-### `hub`
+Together they form the **NOIZ Interface Stack (NIS)** — a unified architecture for building responsive, real-time, creator-centric experiences.
 
-The **event and API bus** for module communication:
+---
+
+## 🧱 Architecture Overview
+
+```
+┌─────────────────────────────┐
+│         Scaffold             │
+│  (UI Layout & Components)    │
+└────────────┬────────────────┘
+             │
+             ▼
+┌─────────────────────────────┐
+│            Hub              │
+│  (State & Event Routing)    │
+└────────────┬────────────────┘
+             │
+             ▼
+┌─────────────────────────────┐
+│           RITES             │
+│ (Right-in-Time Event System)│
+└────────────┬────────────────┘
+             │
+             ▼
+┌─────────────────────────────┐
+│          Modules            │
+│   (Extendable Features)     │
+└─────────────────────────────┘
+```
+
+Each module connects to the Hub, subscribes to RITES events, and mounts within the Scaffold using standard `data-module` targets.
+
+---
+
+## 🚀 Quick Start
+
+### 1. Clone the Repository
+
+```bash
+git clone https://github.com/noiz-dev/core.git
+cd core
+```
+
+### 2. Run the Scaffold Demo
+
+Open the local sandbox:
+
+```
+scaffoldDemo.html
+```
+
+Use the **Dev Bar** to toggle immersion modes and test module visibility.
+
+### 3. Register a Test Module
+
+Create `/modules/example/` with:
 
 ```js
-hub.register("quest@1.start", async (data) => {...});
-await hub.request("quest@1.start", { id: 42 });
-hub.publish("layout:changed", { right: 'wide' });
+NOIZ.module.register("example", (ctx) => {
+  const el = document.createElement("div");
+  el.className = "p-3 border rounded text-light";
+  el.textContent = "Hello from Example Module!";
+  ctx.mount(el);
+  ctx.on("stream.started", (e) => console.log("Stream started:", e));
+});
 ```
 
-### `router`
+---
 
-Manages hash-based navigation and route bindings:
+## 🧩 Development Stack
+
+| Component         | Description                                                       |
+| ----------------- | ----------------------------------------------------------------- |
+| **Bootstrap 5.3** | Core CSS and grid framework for all layouts.                      |
+| **NOIZ Scaffold** | Defines responsive sections (`main`, `sidebar`, etc.).            |
+| **NOIZ Hub**      | Event and state mediator between UI and agents.                   |
+| **NOIZ RITES**    | The Right-in-Time Event System powering contextual communication. |
+| **NOIZ Modules**  | Extend functionality by registering modules dynamically.          |
+
+---
+
+## ⚙️ RITES (Right-in-Time Event System)
+
+RITES delivers context-aware updates *exactly when relevant*.
+Instead of blind real-time streams, RITES dispatches selective, filtered event payloads to active modules and users based on visibility, context, and priority.
 
 ```js
-router.register({ path: '#/profile/:user', onEnter: loadProfile });
-router.navigate('#/profile/noizdev');
+ctx.on("chat.message", (data) => console.log(data.text));
+ctx.emit("asset.used", { id: "sticker_fox01" });
 ```
 
-### `layout`
-
-The **layout controller** governs the adaptive 4-column grid used throughout NOIZ.
-The grid columns are:
-
-```
-rail | channel | main | right
-```
-
-Each column can expand, collapse, or hide entirely depending on the app state or active module.
-
-The layout system is driven by CSS body classes managed by `app.js`, and no module should modify them directly. Instead, all state changes must be made via **hub layout requests**.
-
-#### Example usage:
-
-```js
-// Collapse the server rail (leftmost column)
-await hub.request('layout:left:collapse');
-
-// Expand the right column for wide content, e.g., chat or quest tracking
-await hub.request('layout:right:wide');
-
-// Enable immersive layout — hides rail + channel, focuses on main + wide right (used for live streams)
-await hub.request('layout:immerse:on');
-
-// Revert immersive mode
-await hub.request('layout:immerse:off');
-```
-
-#### Notes:
-
-* Layout commands can be combined for complex transitions.
-* The system automatically adjusts column widths to maintain fluid spacing.
-* Modules can listen for layout changes using `hub.subscribe('layout:changed', cb)`.
-* The goal is **dynamic modular adaptability**: if one part hides, others fluidly expand.
+See the full [RITES Reference](./EventsReference.md) for supported events.
 
 ---
 
-## 🧠 Module Principles
+## 🧩 Module Lifecycle
 
-| Rule               | Description                                                |
-| ------------------ | ---------------------------------------------------------- |
-| **Isolation**      | Each module owns only its own DOM root.                    |
-| **Communication**  | Use hub requests/events for all cross-module interactions. |
-| **Scoped CSS**     | Only style within your `.noiz-<module>` namespace.         |
-| **Cleanup**        | Return `dispose()` and unregister functions.               |
-| **Versioned APIs** | Example: `questbar@1.setProgress`.                         |
+All modules must:
 
----
+1. Register through `NOIZ.module.register(id, handler)`.
+2. Mount into the Scaffold (`ctx.mount()`).
+3. Subscribe to or emit RITES events via the Hub.
+4. Support full teardown via `ctx.onUnmount()`.
 
-## 🏗️ Scaffolding System
-
-Adaptive 4-column layout controlled via CSS variables:
-
-```
-rail | channel | main | right
-```
-
-* Collapsible and resizable columns.
-* Dynamic presets (like `immerse` for live streaming).
-* Body classes define current layout state (handled by layout controller).
-
-Example states:
-
-```js
-await hub.request('layout:set', { left: 'collapsed', right: 'wide' });
-await hub.request('layout:immerse:on');
-```
+See [ModuleGuide.md](./ModuleGuide.md) for examples.
 
 ---
 
-## 🚀 Quick Start (Hello NOIZ)
+## 🧠 Layout Integration (Scaffold)
 
-```js
-// /module/example/example.js
-export default async function init({ root, hub }) {
-  root.innerHTML = `<button class="btn btn-primary">Ping!</button>`;
-  root.querySelector('button').onclick = async () => {
-    const res = await hub.request('example@1.ping', { msg: 'Hello NOIZ' });
-    alert(res.echo);
-  };
+Refer to [Scaffolding.md](./Scaffolding.md) for layout standards.
 
-  const unregister = [hub.register('example@1.ping', async ({ msg }) => ({ echo: msg }))];
-  return { unregister, dispose() { console.log('example disposed'); } };
-}
-```
+| Section       | Use Case                              |
+| ------------- | ------------------------------------- |
+| `main`        | Primary content or feature area       |
+| `sidebar`     | Secondary UI or chat panels           |
+| `main-header` | Stream titles, toolbars, navigation   |
+| `nav-pane`    | Creator or channel context navigation |
+| `rail`        | System navigation (immutable)         |
+
+> **Warning:** Hiding or re-rendering the `rail` is forbidden and may cause module rejection.
 
 ---
 
-## 🧩 Key Directories
+## 🧰 Dev Bar Presets
 
-| Path       | Description                              |
-| ---------- | ---------------------------------------- |
-| `/module/` | All app modules live here.               |
-| `/docs/`   | Developer and contributor documentation. |
-| `/assets/` | Shared images, fonts, and icons.         |
-| `/`        | Root files (index.html, app.js, etc.).   |
+The `scaffoldDemo.html` Dev Bar simulates environment states:
 
----
-
-## 🧭 Next Steps
-
-1. Read `AGENTS.md` for details on lifecycle and system internals.
-2. See `ModuleGuide.md` for creating your first module.
-3. Check `Scaffolding.md` for understanding layout behavior.
-4. Reference `EventsReference.md` for all hub and layout events.
+| Preset       | Description                                    |
+| ------------ | ---------------------------------------------- |
+| `default`    | Full layout visible                            |
+| `immerse`    | Stream-focused mode (nav hidden, rail visible) |
+| `chat-focus` | Emphasized chat experience                     |
+| `compact`    | Debugging/minimal mode                         |
 
 ---
 
-> 💡 **Tip:** The goal is modular simplicity. If you need to talk to another module — ask the hub, not the DOM.
+## 🧾 Module Compliance Checklist
+
+* ✅ Follows Scaffold layout conventions
+* ✅ Integrates with RITES event API
+* ✅ Does not modify rail or app-bar containers
+* ✅ Uses platform color tokens and ARIA labeling
+* ✅ Responsive under 992px breakpoint
+
+---
+
+## 🔒 Reserved Events and Restrictions
+
+| Event             | Rule                               |
+| ----------------- | ---------------------------------- |
+| `rail.hidden`     | Prohibited — system identity layer |
+| `layout.override` | Reserved for Interface Systems     |
+| `hub.shutdown`    | Maintenance only                   |
+
+---
+
+## 🧭 References
+
+| Document                                   | Description                        |
+| ------------------------------------------ | ---------------------------------- |
+| [Scaffolding.md](./Scaffolding.md)         | Canonical layout and structure     |
+| [ModuleGuide.md](./ModuleGuide.md)         | Module development and lifecycle   |
+| [EventsReference.md](./EventsReference.md) | RITES event catalogue              |
+| [scaffoldDemo.html](./scaffoldDemo.html)   | Interactive sandbox for developers |
+
+---
+
+## 💬 Maintainers
+
+**Interface Systems Team**
+`ui@noiz.gg`
+
+**Systems Team**
+`systems@noiz.gg`
+
+---
+
+> “Right-in-Time, not Real-Time — because context matters.”
