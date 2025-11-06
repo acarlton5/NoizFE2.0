@@ -1,242 +1,288 @@
-# AGENTS — NOIZ Runtime & Module Lifecycle
+# AGENTS (for Codex)
 
-This document explains how **app.js**, the **hub**, the **router**, and the **layout controller** work together to mount and coordinate modules. It reflects the **unified single-file module model**: each module implements UI, API, and Routes in one JS file.
+> **Audience:** Developers prompting Codex (code-gen assistant)
+> **Scope:** How to ask Codex for NOIZ-compatible output (Scaffold + RITES + Modules)
+> **Version:** 1.0 (canonical)
 
----
-
-## 🧠 Mental Model
-
-* `index.html` declares mount points via `<module data-module="name">`.
-* `app.js` scans those tags and loads `/module/<name>/<name>.js` and `/module/<name>/<name>.css`.
-* Each module’s `default export init({ root, hub, router, layout })` is called.
-* Modules **own only their root**. Cross-module communication happens via **hub APIs** and **events**.
+This guide defines **how to work with Codex** so its output drops directly into NOIZ with minimal edits.
 
 ---
 
-## 🧩 app.js Responsibilities
+## 0) Ground Rules Codex Must Follow
 
-1. **Discovery & Mounting**
+1. **Frameworks:** Use **Bootstrap 5.3** utilities only. No Tailwind/React/etc. Vanilla JS modules or ES6 classes.
+2. **Layout:** Respect the **Scaffold**. Mount only into `data-module="main"`, `sidebar`, `main-header`, or `nav-pane`.
 
-   * Query all `<module[data-module]>` elements in `index.html`.
-   * Attach module CSS (`/module/<name>/<name>.css`) if present.
-   * Dynamically import module JS (`/module/<name>/<name>.js`).
-   * Call `init()` with `{ root, hub, router, layout }`.
-
-2. **Lifecycle Management**
-
-   * Keep a registry of mounted modules and their disposers.
-   * On teardown, call `dispose()`, run all `unregister` functions, and detach CSS.
-   * Publish lifecycle events: `module:ready` and `module:teardown`.
-
-3. **Shared Systems**
-
-   * Provide the **hub** (APIs + pub/sub).
-   * Provide the **router** (hash-based; `#/x/:id`).
-   * Provide the **layout controller** (authoritative layout state & helpers).
-
-4. **Error Isolation**
-
-   * Modules that fail to mount are logged and skipped.
-   * The app never hard-crashes due to a single module.
+   * ❗ **Do not** remove, hide, or re-render `rail`. (Policy: hiding rail may cause module denial.)
+3. **Theming:** Use CSS variables from the scaffold (`--c-text`, `--c-main`, etc.). No hard-coded colors beyond subtle borders.
+4. **Events:** Integrate the **RITES** API (`ctx.on`, `ctx.emit`). No ad-hoc global buses.
+5. **Accessibility:** Semantic HTML, ARIA labels for interactive elements, keyboard focus states.
+6. **Performance:** Module bootstrap ≤ 300ms, defer heavy work, avoid layout thrash (batch DOM writes).
+7. **Deliverables:** Prefer **single-file** drop-ins when requested. If multi-file, include a file map and final combined snippet.
 
 ---
 
-## 🔌 Hub — Capability & Event Bus
+## 1) Repository Expectations (What Codex Should Assume)
 
-### API (request/response)
-
-```js
-const off = hub.register("namespace:feature@1.method", async (payload) => {
-  // ... do work ...
-  return { ok: true, data };
-});
-
-const res = await hub.request("namespace:feature@1.method", { foo: "bar" });
+```
+/docs
+  Scaffolding.md
+  ModuleGuide.md
+  EventsReference.md   (RITES)
+  index.md
+  README.md
+/scaffoldDemo.html     (Dev Bar present)
+/modules
+  /<your-module>/
+    module.json
+    main.js
+    style.css
 ```
 
-* **Register** returns an **unregister** function; store it and call during `dispose()`.
-* **Version your APIs** (`@1`) to avoid breaking changes.
-* **unregisterAll(name)** is automatically called when a module unmounts.
-
-### Pub/Sub
-
-```js
-const unsub = hub.subscribe("quest:progress", (data) => { /* update UI */ });
-hub.publish("quest:progress", { xp, goal });
-```
-
-* Avoid noisy global topics; prefer namespacing: `ui:*`, `quest:*`, `sidebar:*`.
+Codex must generate files that fit this layout.
 
 ---
 
-## 🗺️ Router — Hash-based Navigation
+## 2) Canonical Module Skeleton (What to Output)
 
-### Register Routes
+**module.json**
 
-```js
-router.register({
-  path: "#/c/:channel",
-  onEnter: ({ channel }) => loadChannel(channel),
-  onLeave: () => saveScroll()
-});
-```
-
-* Parameter tokens `:name` are exposed via `params`.
-* Multiple modules can register routes. The first match wins.
-
-### Navigate Programmatically
-
-```js
-router.navigate("#/c/general");
-```
-
-### Router Event
-
-* `router:changed` `{ hash, params }` is published by the runtime after a successful navigation.
-
----
-
-## 🧱 Layout Controller — Authoritative State
-
-Modules **never** set `body.classList` directly. Use hub APIs to manipulate layout.
-
-### Core API
-
-```js
-await hub.request("layout:set", { left, chan, right, preset });
-```
-
-| Parameter | Type                  | Description                        |
-| --------- | --------------------- | ---------------------------------- |
-| `left`    | `'collapsed'`         | Collapse or expand rail.           |
-| `chan`    | `'hidden'`            | Hide or show channel sidebar.      |
-| `right`   | `'hidden'` | `'wide'` | Hide, show, or widen right column. |
-| `preset`  | `'immerse'`           | Applies immersive layout preset.   |
-
-### Shorthand Helpers
-
-```js
-await hub.request("layout:left:collapse");
-await hub.request("layout:left:expand");
-await hub.request("layout:chan:hide");
-await hub.request("layout:chan:show");
-await hub.request("layout:right:hide");
-await hub.request("layout:right:show");
-await hub.request("layout:right:wide");
-await hub.request("layout:immerse:on");
-await hub.request("layout:immerse:off");
-```
-
-### Change Notifications
-
-* Runtime publishes `layout:changed` with the current class flags so listeners can adapt.
-
-| Class            | Effect                                              |
-| ---------------- | --------------------------------------------------- |
-| `left-collapsed` | Collapses the rail column.                          |
-| `chan-hidden`    | Hides the channel sidebar.                          |
-| `right-hidden`   | Hides the right column.                             |
-| `right-wide`     | Expands the right column for chat or quests.        |
-| `immerse`        | Hides rail + channel; focuses on main + wide right. |
-
----
-
-## 🧬 Module File (Unified) — Structure & Lifecycle
-
-**Path:** `/module/<name>/<name>.js`
-
-```js
-export default async function init({ root, hub, router, layout }) {
-  console.groupCollapsed('[Example] Mounting module...');
-
-  // 1) UI — render and wire events
-  root.innerHTML = `
-    <section class="noiz-<name>">
-      <button data-act="go-wide">Right Wide</button>
-      <div class="questbar" data-questbar hidden>
-        <div class="fill" data-qb-fill></div>
-      </div>
-    </section>
-  `;
-
-  root.querySelector('[data-act="go-wide"]').onclick = () => hub.request('layout:right:wide');
-
-  // 2) API — register capabilities for others to call
-  const unregister = [];
-  unregister.push(hub.register("<name>@1.ping", async ({ msg }) => ({ ok: true, echo: msg })));
-
-  // 3) Routes — optional
-  router.register({
-    path: "#/example",
-    onEnter: () => console.log('[Example] Enter route'),
-    onLeave: () => console.log('[Example] Leave route')
-  });
-
-  // 4) Teardown — clean listeners/timers; unregister APIs
-  return {
-    unregister,
-    async dispose() {
-      console.groupCollapsed('[Example] Disposing module...');
-      // remove observers, intervals, etc.
-    }
-  };
+```json
+{
+  "name": "example-module",
+  "displayName": "Example Module",
+  "version": "1.0.0",
+  "entry": "main.js",
+  "style": "style.css",
+  "mount": { "target": "main", "position": "after" },
+  "events": ["user.login", "chat.message", "stream.started"],
+  "requires": { "rites": ">=1.0.0 <2.0.0" }
 }
 ```
 
-**CSS:** `/module/<name>/<name>.css` — scope selectors (e.g., `.noiz-<name>`) and avoid globals.
+**main.js**
+
+```js
+NOIZ.module.register("example-module", (ctx) => {
+  // Create root
+  const root = document.createElement("section");
+  root.className = "example-box p-3";
+  root.setAttribute("role", "region");
+  root.setAttribute("aria-label", "Example Module");
+
+  // UI
+  root.innerHTML = `
+    <h2 class="h6 mb-2 text-light">Example Module</h2>
+    <button class="btn btn-sm btn-light" id="ex-btn" aria-label="Send test toast">
+      Send Toast
+    </button>
+    <div class="mt-3 small opacity-75" id="ex-log" aria-live="polite"></div>
+  `;
+
+  // Mount into scaffold target (module.json.mount.target)
+  ctx.mount(root);
+
+  // RITES: listen
+  ctx.on("chat.message", (e) => {
+    const log = document.getElementById("ex-log");
+    if (log) log.textContent = `[chat] ${e.user}: ${e.text}`;
+  });
+
+  // RITES: emit
+  root.querySelector("#ex-btn").addEventListener("click", () => {
+    ctx.emit("toast.show", { message: "Hello NOIZ from Example Module!" });
+  });
+
+  // Lifecycle
+  ctx.onReady(() => {/* optional post-mount tasks */});
+  ctx.onUnmount(() => {/* cleanup */});
+});
+```
+
+**style.css**
+
+```css
+.example-box{
+  background: var(--c-main);
+  color: var(--c-text);
+  border: 1px solid #00000033;
+  border-radius: .5rem;
+}
+```
 
 ---
 
-## 🔒 Ownership & Security Rules
+## 3) Prompt Template (Use This When Asking Codex)
 
-* **View ownership**: a module renders only within its `root`.
-* **Data ownership**: the module that registers an API is the source of truth for that domain.
-* **Cross-module access**: call capabilities; do not query or mutate other modules’ DOM.
-* **Slots**: shared surfaces (e.g., channel sidebar top) must expose explicit APIs to accept external content. The surface owner decides rendering.
+Paste this template, fill `[brackets]`, and Codex will produce NOIZ-compliant code.
+
+```
+You are Codex writing code for NOIZ. Follow these strict rules:
+
+- Use Bootstrap 5.3 utilities only (no Tailwind/React).
+- Respect NOIZ Scaffold. Mount only into: main | sidebar | main-header | nav-pane.
+- Do NOT hide or modify the rail. 
+- Integrate RITES with ctx.on / ctx.emit.
+- Provide accessible HTML (ARIA), and keyboard-friendly controls.
+- Optimize for ≤300ms bootstrap.
+- Deliver as:
+  1) module.json
+  2) main.js
+  3) style.css
+  4) (optional) snippet to drop into scaffoldDemo.html for quick test
+
+Feature request:
+[Describe the module’s purpose, inputs, and UI briefly]
+
+Acceptance criteria:
+- [List concrete UI states & interactions]
+- [List required RITES events to listen/emit]
+- [Responsive behavior ≥/< 992px]
+- [No layout shifts; no blocking network calls on init]
+
+Now output:
+- A short FILE MAP.
+- The exact file contents.
+- A final combined single-file snippet for quick testing.
+```
 
 ---
 
-## 🧹 Teardown Discipline
+## 4) Acceptance Checklist (What to Verify Before Merging)
 
-Every module must:
-
-* Return `{ unregister, dispose }` and clear all listeners/observers.
-* Use `hub.unregisterAll(<name>)` for global cleanup if supported.
-* Avoid leaving timers, intervals, or pending requests running.
-
----
-
-## 🧪 Logging & Debugging
-
-* Prefix all console messages with `[ModuleName]`.
-* Use `console.groupCollapsed()` for lifecycle groups (mounting, routing, disposing).
-* Avoid raw `console.log()` spam.
-* Keep debug messages descriptive (e.g., `[Quest] updated progress 0.4`).
+* [ ] Uses **Bootstrap 5.3** utilities; no external frameworks.
+* [ ] Mounts to valid scaffold target via `ctx.mount`.
+* [ ] **Does not** hide or alter the rail/app-bar containers.
+* [ ] RITES: `ctx.on` listeners and `ctx.emit` calls match EventsReference.
+* [ ] Accessible: semantic elements, labels, keyboard focus.
+* [ ] Responsive at 992px breakpoint.
+* [ ] Theming via scaffold CSS variables; minimal hard-coded colors.
+* [ ] No synchronous heavy work; defers expensive ops; no jank.
+* [ ] Clean teardown (`ctx.onUnmount`).
 
 ---
 
-## 🔁 Lifecycle Events (Emitted by Runtime)
+## 5) Common Patterns Codex Should Use
 
-* `module:ready` `{ name }` — after module UI + API are registered.
-* `module:teardown` `{ name }` — when a module is disposed.
-* `router:changed` `{ hash, params }` — on successful navigation.
-* `layout:changed` `{ classFlags }` — after layout update.
+### A) Mount into Sidebar with Header Toolbar
+
+```js
+NOIZ.module.register("chat-tools", (ctx) => {
+  const root = document.createElement("div");
+  root.className = "chat-tools d-flex align-items-center gap-2 p-2";
+  root.innerHTML = `
+    <button class="btn btn-sm btn-outline-light" aria-label="Clear chat">Clear</button>
+    <button class="btn btn-sm btn-outline-light" aria-label="Slow mode">Slow</button>
+  `;
+  ctx.mount(root, { target: "sidebar" });
+
+  root.children[0].onclick = () => ctx.emit("chat.cleared", { channel: "current" });
+  root.children[1].onclick = () => ctx.emit("chat.slowMode", { enabled: true });
+});
+```
+
+### B) Add Controls to Main-Header
+
+```js
+NOIZ.module.register("stream-title", (ctx) => {
+  const el = document.createElement("div");
+  el.className = "d-flex align-items-center gap-2";
+  el.innerHTML = `
+    <strong id="st-title" class="text-dark">Stream Title</strong>
+    <button class="btn btn-sm btn-light" id="st-edit" aria-label="Edit title">✎</button>
+  `;
+  ctx.mount(el, { target: "main-header" });
+  ctx.on("stream.titleUpdated", ({ title }) => {
+    document.getElementById("st-title").textContent = title;
+  });
+});
+```
+
+### C) Context-Aware Rendering (Right-in-Time)
+
+```js
+NOIZ.module.register("viewer-count", (ctx) => {
+  let visible = false;
+  const el = document.createElement("div");
+  el.className = "badge text-bg-dark";
+  el.textContent = "—";
+
+  ctx.mount(el, { target: "main-header" });
+
+  // Receive only when needed (RITES context managed by Hub)
+  ctx.on("stream.metricUpdated", (m) => {
+    if (!visible) return;
+    el.textContent = `👁 ${m.viewers}`;
+  });
+
+  // Dev Bar or layout bus could emit this:
+  ctx.on("layout.visibility", ({ region, isVisible }) => {
+    if (region === "main") visible = isVisible;
+  });
+});
+```
 
 ---
 
-## ✅ Checklists
+## 6) Quick Test Harness (for scaffoldDemo.html)
 
-**Before mounting a new module:**
+Ask Codex for an **inline** test block to paste inside `<main data-module="main">` at runtime or to inject via Dev Bar:
 
-* [ ] File path is `/module/<name>/<name>.js` and `/module/<name>/<name>.css`.
-* [ ] All selectors are scoped under `.noiz-<name>`.
-* [ ] APIs are versioned (`@1`) and namespaced.
+```html
+<!-- Drop-in test block (temporary) -->
+<div id="module-test" class="p-3 border text-light">
+  Testing slot — replace by ctx.mount in actual module.
+</div>
+<script>
+  // Simulate a RITES event to verify listeners:
+  setTimeout(()=> window.NOIZ?.hub?.emit?.("chat.message", {user:"Morphine", text:"Ping!"}), 1000);
+</script>
+```
 
-**Before merging a PR:**
+(Use only during rapid prototyping; real modules should mount through `ctx.mount`.)
 
-* [ ] No sibling DOM access.
-* [ ] `dispose()` cleans everything.
-* [ ] Module works in all layout states.
-* [ ] Keyboard/focus flows are preserved.
-* [ ] No module CSS leaked into global scaffold.
-* [ ] Console logs are grouped and prefixed.
+---
+
+## 7) How to Ask Codex for **Edits** (Diff Mode)
+
+When iterating, prefer explicit diffs:
+
+```
+Edit request to Codex:
+
+File: modules/example-module/main.js
+Change:
+- Add ARIA labels for the 2 buttons.
+- Debounce chat input by 250ms.
+- Emit "asset.used" after successful action.
+
+Output: show only the changed lines with enough surrounding context.
+```
+
+---
+
+## 8) Guardrails & Rejections (What Codex Must Not Do)
+
+* ❌ Hide the **rail** or relocate core scaffold regions.
+* ❌ Inject global CSS that breaks Bootstrap (e.g., overriding `.row`, `.col-*`).
+* ❌ Use blocking calls on init (e.g., long `fetch` without `await` safeguards).
+* ❌ Add libraries/frameworks not approved by the Interface Systems Team.
+* ❌ Emit **reserved** events (see EventsReference.md).
+
+---
+
+## 9) Troubleshooting Prompts (Codex Fix-It)
+
+* “The module causes layout shift on mount. **Minimize reflow** and **batch DOM writes**.”
+* “Color contrast fails on buttons. Use **var(--c-text)** and **btn-outline-light**.”
+* “Listeners not firing. Ensure **ctx.on('chat.message')** and correct payload schema.”
+* “Mobile overflow. Add **overflow-auto** and verify 992px breakpoint behavior.”
+
+---
+
+## 10) Credits & Contacts
+
+* **Interface Systems Team** — layout, scaffold, UI standards
+* **Systems Team** — RITES & Hub integration
+
+Contact: `ui@noiz.gg` · `systems@noiz.gg`
