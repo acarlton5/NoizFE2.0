@@ -1,175 +1,228 @@
-# EventsReference — Hub, Layout & Module Events
+# NOIZ RITES (Right-in-Time Event System)
 
-This document lists all **event topics** and **API requests** that power inter-module communication in NOIZ. Every module communicates through the **hub** — never via direct DOM or global variables.
-
----
-
-## 🧩 Hub Event Model
-
-The hub provides a consistent interface for three communication patterns:
-
-| Pattern                 | Description                                | Example                                           |
-| ----------------------- | ------------------------------------------ | ------------------------------------------------- |
-| **Request/Response**    | One-to-one RPC-style calls (async).        | `await hub.request('quest@1.start', { id: 42 });` |
-| **Publish/Subscribe**   | One-to-many event broadcast.               | `hub.publish('quest:progress', { xp: 100 });`     |
-| **Register/Unregister** | Define an API endpoint callable by others. | `hub.register('quest@1.start', handlerFn);`       |
+> **Version:** 1.0
+> **Status:** Canonical
+> **Maintainers:** NOIZ Systems & Interface Teams
+> **Scope:** Platform-wide Right-in-Time event routing for user, stream, chat, quest, and support systems.
 
 ---
 
-## 🔌 Layout API Events
+## Overview
 
-All layout actions should use these hub requests — no direct `body.classList` modifications.
+The **NOIZ Right-in-Time Event System (RITES)** powers all dynamic activity across the NOIZ ecosystem — from chat updates and stream states to quest progress and currency triggers.
 
-### **Layout Requests**
+Unlike generic real-time buses, **RITES** delivers events *intelligently and contextually*, ensuring modules, users, and agents only receive data when it is relevant, reducing noise and bandwidth overhead.
 
-```js
-await hub.request('layout:set', { left, chan, right, preset });
+---
+
+## Event Architecture
+
+Every RITES packet follows the same structure:
+
+```json
+{
+  "event": "chat.message",
+  "timestamp": "2025-11-05T23:21:00Z",
+  "context": {
+    "userId": "u_8231",
+    "channelId": "ch_3201",
+    "sessionId": "s_2019"
+  },
+  "payload": {
+    "text": "Hello NOIZ!",
+    "attachments": []
+  }
+}
 ```
 
-| Parameter | Type                  | Description                        |
-| --------- | --------------------- | ---------------------------------- |
-| `left`    | `'collapsed'`         | Collapse or expand rail.           |
-| `chan`    | `'hidden'`            | Hide or show channel sidebar.      |
-| `right`   | `'hidden'` | `'wide'` | Hide, show, or widen right column. |
-| `preset`  | `'immerse'`           | Applies immersive layout preset.   |
+| Field       | Type   | Description                                        |
+| ----------- | ------ | -------------------------------------------------- |
+| `event`     | string | Fully qualified event name (`category.action`)     |
+| `timestamp` | string | UTC ISO 8601 emission time                         |
+| `context`   | object | Optional routing metadata (user, channel, session) |
+| `payload`   | object | Event-specific body content                        |
 
-### **Shorthand Aliases**
+---
+
+## Event Categories
+
+| Category    | Description                                    |
+| ----------- | ---------------------------------------------- |
+| `user.*`    | Authentication, settings, and identity actions |
+| `quest.*`   | Quest progression and reward tracking          |
+| `chat.*`    | Messages, moderation, and channel activity     |
+| `stream.*`  | Stream lifecycle and metadata updates          |
+| `support.*` | Subscriptions, donations, and gifting          |
+| `asset.*`   | Digital goods, inventory, or sticker events    |
+| `system.*`  | Hub or diagnostics reporting                   |
+| `goal.*`    | Stream goals, milestones, and progress updates |
+
+---
+
+## 1. User Events
+
+| Event                  | Description                             | Payload Example                                                |
+| ---------------------- | --------------------------------------- | -------------------------------------------------------------- |
+| `user.login`           | User authenticated successfully.        | `{ "username": "Morphine", "id": "u_001", "method": "oauth" }` |
+| `user.logout`          | Session ended or expired.               | `{ "id": "u_001" }`                                            |
+| `user.registered`      | Account creation event.                 | `{ "id": "u_001", "email": "x@noiz.gg" }`                      |
+| `user.settingsUpdated` | Preferences or profile changed.         | `{ "theme": "dark", "notifications": true }`                   |
+| `user.avatarChanged`   | Avatar updated.                         | `{ "url": "/avatars/u_001.png" }`                              |
+| `user.levelUpdate`     | XP or level milestone.                  | `{ "level": 15, "xp": 4500000 }`                               |
+| `user.walletLinked`    | Payment or Constellation wallet linked. | `{ "wallet": "constellation" }`                                |
+
+---
+
+## 2. Quest & Inventory Events
+
+| Event                | Description                             | Payload Example                                                |
+| -------------------- | --------------------------------------- | -------------------------------------------------------------- |
+| `quest.started`      | A user begins a quest.                  | `{ "questId": "q_002", "title": "Streaming Debut" }`           |
+| `quest.updated`      | Progression updated.                    | `{ "questId": "q_002", "progress": 45 }`                       |
+| `quest.completed`    | Quest completed and reward distributed. | `{ "questId": "q_002", "reward": "faded_decibels" }`           |
+| `asset.granted`      | New asset or item awarded.              | `{ "itemId": "sticker_fox01", "type": "collectible" }`         |
+| `asset.used`         | Asset activated in UI.                  | `{ "itemId": "sticker_fox01" }`                                |
+| `asset.equipped`     | Item equipped (avatar, frame, etc.).    | `{ "slot": "frame", "itemId": "frame_neon" }`                  |
+| `asset.traded`       | Marketplace trade completed.            | `{ "from": "u_001", "to": "u_002", "itemId": "badge_rare01" }` |
+| `achievement.earned` | Milestone achieved.                     | `{ "achievementId": "a_099" }`                                 |
+
+---
+
+## 3. Chat & Community Events
+
+| Event                  | Description                          | Payload Example                                                           |
+| ---------------------- | ------------------------------------ | ------------------------------------------------------------------------- |
+| `chat.message`         | New message sent.                    | `{ "user": "Morphine", "text": "Let's GO!", "channel": "announcements" }` |
+| `chat.deleted`         | Message removed.                     | `{ "messageId": "m_453" }`                                                |
+| `chat.purged`          | Moderator cleared multiple messages. | `{ "channel": "tea-room", "count": 42 }`                                  |
+| `chat.cleared`         | Entire chat reset.                   | `{ "channel": "waiting-room" }`                                           |
+| `chat.joined`          | User joined a channel.               | `{ "user": "Morphine" }`                                                  |
+| `chat.left`            | User left a channel.                 | `{ "user": "Morphine" }`                                                  |
+| `chat.userBanned`      | Moderator banned a user.             | `{ "user": "Spammer123", "duration": 3600 }`                              |
+| `chat.userTimedOut`    | Temporary timeout applied.           | `{ "user": "Spammer123", "duration": 300 }`                               |
+| `chat.userModded`      | Role elevated to moderator.          | `{ "user": "Helper01" }`                                                  |
+| `chat.userUnmodded`    | Role removed.                        | `{ "user": "Helper01" }`                                                  |
+| `chat.reportSubmitted` | Report submitted.                    | `{ "user": "ViewerX", "reason": "Spam" }`                                 |
+
+---
+
+## 4. Streaming Events
+
+| Event                     | Description              | Payload Example                                                   |
+| ------------------------- | ------------------------ | ----------------------------------------------------------------- |
+| `stream.started`          | Stream begins.           | `{ "channelId": "noiz://morphine", "title": "Let’s Code NOIZ!" }` |
+| `stream.ended`            | Stream stops.            | `{ "channelId": "noiz://morphine" }`                              |
+| `stream.paused`           | Stream paused.           | `{ "reason": "network" }`                                         |
+| `stream.resumed`          | Stream resumed.          | `{}`                                                              |
+| `stream.titleUpdated`     | Stream title changed.    | `{ "title": "Working on Scaffold v2" }`                           |
+| `stream.categoryUpdated`  | Stream category changed. | `{ "category": "Development" }`                                   |
+| `stream.overlayTriggered` | Overlay triggered.       | `{ "overlay": "followAlert" }`                                    |
+| `stream.metricUpdated`    | Metric updated.          | `{ "viewers": 210, "uptime": 3600 }`                              |
+| `stream.goalProgressed`   | Goal partial progress.   | `{ "goalId": "subs_100", "progress": 75 }`                        |
+| `stream.goalCompleted`    | Goal completed.          | `{ "goalId": "subs_100" }`                                        |
+
+---
+
+## 5. Monetization & Support Events
+
+| Event                    | Description              | Payload Example                          |
+| ------------------------ | ------------------------ | ---------------------------------------- |
+| `support.subscription`   | New subscription.        | `{ "user": "FanGirl99", "tier": 2 }`     |
+| `support.resubscription` | Renewed subscription.    | `{ "user": "FanGirl99", "months": 6 }`   |
+| `support.gifted`         | Gifted sub or item.      | `{ "from": "Viewer1", "to": "Viewer2" }` |
+| `support.cheer`          | Decibels or cheers sent. | `{ "amount": 2500, "currency": "dB" }`   |
+
+---
+
+## 6. System & Diagnostic Events
+
+| Event                | Description                       | Payload Example                                      |
+| -------------------- | --------------------------------- | ---------------------------------------------------- |
+| `system.ready`       | System initialized and connected. | `{ "version": "1.0.0", "uptime": 240 }`              |
+| `system.warning`     | Service degradation.              | `{ "code": "ingest_latency", "severity": "medium" }` |
+| `system.error`       | Critical error.                   | `{ "code": "overlay_crash", "stack": "..." }`        |
+| `system.reconnected` | Reconnected after downtime.       | `{ "duration": 12 }`                                 |
+
+---
+
+## 7. Goal Events
+
+| Event             | Description       | Payload Example                            |
+| ----------------- | ----------------- | ------------------------------------------ |
+| `goal.created`    | Goal created.     | `{ "goalId": "subs_100", "target": 100 }`  |
+| `goal.progressed` | Partial progress. | `{ "goalId": "subs_100", "progress": 45 }` |
+| `goal.completed`  | Goal achieved.    | `{ "goalId": "subs_100" }`                 |
+
+---
+
+## Emission Patterns
+
+### 1. From Modules
 
 ```js
-await hub.request('layout:left:collapse');
-await hub.request('layout:left:expand');
-await hub.request('layout:chan:hide');
-await hub.request('layout:chan:show');
-await hub.request('layout:right:hide');
-await hub.request('layout:right:show');
-await hub.request('layout:right:wide');
-await hub.request('layout:immerse:on');
-await hub.request('layout:immerse:off');
+ctx.emit("asset.used", { itemId: "frame_neon" });
 ```
 
-### **Layout Broadcast Events**
-
-| Event            | Payload          | Description                            |
-| ---------------- | ---------------- | -------------------------------------- |
-| `layout:changed` | `{ classFlags }` | Fired when layout class state changes. |
-
-Modules can listen to this event:
+### 2. From Agents
 
 ```js
-hub.subscribe('layout:changed', (flags) => console.log('Layout updated', flags));
+Hub.emit("system.warning", { code: "ingest_latency" });
 ```
 
----
-
-## 🧭 Router Events
-
-### Navigation
-
-* **Event:** `router:changed`
-* **Payload:** `{ hash, params }`
-* **Description:** Published when a hash-based navigation is completed.
-
-### Usage Example
+### 3. From User Actions
 
 ```js
-hub.subscribe('router:changed', ({ hash, params }) => {
-  console.log('Navigated to', hash, params);
-});
-```
-
-### Programmatic Routing
-
-```js
-router.navigate('#/profile/noiz');
-```
-
----
-
-## 🧬 Module Lifecycle Events
-
-The runtime emits these events automatically as modules load/unload:
-
-| Event             | Payload    | Description                                                     |
-| ----------------- | ---------- | --------------------------------------------------------------- |
-| `module:ready`    | `{ name }` | Triggered when a module has been fully mounted and initialized. |
-| `module:teardown` | `{ name }` | Triggered when a module is unmounted and disposed.              |
-
-Example:
-
-```js
-hub.subscribe('module:ready', ({ name }) => console.log(`Module ${name} is live.`));
-```
-
----
-
-## ⚙️ Example Domain APIs
-
-Below are **convention examples** for APIs exposed by specific modules — these help standardize naming and communication.
-
-### Channel Sidebar
-
-| API                              | Description                             | Example                       |
-| -------------------------------- | --------------------------------------- | ----------------------------- |
-| `sidebar:slot@1.offer`           | Offer a new render slot inside sidebar. | `{ slot: 'top', id, render }` |
-| `sidebar:slot@1.remove`          | Remove a previously offered slot.       | `{ id }`                      |
-| `sidebar:questbar@1.setProgress` | Update quest progress bar.              | `{ percent }`                 |
-
-### Quest System
-
-| API                | Description                         |
-| ------------------ | ----------------------------------- |
-| `quest@1.start`    | Begin a quest run.                  |
-| `quest@1.update`   | Update progress.                    |
-| `quest@1.complete` | Finish a quest and trigger rewards. |
-
-### Chat Module
-
-| API              | Description                           |
-| ---------------- | ------------------------------------- |
-| `chat@1.send`    | Send a new message to active channel. |
-| `chat@1.clear`   | Clear current chat messages.          |
-| `chat@1.history` | Load prior messages.                  |
-
----
-
-## 🔍 Event Naming Conventions
-
-| Type            | Format                          | Example                |
-| --------------- | ------------------------------- | ---------------------- |
-| **API**         | `module@version.method`         | `quest@1.start`        |
-| **Topic/Event** | `namespace:action`              | `layout:changed`       |
-| **Slot/Event**  | `namespace:slot@version.method` | `sidebar:slot@1.offer` |
-
----
-
-## ✅ Best Practices
-
-* **Prefix everything** with a module or domain name (e.g., `chat`, `quest`, `sidebar`).
-* **Version your APIs** to avoid breaking changes (`@1`, `@2`, etc.).
-* **Never throw** in registered handlers — return `{ ok: false, error }` instead.
-* **Keep payloads minimal** and descriptive.
-* **Always unregister** event handlers during module disposal.
-
----
-
-## 📋 Common Event Flow Example
-
-```js
-// Quest module starts a run
-await hub.request('quest@1.start', { id: 9 });
-
-// Sidebar listens for quest updates
-hub.subscribe('quest:progress', ({ xp }) => {
-  const percent = Math.min(1, xp / 100);
-  hub.request('sidebar:questbar@1.setProgress', { percent });
-});
-
-// Layout updates trigger visual transitions
-hub.subscribe('layout:changed', (flags) => {
-  if (flags['immerse']) document.body.classList.add('live-mode');
-});
+ClientEventBus.emit("chat.message", { text: "hi!" });
 ```
 
 ---
 
-> 🧭 **Summary:** Events drive the NOIZ frontend. APIs communicate intent; events communicate change. Respect namespaces, versioning, and cleanup to keep modules isolated yet fully synchronized.
+## Subscription API
+
+```js
+ctx.on("stream.*", handleStreamEvent);
+ctx.on(["user.login", "user.logout"], handleUserState);
+```
+
+Supports multi-binding and wildcard (`*`) subscriptions.
+
+---
+
+## Versioning Policy
+
+| Field   | Description                              |
+| ------- | ---------------------------------------- |
+| `major` | Breaking schema or event behavior change |
+| `minor` | New event or payload field added         |
+| `patch` | Internal update or fix                   |
+
+Example module dependency:
+
+```json
+"requires": { "rites": ">=1.0.0 <2.0.0" }
+```
+
+---
+
+## Reserved Events
+
+| Event             | Purpose                                 |
+| ----------------- | --------------------------------------- |
+| `rail.hidden`     | ❌ Forbidden – rail visibility mandatory |
+| `layout.override` | Reserved for Interface Systems only     |
+| `hub.shutdown`    | System-level maintenance trigger        |
+
+Modules attempting to emit or intercept reserved events will fail certification.
+
+---
+
+## Testing via Scaffold Demo
+
+Use [`scaffoldDemo.html`](./scaffoldDemo.html) → Dev Bar → **“Emit Test”** to simulate RITES events in-browser.
+
+---
+
+## Developer Contact
+
+**Systems Team:** `systems@noiz.gg`
+**Interface Systems Team:** `ui@noiz.gg`
