@@ -1,187 +1,181 @@
-# NOIZ Scaffolding Guide
+# NOIZ Scaffolding Standard
 
-The NOIZ runtime uses a **four-column responsive layout** designed for dynamic module mounting. This document explains the structure, behavior, and lifecycle of the scaffold — how it adapts to module states and how modules interact with it through the Hub.
+> **Version:** 1.0
+> **Status:** Canonical
+> **Audience:** Internal NOIZ Developers & Module Authors
 
 ---
 
-## 🧱 Overview
+## Overview
 
-The scaffold defines the core UI regions for NOIZ. Each region is a `<module>` mount point, which loads dynamically via `app.js`.
+The NOIZ scaffolding defines the **base structure** and **responsive layout model** used across the platform (dashboard, streaming, discovery, and extensions). It ensures consistent module behavior, full-height alignment, and predictable responsive design between desktop and mobile.
+
+Every module plugs into this scaffold using standard data attributes (`data-module="..."`) and naming conventions.
+
+---
+
+## Layout Structure
 
 ```
-+-----------------------------------------------------------+
-| app-header                                                |
-+-----------------------------------------------------------+
-| server-rail | channel-sidebar | main | right-sidebar      |
-+-----------------------------------------------------------+
+APP-BAR
+PAGE
+ ├── RAIL
+ ├── NAV-PANE
+ └── CONTENT-STACK
+      ├── MAIN-HEADER
+      ├── MAIN
+      └── SIDEBAR
+USER-BAR
+TOAST-CONTAINER
+MOBILE-RAIL
 ```
 
-Each section adjusts automatically depending on module visibility and layout state.
+Each section is tagged using `data-module` for clarity and script-based interaction.
+
+| Module ID     | Description                              | Behavior                          |
+| ------------- | ---------------------------------------- | --------------------------------- |
+| `app-bar`     | Fixed bar at top of viewport             | Always visible, 28px tall         |
+| `page`        | Root layout container                    | Fills viewport minus app-bar      |
+| `rail`        | Left-most global navigation column       | **Must remain visible**           |
+| `nav-pane`    | Channel or context navigation            | Collapsible (offcanvas on mobile) |
+| `main-header` | Sub-header for main content              | Flush alignment                   |
+| `main`        | Primary content area                     | Scrollable, resizes dynamically   |
+| `sidebar`     | Secondary stack (chat, stats, etc.)      | Toggleable                        |
+| `user-bar`    | Floating contextual control (user state) | Fixed-bottom left                 |
+| `noti`        | Toast/notification host                  | Fixed-top right                   |
+| `rail-m`      | Mobile rail (bottom navbar)              | Visible ≤ 991px width             |
+| `nav-pane-m`  | Offcanvas overlay for mobile nav         | Fullscreen                        |
 
 ---
 
-## 🧩 Column Structure
+## Height Rules
 
-| Column              | ID / Mount Point                         | Purpose                                                  |
-| ------------------- | ---------------------------------------- | -------------------------------------------------------- |
-| 1️⃣ Server Rail     | `<module data-module="server-rail">`     | Displays followed servers/channels, home, and user icon. |
-| 2️⃣ Channel Sidebar | `<module data-module="channel-sidebar">` | Lists channels, categories, or context navigation.       |
-| 3️⃣ Main            | `<module data-module="main">`            | The central module for stream/video/chat/etc.            |
-| 4️⃣ Right Sidebar   | `<module data-module="right-sidebar">`   | Used for member lists, chat panels, or quest tracking.   |
-
-Each column is fluid and adjusts width based on hidden or wide states.
+* Root `.page` height: `calc(100vh - var(--app-bar-h))`
+* Children with `.fill` or `.flex-grow-1` stretch to available space.
+* Avoid using viewport units (`vh`) inside scrollable containers.
 
 ---
 
-## 🧭 Layout Behavior
+## Responsive Breakpoints
 
-The **Hub layout API** manages column state transitions. Modules request layout changes via `hub.request()` calls.
-
-### Layout API Reference
-
-```js
-await hub.request('layout:left:collapse');
-await hub.request('layout:right:wide');
-await hub.request('layout:right:hide');
-await hub.request('layout:immerse:on');
-```
-
-### Preset States
-
-| Preset              | Description                                                                  |
-| ------------------- | ---------------------------------------------------------------------------- |
-| **Default**         | All columns visible in standard width.                                       |
-| **Immerse Mode**    | Collapses left + channel columns for full-width viewing (used in Live view). |
-| **Right Wide Mode** | Expands the right sidebar for active chats or secondary UIs.                 |
-| **Compact Mode**    | Collapses all but the main content area.                                     |
+| Size    | Behavior                                                       |
+| ------- | -------------------------------------------------------------- |
+| ≥ 992px | Desktop layout enabled (`rail`, `nav-pane`, `sidebar` visible) |
+| < 992px | Collapses into mobile layout (`rail-m`, offcanvas nav)         |
 
 ---
 
-## 🧮 Responsive Behavior
+## Naming Conventions
 
-The scaffold is mobile-first, using Bootstrap 5 grid utilities.
+| Desktop Module | Mobile Equivalent |
+| -------------- | ----------------- |
+| `rail`         | `rail-m`          |
+| `nav-pane`     | `nav-pane-m`      |
+| `app-bar`      | *same*            |
+| `main`         | *same*            |
+| `sidebar`      | *same*            |
 
-* Columns stack on small screens.
-* Hidden columns automatically expand the remaining space.
-* All transitions are animated with CSS variables for smoothness.
-
-### Example:
-
-If the **server rail** is collapsed:
-
-```js
-hub.request('layout:left:collapse');
-```
-
-Then `channel-sidebar` expands to occupy the released space.
-
-If the **right sidebar** is hidden:
-
-```js
-hub.request('layout:right:hide');
-```
-
-Then `main` auto-expands to fill the full width.
+> **Mobile suffix rule:** append `-m` to mobile versions to maintain consistent naming.
 
 ---
 
-## 🧠 Internal Rules
+## Visibility & Toggle Rules
 
-* The scaffold listens for layout updates via hub events:
+| Component  | Default        | May be Hidden             | Notes                                                                       |
+| ---------- | -------------- | ------------------------- | --------------------------------------------------------------------------- |
+| `rail`     | Always visible | **Not recommended**       | Hiding the rail breaks platform consistency and may cause module rejection. |
+| `nav-pane` | Visible        | ✅ via immersion or toggle | Offcanvas alternative on mobile                                             |
+| `sidebar`  | Visible        | ✅ via toggle              | Resizes main automatically                                                  |
 
-  ```js
-  hub.on('layout:update', (state) => adjustColumns(state));
-  ```
-* CSS grid or flex automatically adapts column proportions.
-* Each module mounts inside its own column container and cannot modify sibling columns directly.
+### Visibility Enforcement
 
----
-
-## ⚙️ CSS Layering
-
-All layout definitions belong in `app.css`, scoped under generic layout selectors:
+A `.force-hidden` class is used to override Bootstrap breakpoint logic.
 
 ```css
-.layout {
-  display: grid;
-  grid-template-columns: var(--width-left) var(--width-channel) 1fr var(--width-right);
-  grid-template-rows: auto 1fr;
-  height: 100vh;
-}
-
-.layout.immerse {
-  --width-left: 0;
-  --width-channel: 0;
-}
-
-.layout.right-wide {
-  --width-right: 400px;
-}
+.force-hidden { display: none !important; }
 ```
 
-> ❌ Module-specific CSS should never define layout widths or flex logic.
+Use sparingly—prefer `hub.request('layout:toggle', {target:'sidebar'})` for runtime control.
 
 ---
 
-## 🔄 State Transitions
+## Preset Layout States
 
-### Hidden Columns
+| Preset         | Rail | Nav-Pane | Sidebar | Ratio | Purpose                         |
+| -------------- | ---- | -------- | ------- | ----- | ------------------------------- |
+| **default**    | ✅    | ✅        | ✅       | 8:4   | Standard creator layout         |
+| **immerse**    | ✅    | ❌        | ✅       | 7:5   | Streaming focus (wider sidebar) |
+| **chat-focus** | ✅    | ✅        | ✅       | 7:5   | Chat-driven UI variants         |
+| **compact**    | ❌    | ❌        | ✅       | 9:3   | Debug or minimal mode           |
 
-When a column is hidden, its corresponding `<module>` element remains in the DOM but visually collapsed.
-This prevents remounting on every toggle and preserves module state.
+> ⚠️ **Policy:** Modules must not override Rail visibility.
+> Exceptions require explicit approval by NOIZ UI Maintainers. Unauthorized use may lead to module denial.
 
-```css
-.column.hidden {
-  width: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-```
+---
 
-### Animation Flow
+## Developer Testing (Dev Bar)
 
-Each toggle triggers a `transitionend` event for other modules to listen for resize or refresh events.
+A floating Dev Bar is included in the canonical scaffold for internal QA.
+Controls allow toggling regions and simulating preset states.
+
+| Control | Action                                               |
+| ------- | ---------------------------------------------------- |
+| Presets | Switch between default, immerse, chat-focus, compact |
+| Toggles | Hide/show rail, nav-pane, sidebar                    |
+| Helpers | Trigger mobile nav, toasts, or reset layout          |
+
+---
+
+## Integration Example
+
+Modules should never modify the scaffold DOM directly.
+Instead, communicate with the layout bus:
 
 ```js
-hub.publish('layout:changed', { left: false, right: true });
+hub.request('layout:apply', { preset: 'immerse' });
+hub.request('layout:toggle', { target: 'sidebar', visible: false });
 ```
 
 ---
 
-## 🧩 Interaction Between Modules and Layout
+## CSS Custom Properties
 
-Each module can request adjustments or listen for layout events:
-
-```js
-hub.on('layout:changed', ({ left, right }) => {
-  if (right) adjustChatScroll();
-});
-```
-
-Modules must **not** directly manipulate the scaffold’s CSS or DOM. All requests go through the hub.
+| Variable                  | Description                  | Default            |
+| ------------------------- | ---------------------------- | ------------------ |
+| `--app-bar-h`             | Height of app bar            | `28px`             |
+| `--mobile-rail-h`         | Height of mobile bottom rail | `64px`             |
+| `--c-bg`, `--c-app`, etc. | Theming colors               | Demo defaults only |
 
 ---
 
-## 🧹 Cleanup and Safety
+## Module Guidelines
 
-* Layout changes should always revert cleanly when modules unload.
-* Temporary layout overrides (e.g. Live Stream mode) must unregister their hub listeners on dispose.
-
-Example:
-
-```js
-const off = hub.on('layout:changed', syncUI);
-return () => off();
-```
+1. **Do not** reposition or resize the scaffold containers.
+2. **Do not** hide the Rail unless explicitly permitted.
+3. All module inserts should occur inside the `.main` or `.sidebar` region.
+4. Use `overflow-auto` for any scrollable inner content.
+5. Support both mobile (`-m`) and desktop layouts.
+6. Maintain accessibility compliance (ARIA labels, roles).
 
 ---
 
-## 🧩 Summary
+## Validation Checklist
 
-* The scaffold defines the **core layout containers**.
-* All adjustments happen via the **Hub layout API**.
-* Columns **expand, collapse, or hide** based on module requests.
-* Modules **cannot modify sibling containers directly**.
-* CSS and logic are separated for predictable, composable behavior.
+* [ ] Uses canonical scaffold structure
+* [ ] Responsive at 992px breakpoint
+* [ ] Rail visible at all times
+* [ ] No hardcoded `vh`/`vw` usage
+* [ ] Follows `data-module` naming
+* [ ] All interactive elements accessible
 
-> 💡 Think of the scaffold as the stage — modules are the actors. The stage defines where the play happens, but never changes the script.
+---
+
+### Appendix: Developer Note
+
+> **Rail Policy:**
+> The Rail represents the core of NOIZ’s visual and navigational identity. Hiding or repositioning it creates inconsistent UX and will fail certification unless a justified exception is reviewed and approved by the NOIZ Core UI Team.
+
+---
+
+**Maintainers:** NOIZ Interface Systems Team
+**Contact:** (https://discord.gg/wpmuzCMQ)
